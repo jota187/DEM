@@ -1,0 +1,2136 @@
+<!DOCTYPE html>
+
+<html lang="pt">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Aprender a Medir</title>
+<link rel="icon" type="image/png" href="favicon_medir.png"/>
+<style>
+  :root {
+    --primary: #1a5276;
+    --secondary: #2e86c1;
+    --accent: #e74c3c;
+    --accent2: #27ae60;
+    --bg: #f4f6f9;
+    --card: #ffffff;
+    --text: #2c3e50;
+    --muted: #7f8c8d;
+    --border: #d5d8dc;
+    --highlight: #fef9e7;
+    --nav-bg: #1a3a5c;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: var(--bg); color: var(--text); }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--nav-bg) 0%, var(--secondary) 100%);
+    color: white; text-align: center; padding: 28px 20px 18px;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.25);
+    position: sticky; top: 0; z-index: 100;
+  }
+  header h1 { font-size: 2.4em; letter-spacing: 2px; font-weight: 700; }
+  header p { font-size: 1em; opacity: 0.85; margin-top: 4px; }
+
+  /* NAV */
+  nav {
+    background: var(--nav-bg);
+    display: flex; flex-wrap: wrap; justify-content: center;
+    gap: 4px; padding: 8px 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  }
+  nav button {
+    background: transparent; border: 1.5px solid rgba(255,255,255,0.3);
+    color: white; padding: 7px 14px; border-radius: 20px;
+    cursor: pointer; font-size: 0.82em; font-weight: 600;
+    transition: all 0.25s; letter-spacing: 0.3px;
+  }
+  nav button:hover, nav button.active {
+    background: var(--accent); border-color: var(--accent); color: white;
+  }
+
+  /* MAIN */
+  main { max-width: 1100px; margin: 0 auto; padding: 28px 18px; }
+
+  /* SECTIONS */
+  .section { display: none; animation: fadeIn 0.4s ease; }
+  .section.active { display: block; }
+  @keyframes fadeIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:none; } }
+
+  .section-title {
+    font-size: 1.7em; color: var(--primary); border-bottom: 3px solid var(--secondary);
+    padding-bottom: 8px; margin-bottom: 22px; display: flex; align-items: center; gap: 10px;
+  }
+  .section-title span { font-size: 1.3em; }
+
+  /* CARDS */
+  .card {
+    background: var(--card); border-radius: 12px; padding: 22px 24px;
+    margin-bottom: 22px; box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+    border-left: 5px solid var(--secondary);
+  }
+  .card.green { border-left-color: var(--accent2); }
+  .card.red { border-left-color: var(--accent); }
+  .card.orange { border-left-color: #e67e22; }
+  .card.purple { border-left-color: #8e44ad; }
+  .card h3 { font-size: 1.15em; color: var(--primary); margin-bottom: 10px; }
+  .card p, .card li { font-size: 0.97em; line-height: 1.7; margin-bottom: 6px; }
+  .card ul { padding-left: 20px; }
+
+  /* INFO BOX */
+  .info-box {
+    background: var(--highlight); border: 1.5px solid #f0c040;
+    border-radius: 8px; padding: 12px 18px; margin: 14px 0;
+    font-size: 0.95em; line-height: 1.6;
+  }
+  .def-box {
+    background: #eaf4fb; border: 1.5px solid var(--secondary);
+    border-radius: 8px; padding: 12px 18px; margin: 14px 0;
+    font-size: 0.95em; line-height: 1.6;
+  }
+  .warn-box {
+    background: #fdecea; border: 1.5px solid var(--accent);
+    border-radius: 8px; padding: 12px 18px; margin: 14px 0;
+    font-size: 0.95em; line-height: 1.6;
+  }
+
+  /* FORMULA */
+  .formula {
+    background: #1a3a5c; color: #a8d8f0; border-radius: 8px;
+    padding: 10px 18px; font-family: 'Courier New', monospace;
+    font-size: 1.08em; margin: 12px 0; text-align: center; letter-spacing: 1px;
+  }
+
+  /* GRID */
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+  @media(max-width:700px){ .grid2,.grid3 { grid-template-columns:1fr; } }
+
+  /* TARGET DIAGRAM */
+  .targets { display: flex; flex-wrap: wrap; gap: 18px; justify-content: center; margin: 18px 0; }
+  .target-wrap { text-align: center; }
+  .target-wrap canvas { display: block; margin: 0 auto; }
+  .target-label { font-size: 0.85em; font-weight: 600; margin-top: 6px; color: var(--primary); }
+
+  /* RULER SVG */
+  .ruler-container { background: #f8f9f5; border-radius: 10px; padding: 16px; margin: 16px 0; text-align: center; }
+
+  /* INTERACTIVE */
+  .sim-box {
+    background: #f0f4ff; border: 2px solid var(--secondary);
+    border-radius: 12px; padding: 20px; margin: 18px 0;
+  }
+  .sim-box h4 { color: var(--primary); margin-bottom: 12px; font-size: 1.05em; }
+  .sim-controls { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-bottom: 14px; }
+  .sim-controls label { font-size: 0.9em; font-weight: 600; }
+  .sim-controls input[type=range] { width: 180px; accent-color: var(--secondary); }
+  .sim-controls input[type=number] { width: 80px; padding: 4px 8px; border-radius: 6px; border: 1.5px solid var(--border); font-size: 0.95em; }
+  .sim-controls select { padding: 5px 10px; border-radius: 6px; border: 1.5px solid var(--border); font-size: 0.9em; }
+  .sim-result {
+    background: white; border-radius: 8px; padding: 12px 18px;
+    font-size: 1.05em; font-weight: 700; color: var(--primary);
+    border: 1.5px solid var(--secondary); margin-top: 8px;
+  }
+  .sim-result span { color: var(--accent); }
+  button.btn {
+    background: var(--secondary); color: white; border: none;
+    border-radius: 8px; padding: 8px 20px; cursor: pointer;
+    font-size: 0.9em; font-weight: 600; transition: background 0.2s;
+  }
+  button.btn:hover { background: var(--primary); }
+  button.btn.green { background: var(--accent2); }
+  button.btn.green:hover { background: #1e8449; }
+
+  /* TABLE */
+  table { width: 100%; border-collapse: collapse; font-size: 0.93em; margin: 12px 0; }
+  th { background: var(--primary); color: white; padding: 9px 12px; text-align: left; }
+  td { padding: 8px 12px; border-bottom: 1px solid var(--border); }
+  tr:nth-child(even) td { background: #f4f6f9; }
+
+  /* HIGHLIGHT TEXT */
+  .hl { color: var(--accent); font-weight: 700; }
+  .hl2 { color: var(--accent2); font-weight: 700; }
+  .hl3 { color: var(--secondary); font-weight: 700; }
+
+  /* QUIZ */
+  .quiz-q { font-size: 1em; font-weight: 600; margin-bottom: 10px; }
+  .quiz-opts label { display: block; margin: 5px 0; cursor: pointer; font-size: 0.95em; }
+  .quiz-opts input { margin-right: 6px; }
+  .quiz-feedback { margin-top: 8px; font-weight: 700; font-size: 0.97em; padding: 6px 12px; border-radius: 6px; display: none; }
+  .quiz-feedback.correct { background: #d4efdf; color: #1e8449; display: block; }
+  .quiz-feedback.wrong { background: #fadbd8; color: #c0392b; display: block; }
+
+  /* PROGRESS BAR */
+  .progress-wrap { background: #d5d8dc; border-radius: 10px; height: 10px; margin: 4px 0 12px; }
+  .progress-bar { background: var(--accent2); border-radius: 10px; height: 10px; transition: width 0.5s; }
+
+  /* CANVAS */
+  canvas { border-radius: 8px; }
+
+  /* SCALE LABELS */
+  .scale-row { display: flex; align-items: center; gap: 12px; margin: 8px 0; flex-wrap: wrap; }
+  .scale-row label { min-width: 160px; font-size: 0.93em; }
+
+  /* BADGE */
+  .badge {
+    display: inline-block; background: var(--secondary); color: white;
+    border-radius: 12px; padding: 2px 10px; font-size: 0.78em; font-weight: 700;
+    margin-left: 6px; vertical-align: middle;
+  }
+  .badge.red { background: var(--accent); }
+  .badge.green { background: var(--accent2); }
+  .badge.orange { background: #e67e22; }
+
+  /* LAYOUT */
+  .page-wrapper { display: flex; min-height: calc(100vh - 80px); }
+
+  /* SIDEBAR */
+  #sidebar {
+    width: 240px; min-width: 240px;
+    background: var(--nav-bg);
+    display: flex; flex-direction: column;
+    box-shadow: 3px 0 12px rgba(0,0,0,0.2);
+    position: sticky; top: 0;
+    height: calc(100vh - 80px); overflow-y: auto;
+    transition: width 0.25s, min-width 0.25s;
+    z-index: 90;
+  }
+  #sidebar.collapsed { width: 50px; min-width: 50px; overflow: hidden; }
+  .sidebar-toggle {
+    background: none; border: none; color: white;
+    font-size: 1.3em; cursor: pointer;
+    padding: 16px 14px 12px;
+    display: flex; align-items: center; gap: 10px;
+    width: 100%; border-bottom: 1px solid rgba(255,255,255,0.1);
+    white-space: nowrap; transition: background 0.2s;
+  }
+  .sidebar-toggle:hover { background: rgba(255,255,255,0.08); }
+  .sidebar-label { font-size: 0.85em; font-weight: 700; letter-spacing: 0.5px; }
+  .sidebar-section-title {
+    font-size: 0.7em; font-weight: 700; letter-spacing: 1.5px;
+    color: rgba(255,255,255,0.4); text-transform: uppercase;
+    padding: 14px 14px 4px; white-space: nowrap;
+  }
+  #sidebar nav {
+    background: transparent; box-shadow: none;
+    display: flex; flex-direction: column;
+    gap: 2px; padding: 6px 8px; justify-content: flex-start;
+  }
+  #sidebar nav button {
+    background: transparent; border: none;
+    color: rgba(255,255,255,0.82);
+    padding: 9px 10px; border-radius: 8px;
+    cursor: pointer; font-size: 0.87em; font-weight: 500;
+    transition: all 0.2s; text-align: left;
+    display: flex; align-items: center; gap: 10px;
+    white-space: nowrap; overflow: hidden; width: 100%;
+  }
+  .nav-icon { font-size: 1.15em; min-width: 24px; text-align: center; flex-shrink: 0; }
+  .nav-lbl { overflow: hidden; text-overflow: ellipsis; }
+  #sidebar nav button:hover { background: rgba(255,255,255,0.12); color: white; }
+  #sidebar nav button.active { background: var(--accent); color: white; font-weight: 700; }
+  #sidebar.collapsed .nav-lbl,
+  #sidebar.collapsed .sidebar-section-title,
+  #sidebar.collapsed .sidebar-label { display: none; }
+  #sidebar.collapsed nav button { justify-content: center; padding: 9px 4px; }
+  #sidebar.collapsed .sidebar-toggle { justify-content: center; padding: 16px 4px 12px; }
+
+  /* CONTENT */
+  .content-area { flex: 1; min-width: 0; overflow: hidden; }
+  main { max-width: 1060px; margin: 0 auto; padding: 28px 18px; }
+
+  /* HOME ANIMATION */
+  #homeScreen {
+    display: flex; align-items: center; justify-content: center;
+    min-height: calc(100vh - 80px); position: relative; overflow: hidden;
+    background: radial-gradient(ellipse at center, #0d2137 0%, #0a1628 100%);
+  }
+  #animCanvas { display: block; max-width: 100%; }
+
+  @media(max-width:700px){
+    #sidebar { width: 200px; min-width: 200px; }
+    #sidebar.collapsed { width: 44px; min-width: 44px; }
+    .grid2,.grid3 { grid-template-columns:1fr; }
+  }
+
+</style>
+</head>
+<body>
+<header>
+<h1>📏 Aprender a Medir</h1>
+<p>Conceitos fundamentais sobre medições, erros e incertezas</p>
+</header>
+<div class="page-wrapper">
+<!-- SIDEBAR -->
+<div id="sidebar">
+<button class="sidebar-toggle" onclick="toggleSidebar()" title="Expandir/Colapsar menu">
+<span>☰</span>
+<span class="sidebar-label">Menu</span>
+</button>
+<div class="sidebar-section-title">Navegação</div>
+<nav id="mainNav">
+<button onclick="showSection('intro',this)"><span class="nav-icon">🏠</span><span class="nav-lbl">Introdução</span></button>
+<button onclick="showSection('algsig',this)"><span class="nav-icon">🔢</span><span class="nav-lbl">Algarismos Significativos</span></button>
+<button onclick="showSection('precisao',this)"><span class="nav-icon">🎯</span><span class="nav-lbl">Precisão e Exatidão</span></button>
+<button onclick="showSection('escalas',this)"><span class="nav-icon">📐</span><span class="nav-lbl">Erros de Escala</span></button>
+<button onclick="showSection('leitura',this)"><span class="nav-icon">👁️</span><span class="nav-lbl">Erros de Leitura</span></button>
+<button onclick="showSection('digital',this)"><span class="nav-icon">🔢</span><span class="nav-lbl">Escalas Digitais</span></button>
+<button onclick="showSection('analogico',this)"><span class="nav-icon">📊</span><span class="nav-lbl">Escalas Analógicas</span></button>
+<button onclick="showSection('simulacoes',this)"><span class="nav-icon">⚗️</span><span class="nav-lbl">Simulações</span></button>
+<button onclick="showSection('quiz',this)"><span class="nav-icon">✅</span><span class="nav-lbl">Quiz</span></button>
+
+<button onclick="showSection('referencias', this)"><span class="nav-icon">📚</span><span class="nav-lbl">Para saber mais</span></button>
+<div style="width: 100%; text-align: center; margin-top: 30px; margin-bottom: 20px; display: flex; flex-direction: column; align-items: center;">
+<span class="nav-lbl" style="font-weight: 700; font-size: 0.85em; color: rgba(255,255,255,0.9); margin-bottom: 4px;">v.2026.05.01.2</span>
+<span class="nav-lbl" style="font-size: 0.75em; color: rgba(255,255,255,0.6);">Jorge Fonseca e Trindade</span>
+</div>
+</nav>
+</div>
+<!-- CONTENT AREA -->
+<div class="content-area">
+<!-- HOME ANIMATION -->
+<div id="homeScreen">
+<canvas height="560" id="animCanvas" width="900"></canvas>
+</div>
+<main>
+<!-- ===================== INTRO ===================== -->
+<div class="section" id="intro">
+<div class="section-title"><span>🏠</span> Introdução às Medições</div>
+<div class="card">
+<h3>Por que medir?</h3>
+<p>A medição é o fundamento de toda a ciência experimental. Lord Kelvin dizia:</p>
+<div class="info-box">
+<em>"To measure is to know. There is nothing new to be discovered in physics now; all that remains is more and more precise measurement."</em>
+<br/>— Lord Kelvin
+    </div>
+<p>Para descrever os fenómenos naturais com rigor, precisamos de <strong>medir</strong> grandezas físicas e compreender as <strong>limitações</strong> dessas medições.</p>
+</div>
+<div class="grid2">
+<div class="card green">
+<h3>O que é uma medição?</h3>
+<ul>
+<li>Comparar uma grandeza com um <strong>padrão</strong> (unidade)</li>
+<li>Toda a medição tem uma <strong>incerteza</strong> associada</li>
+<li>O erro <strong>não</strong> é um engano — é uma limitação física inevitável</li>
+<li>Resultado: <code>x = x₀ ± Δx (unidade)</code></li>
+</ul>
+</div>
+<div class="card orange">
+<h3>Sistema Internacional (SI)</h3>
+<ul>
+<li>Metro (m) — comprimento</li>
+<li>Segundo (s) — tempo</li>
+<li>Quilograma (kg) — massa</li>
+<li>Kelvin (K) — temperatura</li>
+<li>Ampere (A) — corrente elétrica</li>
+<li>Candela (Cd) — intensidade luminosa</li>
+<li>Mole (mol) — quantidade de substância</li>
+</ul>
+</div>
+</div>
+<div class="card">
+<h3>Tipos de erros em medições</h3>
+<div class="grid3">
+<div class="def-box">
+<strong style="color:#e74c3c">Erros Aleatórios</strong><br/>
+        Afetam a <strong>precisão</strong>. Causados por flutuações aleatórias. Podem ser minimizados com repetição das medições.
+      </div>
+<div class="def-box">
+<strong style="color:#e67e22">Erros Sistemáticos</strong><br/>
+        Afetam a <strong>exatidão</strong>. Causados por erros de calibração, zero incorreto, etc. Não se eliminam com repetição.
+      </div>
+<div class="def-box">
+<strong style="color:#8e44ad">Erros Grosseiros</strong><br/>
+        São <strong>enganos</strong>: leituras erradas, confusão de unidades, erros de escrita. Devem ser detetados e eliminados.
+      </div>
+</div>
+</div>
+<div class="card red">
+<h3>Representação de um resultado</h3>
+<p>Toda a medição deve ser apresentada com o seu erro:</p>
+<div class="formula">x = x₀ ± |Δx|   (unidade)</div>
+<p><strong>Erro absoluto:</strong> |Δx| — na mesma unidade da grandeza</p>
+<p><strong>Erro relativo:</strong> |Δx/x₀| — adimensional (ou em %)</p>
+<div class="info-box">
+<strong>Exemplo:</strong> Um comprimento medido com uma régua de 1 mm de resolução:<br/>
+<code>L = (25,5 ± 0,5) mm</code>  →  Erro relativo: 0,5/25,5 ≈ 2%
+    </div>
+</div>
+</div>
+<!-- ===================== ALGARISMOS SIGNIFICATIVOS ===================== -->
+<div class="section" id="algsig">
+<div class="section-title"><span>🔢</span> Algarismos Significativos</div>
+<div class="card">
+<h3>O que são algarismos significativos?</h3>
+<p>São todos os algarismos de um número que têm significado físico — desde o primeiro algarismo não-nulo até ao <strong>primeiro afetado pelo erro</strong>.</p>
+<div class="def-box">
+<strong>Definição:</strong> Algarismos significativos (AS) são os algarismos do valor de uma grandeza, contados desde o primeiro dígito significativo (≠ 0) até ao último com significado para a medição.
+    </div>
+</div>
+<div class="card green">
+<h3>Regras de contagem</h3>
+<table>
+<tr><th>Número</th><th>AS</th><th>Explicação</th></tr>
+<tr><td>1234</td><td>4</td><td>Todos os dígitos são significativos</td></tr>
+<tr><td>0,00456</td><td>3</td><td>Os zeros à esquerda NÃO são significativos</td></tr>
+<tr><td>150,0</td><td>4</td><td>O zero à direita da vírgula É significativo</td></tr>
+<tr><td>1500</td><td>2 ou 4?</td><td>Ambíguo! Usar notação científica: 1,5×10³ (2 AS) ou 1,500×10³ (4 AS)</td></tr>
+<tr><td>97 Ω</td><td>2</td><td>Erro associado: ±1 Ω</td></tr>
+<tr><td>100,04 Ω</td><td>5</td><td>Erro associado: ±0,01 Ω</td></tr>
+<tr><td>V = 150,0 V</td><td>4</td><td>Erro associado: ±0,1 V</td></tr>
+</table>
+</div>
+<div class="card orange">
+<h3>Regras para operações</h3>
+<div class="grid2">
+<div>
+<strong>Adição e Subtração</strong>
+<p>O resultado tem tantas casas decimais quantas o número com <em>menos casas decimais</em>.</p>
+<div class="info-box">
+          4,573 + 0,6 = 5,173 → <strong>5,2</strong><br/>
+          4,573 − 0,60 = 3,973 → <strong>3,97</strong>
+</div>
+</div>
+<div>
+<strong>Multiplicação e Divisão</strong>
+<p>O resultado tem tantos AS quantos o número com <em>menos AS</em>.</p>
+<div class="info-box">
+          4,573 × 0,6 = 2,74 → <strong>3</strong> (1 AS)<br/>
+          4,573 / 0,60 = 7,62 → <strong>7,6</strong> (2 AS)
+        </div>
+</div>
+</div>
+<div class="warn-box">⚠️ Constantes matemáticas (π, e, fatores exatos) têm infinitos algarismos significativos e não limitam o resultado.</div>
+</div>
+<!-- Calculadora Interativa AS -->
+<div class="sim-box">
+<h4>🔢 Calculadora Interativa de Algarismos Significativos</h4>
+<div class="sim-controls">
+<label>Insere um número:</label>
+<input id="numAS" placeholder="ex: 0.00456" style="width:130px;padding:5px 8px;border-radius:6px;border:1.5px solid #2e86c1;font-size:0.95em;" type="text"/>
+<button class="btn" onclick="calcAS()">Analisar</button>
+</div>
+<div class="sim-result" id="resAS">Aguardando entrada...</div>
+</div>
+<div class="card">
+<h3>Arredondamentos</h3>
+<ul>
+<li>Se o dígito a remover é <strong>&gt; 5</strong>: arredonda para cima</li>
+<li>Se o dígito a remover é <strong>&lt; 5</strong>: arredonda para baixo</li>
+<li>Se o dígito a remover é <strong>= 5</strong>: arredonda para o número <strong>par</strong> mais próximo (regra do banqueiro)</li>
+</ul>
+<div class="info-box">
+<strong>Exemplos:</strong><br/>
+      15,6 → 16  |  15,4 → 15  |  15,5 → 16  |  16,5 → 16
+    </div>
+</div>
+</div>
+<!-- ===================== PRECISÃO E EXATIDÃO ===================== -->
+<div class="section" id="precisao">
+<div class="section-title"><span>🎯</span> Precisão e Exatidão</div>
+<div class="grid2">
+<div class="card">
+<h3>Precisão <span class="badge">Erros Aleatórios</span></h3>
+<p><strong>Precisão</strong> é a <em>proximidade entre os resultados</em> de medições repetidas da mesma grandeza.</p>
+<p>Uma medição é <strong>precisa</strong> se os valores obtidos em várias repetições estão <strong>próximos entre si</strong> (pequena dispersão).</p>
+<div class="def-box">Precisão ↔ Reprodutibilidade ↔ Erros aleatórios pequenos</div>
+</div>
+<div class="card green">
+<h3>Exatidão <span class="badge green">Erros Sistemáticos</span></h3>
+<p><strong>Exatidão</strong> é a <em>proximidade do valor medido ao valor verdadeiro</em> da grandeza.</p>
+<p>Uma medição é <strong>exata</strong> se o valor obtido é <strong>próximo do valor real</strong>.</p>
+<div class="def-box">Exatidão ↔ Ausência de viés ↔ Erros sistemáticos pequenos</div>
+</div>
+</div>
+<!-- Diagrama de Alvos -->
+<div class="card">
+<h3>Analogia dos Alvos</h3>
+<p>A diferença entre precisão e exatidão pode ser visualizada com um alvo de tiro:</p>
+<div class="targets" id="targets"></div>
+<div class="grid2" style="margin-top:8px;">
+<div class="def-box"><strong>Preciso mas pouco exato:</strong> tiros muito agrupados mas longe do centro (erro sistemático)</div>
+<div class="def-box"><strong>Exato mas pouco preciso:</strong> tiros espalhados em torno do centro (erro aleatório)</div>
+</div>
+</div>
+<div class="card orange">
+<h3>Fontes de Erros Sistemáticos</h3>
+<div class="grid3">
+<div class="def-box">
+<strong>Erro de Zero</strong><br/>
+        O instrumento não marca zero quando deveria (ex: régua com extremidade gasta, balança descalibrada)
+      </div>
+<div class="def-box">
+<strong>Erro de Calibração</strong><br/>
+        O instrumento foi calibrado em condições diferentes (ex: régua calibrada a 20°C usada a 10°C)
+      </div>
+<div class="def-box">
+<strong>Erro de Inserção</strong><br/>
+        O instrumento perturba o sistema medido (ex: termómetro frio num líquido quente)
+      </div>
+</div>
+<div class="warn-box">⚠️ Os erros sistemáticos <strong>não se eliminam</strong> repetindo medições! Exigem calibração ou correção do método.</div>
+</div>
+<div class="card red">
+<h3>Erros Aleatórios e Tratamento Estatístico</h3>
+<p>Os erros aleatórios causam <strong>flutuações</strong> nos valores medidos. Com N medições x₁, x₂, ..., xₙ:</p>
+<div class="formula">Média: x̄ = (1/N) Σ xᵢ</div>
+<div class="formula">Desvio padrão: s = √[Σ(xᵢ - x̄)² / (N-1)]</div>
+<div class="formula">Erro padrão da média: α = s / √N</div>
+<div class="info-box">
+<strong>Regra prática:</strong><br/>
+      • N ≥ 20: usar erro padrão da média <code>x = x̄ ± s/√N</code><br/>
+      • 10 &lt; N &lt; 20: usar desvio padrão <code>x = x̄ ± s</code><br/>
+      • N &lt; 10: usar desvio máximo <code>x = x̄ ± max|xᵢ - x̄|</code>
+</div>
+</div>
+<!-- Simulador de Média e Desvio Padrão -->
+<div class="sim-box">
+<h4>📊 Simulador de Medições Repetidas</h4>
+<div class="sim-controls">
+<label>Valor verdadeiro:</label>
+<input id="trueVal" step="0.1" style="width:75px;padding:4px 8px;border-radius:6px;border:1.5px solid #2e86c1;" type="number" value="10.0"/>
+<label>Erro aleatório (σ):</label>
+<input id="randSig" min="0.01" step="0.1" style="width:70px;padding:4px 8px;border-radius:6px;border:1.5px solid #2e86c1;" type="number" value="0.5"/>
+<label>Erro sist. (δ):</label>
+<input id="systErr" step="0.1" style="width:70px;padding:4px 8px;border-radius:6px;border:1.5px solid #2e86c1;" type="number" value="0.0"/>
+<label>N medições:</label>
+<input id="nMeas" max="50" min="3" oninput="document.getElementById('nMeasVal').textContent=this.value" type="range" value="10"/>
+<span id="nMeasVal">10</span>
+<button class="btn" onclick="runSimulation()">Simular</button>
+</div>
+<canvas height="200" id="histCanvas" style="max-width:100%;background:white;border:1px solid #d5d8dc;" width="680"></canvas>
+<div class="sim-result" id="simResult">Clique em "Simular" para gerar dados.</div>
+</div>
+</div>
+<!-- ===================== ERROS DE ESCALA ===================== -->
+<div class="section" id="escalas">
+<div class="section-title"><span>📐</span> Erros de Escala</div>
+<div class="card">
+<h3>O que é o erro de escala?</h3>
+<p>O <strong>erro de escala</strong> (ou erro máximo do aparelho) é a incerteza mínima associada à <em>resolução</em> do instrumento de medição — independentemente do utilizador.</p>
+<div class="def-box">
+<strong>Resolução (ξ):</strong> É o menor valor que o instrumento consegue distinguir — o valor da menor divisão da escala.
+    </div>
+</div>
+<div class="grid2">
+<div class="card green">
+<h3>Escalas Analógicas</h3>
+<p>O erro máximo do aparelho analógico é <strong>metade</strong> da menor divisão da escala:</p>
+<div class="formula">Δx₀ = ξ / 2</div>
+<div class="info-box">
+<strong>Exemplo — Régua graduada em mm (ξ = 1 mm):</strong><br/>
+        Δx₀ = 1/2 = <strong>0,5 mm</strong><br/>
+        Resultado: L = (25,0 ± 0,5) mm
+      </div>
+</div>
+<div class="card red">
+<h3>Escalas Digitais</h3>
+<p>O erro máximo do aparelho digital é <strong>igual</strong> à menor unidade representável (último dígito):</p>
+<div class="formula">Δx₀ = ξ</div>
+<div class="info-box">
+<strong>Exemplo — Voltímetro que mostra 8,41 V (ξ = 0,01 V):</strong><br/>
+        Δx₀ = 0,01 V<br/>
+        Resultado: V = (8,41 ± 0,01) V
+      </div>
+</div>
+</div>
+<div class="card">
+<h3>Comparação de Instrumentos</h3>
+<table>
+<tr><th>Instrumento</th><th>Tipo</th><th>Resolução (ξ)</th><th>Erro máximo (Δx₀)</th><th>Exemplo de leitura</th></tr>
+<tr><td>Régua metálica</td><td>Analógico</td><td>1 mm</td><td>0,5 mm</td><td>(58,5 ± 0,5) mm</td></tr>
+<tr><td>Craveira (nónio 0,1 mm)</td><td>Analógico</td><td>0,1 mm</td><td>0,05 mm</td><td>(24,70 ± 0,05) mm</td></tr>
+<tr><td>Micrómetro (palmer)</td><td>Analógico</td><td>0,01 mm</td><td>0,005 mm</td><td>(7,72 ± 0,005) mm</td></tr>
+<tr><td>Balança digital</td><td>Digital</td><td>0,1 g</td><td>0,1 g</td><td>(260,5 ± 0,1) g</td></tr>
+<tr><td>Voltímetro digital</td><td>Digital</td><td>0,01 V</td><td>0,01 V</td><td>(8,41 ± 0,01) V</td></tr>
+<tr><td>pH metro digital</td><td>Digital</td><td>0,01</td><td>0,01</td><td>(7,00 ± 0,01)</td></tr>
+</table>
+</div>
+<!-- Simulador de Escala -->
+<div class="sim-box">
+<h4>📐 Simulador de Erro de Escala</h4>
+<div class="sim-controls">
+<label>Tipo de instrumento:</label>
+<select id="instrType" onchange="updateEscalaCalc()">
+<option value="analogico">Analógico</option>
+<option value="digital">Digital</option>
+</select>
+<label>Menor divisão (ξ):</label>
+<input id="xiVal" min="0.001" oninput="updateEscalaCalc()" step="0.001" style="width:80px;padding:4px 8px;border-radius:6px;border:1.5px solid #2e86c1;" type="number" value="1"/>
+<label>Unidade:</label>
+<input id="xiUnit" oninput="updateEscalaCalc()" style="width:50px;padding:4px 8px;border-radius:6px;border:1.5px solid #2e86c1;" type="text" value="mm"/>
+</div>
+<div class="sim-result" id="escalaRes">Selecione o instrumento para calcular o erro.</div>
+</div>
+</div>
+<!-- ===================== ERROS DE LEITURA ===================== -->
+<div class="section" id="leitura">
+<div class="section-title"><span>👁️</span> Erros de Leitura</div>
+<div class="card">
+<h3>O que são erros de leitura?</h3>
+<p>Os <strong>erros de leitura</strong> ocorrem quando o utilizador realiza uma leitura incorreta de um instrumento. Podem ser causados por:</p>
+<ul>
+<li><strong>Efeito de paralaxe</strong> — o olho não está perpendicular à escala</li>
+<li><strong>Interpolação incorreta</strong> — estimativa errada entre divisões</li>
+<li><strong>Leitura da escala errada</strong> — confusão entre escalas de um mesmo instrumento</li>
+<li><strong>Enganos de transcrição</strong> — copiar incorretamente o valor lido</li>
+</ul>
+</div>
+<div class="card green">
+<h3>Efeito de Paralaxe</h3>
+<p>O <strong>paralaxe</strong> ocorre quando o observador não está alinhado perpendicularmente com a escala e o ponteiro (ou o objeto medido). Isso provoca uma leitura desviada.</p>
+<div style="text-align:center;margin:16px 0;">
+<canvas height="180" id="paralaxCanvas" style="max-width:100%;background:#fff;border:1px solid #d5d8dc;border-radius:8px;" width="560"></canvas>
+</div>
+<div class="info-box">
+<strong>Como evitar:</strong> Posicionar os olhos <em>diretamente em frente</em> à marcação a ler. Muitos instrumentos têm um <em>espelho</em> por trás do ponteiro para ajudar — a leitura correta é quando a imagem do ponteiro coincide com o ponteiro real.
+    </div>
+</div>
+<div class="card orange">
+<h3>Interpolação em Escalas Analógicas</h3>
+<p>Quando o ponteiro fica <em>entre</em> duas divisões, é necessário <strong>interpolar</strong>. Um bom observador consegue estimar até <strong>1/5 da menor divisão</strong>.</p>
+<!-- Régua interativa -->
+<div class="sim-box" style="margin-top:12px;">
+<h4>🎚️ Prática de Leitura — Régua Virtual</h4>
+<p style="font-size:0.9em;margin-bottom:8px;">Arrasta o marcador e faz a tua leitura. Depois verifica!</p>
+<div class="sim-controls">
+<label>Posição do objeto (mm):</label>
+<input id="rulerPos" max="100" min="0" oninput="drawRuler()" step="0.1" type="range" value="37"/>
+<span id="rulerHidden" style="display:none"></span>
+</div>
+<canvas height="100" id="rulerCanvas" style="max-width:100%;background:#fffde7;border:1px solid #d5d8dc;border-radius:8px;" width="660"></canvas>
+<div class="sim-controls" style="margin-top:10px;">
+<label>A tua leitura (mm):</label>
+<input id="userRulerRead" step="0.5" style="width:80px;padding:4px 8px;border-radius:6px;border:1.5px solid #2e86c1;" type="number"/>
+<button class="btn" onclick="checkRulerRead()">Verificar</button>
+</div>
+<div class="sim-result" id="rulerResult" style="display:none"></div>
+</div>
+</div>
+<div class="card red">
+<h3>Erros Grosseiros de Leitura</h3>
+<div class="grid2">
+<div>
+<p>São erros que resultam de <strong>enganos</strong> durante a leitura:</p>
+<ul>
+<li>Ler "2,34" em vez de "2,43"</li>
+<li>Confundir a escala de cm com a de polegadas</li>
+<li>Multiplicador errado no osciloscópio (×10 em vez de ×1)</li>
+<li>Mau funcionamento do instrumento não detetado</li>
+</ul>
+</div>
+<div class="warn-box">
+<strong>Como detetar:</strong><br/>
+        • Representar os dados graficamente<br/>
+        • Pontos afastados da tendência geral são suspeitos<br/>
+        • Repetir a medição suspeita<br/>
+        • Quando detetados, <strong>devem ser eliminados</strong>
+</div>
+</div>
+</div>
+</div>
+<!-- ===================== DIGITAL ===================== -->
+<div class="section" id="digital">
+<div class="section-title"><span>🔢</span> Erros em Escalas Digitais</div>
+<div class="card">
+<h3>Como funciona um instrumento digital?</h3>
+<p>Um instrumento digital converte o sinal analógico (contínuo) num valor numérico discreto através de um <strong>conversor analógico-digital (ADC)</strong>. Este processo implica sempre um <strong>arredondamento</strong> ou <strong>truncagem</strong>.</p>
+<div class="grid2">
+<div class="def-box">
+<strong>Arredondamento:</strong><br/>
+        O instrumento apresenta o valor mais próximo da divisão.<br/>
+        → Erro máximo = <strong>½ do último dígito</strong><br/>
+        Ex: 8,41 V → erro = ±0,005 V → resultado: (8,410 ± 0,005) V
+      </div>
+<div class="def-box">
+<strong>Truncagem:</strong><br/>
+        O instrumento corta os dígitos para baixo.<br/>
+        → Erro máximo = <strong>último dígito</strong><br/>
+        Ex: 8,41 V → erro = ±0,01 V → resultado: (8,41 ± 0,01) V
+      </div>
+</div>
+<div class="warn-box">⚠️ Na prática, para instrumentos digitais, <strong>assume-se sempre o erro como o valor do último dígito</strong> (situação mais conservadora).</div>
+</div>
+<!-- Display Digital Interativo -->
+<div class="sim-box">
+<h4>🔢 Simulador de Instrumento Digital</h4>
+<div class="sim-controls">
+<label>Valor real:</label>
+<input id="digRealVal" step="0.001" style="width:90px;padding:4px 8px;border-radius:6px;border:1.5px solid #2e86c1;" type="number" value="8.4163"/>
+<label>Nº de casas decimais do display:</label>
+<input id="digDec" max="4" min="0" oninput="document.getElementById('digDecVal').textContent=this.value;updateDigital()" type="range" value="2"/>
+<span id="digDecVal">2</span>
+<label>Modo:</label>
+<select id="digMode" onchange="updateDigital()">
+<option value="round">Arredondamento</option>
+<option value="trunc">Truncagem</option>
+</select>
+</div>
+<div style="text-align:center;margin:12px 0;">
+<canvas height="100" id="digitalDisplay" style="background:#111;border-radius:10px;border:2px solid #333;" width="300"></canvas>
+</div>
+<div class="sim-result" id="digitalRes">---</div>
+</div>
+<div class="card green">
+<h3>Erro Relativo em Instrumentos Digitais</h3>
+<p>O <strong>erro relativo</strong> de um instrumento digital diminui com o aumento do valor medido (para a mesma escala):</p>
+<div class="formula">Erro relativo = Δx₀ / x = ξ / x</div>
+<div class="info-box">
+<strong>Exemplo:</strong> Voltímetro com ξ = 0,01 V<br/>
+      • Leitura de 1,00 V → erro relativo = 0,01/1,00 = <strong>1%</strong><br/>
+      • Leitura de 10,00 V → erro relativo = 0,01/10,00 = <strong>0,1%</strong><br/>
+      → Convém escolher a escala em que o valor <strong>preenche</strong> o display!
+    </div>
+</div>
+<div class="card orange">
+<h3>Erro relativo vs. valor medido</h3>
+<canvas height="220" id="relErrCanvas" style="max-width:100%;background:white;border:1px solid #d5d8dc;border-radius:8px;display:block;margin:10px auto;" width="600"></canvas>
+</div>
+</div>
+<!-- ===================== ANALÓGICO ===================== -->
+<div class="section" id="analogico">
+<div class="section-title"><span>📊</span> Erros em Escalas Analógicas</div>
+<div class="card">
+<h3>Características de escalas analógicas</h3>
+<p>Nos instrumentos analógicos, a escala é <strong>contínua</strong> mas a leitura é <strong>discreta</strong> (limitada pelas divisões). O utilizador tem de <em>arredondar</em> para a divisão mais próxima — ou <em>interpolar</em>.</p>
+<div class="def-box">
+<strong>Regra geral:</strong> Erro máximo = <strong>metade</strong> da menor divisão da escala<br/>
+<code>Δx₀ = ξ / 2</code>
+</div>
+</div>
+<!-- Simulador de Régua Animada -->
+<div class="sim-box">
+<h4>📏 Leitura numa Escala Analógica — Régua Milimétrica</h4>
+<div class="sim-controls">
+<label>Valor real a medir (mm):</label>
+<input id="anaPos" max="115" min="5" oninput="drawAnalogScale()" step="0.1" type="range" value="47.3"/>
+<span id="anaPosLabel">47,3 mm</span>
+</div>
+<canvas height="130" id="analogCanvas" style="max-width:100%;background:#fffde7;border:1px solid #ccc;border-radius:8px;display:block;" width="680"></canvas>
+<div class="sim-result" id="analogRes"></div>
+</div>
+<div class="card green">
+<h3>Exemplo: Medição com régua (ξ = 1 mm)</h3>
+<div class="ruler-container">
+<svg height="80" style="max-width:100%" viewbox="0 0 600 80" width="600">
+<!-- Régua -->
+<rect fill="#f5e6c8" height="35" rx="3" stroke="#8B6914" stroke-width="2" width="560" x="20" y="20"></rect>
+<!-- Divisões principais (cm) -->
+<g stroke="#333" stroke-width="1.5">
+<line x1="20" x2="20" y1="20" y2="55"></line>
+<line x1="76" x2="76" y1="20" y2="50"></line>
+<line x1="132" x2="132" y1="20" y2="50"></line>
+<line x1="188" x2="188" y1="20" y2="50"></line>
+<line x1="244" x2="244" y1="20" y2="50"></line>
+<line x1="300" x2="300" y1="20" y2="50"></line>
+<line x1="356" x2="356" y1="20" y2="50"></line>
+<line x1="412" x2="412" y1="20" y2="50"></line>
+<line x1="468" x2="468" y1="20" y2="50"></line>
+<line x1="524" x2="524" y1="20" y2="50"></line>
+<line x1="580" x2="580" y1="20" y2="55"></line>
+</g>
+<!-- Divisões de mm -->
+<g stroke="#333" stroke-width="1">
+<line x1="31.6" x2="31.6" y1="20" y2="42"></line> <line x1="42.2" x2="42.2" y1="20" y2="42"></line>
+<line x1="52.8" x2="52.8" y1="20" y2="42"></line> <line x1="63.4" x2="63.4" y1="20" y2="42"></line>
+<line x1="87.6" x2="87.6" y1="20" y2="42"></line> <line x1="98.2" x2="98.2" y1="20" y2="42"></line>
+<line x1="108.8" x2="108.8" y1="20" y2="42"></line> <line x1="119.4" x2="119.4" y1="20" y2="42"></line>
+</g>
+<!-- Rótulos -->
+<text fill="#333" font-size="11" x="17" y="68">0</text>
+<text fill="#333" font-size="11" x="72" y="68">1</text>
+<text fill="#333" font-size="11" x="128" y="68">2</text>
+<text fill="#333" font-size="11" x="184" y="68">3</text>
+<text fill="#333" font-size="11" x="240" y="68">4</text>
+<text fill="#333" font-size="11" x="296" y="68">5 cm</text>
+<!-- Marcas A e B -->
+<line stroke="#e74c3c" stroke-dasharray="4,2" stroke-width="2" x1="148" x2="148" y1="10" y2="55"></line>
+<text fill="#e74c3c" font-size="12" font-weight="bold" x="141" y="9">A</text>
+<line stroke="#2e86c1" stroke-dasharray="4,2" stroke-width="2" x1="215" x2="215" y1="10" y2="55"></line>
+<text fill="#2e86c1" font-size="12" font-weight="bold" x="208" y="9">B</text>
+</svg>
+</div>
+<div class="grid2">
+<div class="info-box">
+<strong>Ponto A</strong> (vermelho): mais próximo da divisão de 24 mm<br/>
+        Leitura: <strong>l<sub>A</sub> = (24,0 ± 0,5) mm</strong>
+</div>
+<div class="info-box">
+<strong>Ponto B</strong> (azul): mais próximo da divisão de 37 mm<br/>
+        Leitura: <strong>l<sub>B</sub> = (37,0 ± 0,5) mm</strong>
+</div>
+</div>
+<div class="warn-box">⚠️ A leitura deve ser coerente com o erro: se o erro é ±0,5 mm, o resultado deve ter uma casa decimal — escrever "24,0" e não "24"!</div>
+</div>
+<div class="card red">
+<h3>Instrumento analógico: manómetro / galvanómetro</h3>
+<div class="sim-box">
+<h4>⏱️ Simulador de Ponteiro Analógico</h4>
+<div class="sim-controls">
+<label>Posição do ponteiro:</label>
+<input id="ptrVal" max="100" min="0" oninput="drawPointer()" type="range" value="63"/>
+<label>Divisões da escala:</label>
+<select id="ptrDivs" onchange="drawPointer()">
+<option value="10">10 divisões (ξ=10)</option>
+<option selected="" value="20">20 divisões (ξ=5)</option>
+<option value="50">50 divisões (ξ=2)</option>
+<option value="100">100 divisões (ξ=1)</option>
+</select>
+</div>
+<canvas height="220" id="pointerCanvas" style="max-width:100%;background:white;border:1px solid #ccc;border-radius:8px;display:block;margin:0 auto;" width="400"></canvas>
+<div class="sim-result" id="pointerRes"></div>
+</div>
+</div>
+</div>
+<!-- ===================== SIMULAÇÕES ===================== -->
+<div class="section" id="simulacoes">
+<div class="section-title"><span>⚗️</span> Simulações e Exemplos Interativos</div>
+<!-- Sim 1: Propagação de Erros -->
+<div class="sim-box">
+<h4>⚡ Simulação 1 — Propagação de Erros (Área de um Retângulo)</h4>
+<p style="font-size:0.9em;margin-bottom:10px;">Calcula a área A = L × W com propagação de erros: <code>ΔA = W·ΔL + L·ΔW</code></p>
+<div class="sim-controls">
+<label>L (cm):</label>
+<input id="propL" step="0.1" style="width:75px;padding:4px 8px;border-radius:6px;border:1.5px solid #2e86c1;" type="number" value="12.5"/>
+<label>ΔL (cm):</label>
+<input id="propDL" min="0" step="0.1" style="width:70px;padding:4px 8px;border-radius:6px;border:1.5px solid #2e86c1;" type="number" value="0.5"/>
+<label>W (cm):</label>
+<input id="propW" step="0.1" style="width:75px;padding:4px 8px;border-radius:6px;border:1.5px solid #2e86c1;" type="number" value="8.3"/>
+<label>ΔW (cm):</label>
+<input id="propDW" min="0" step="0.1" style="width:70px;padding:4px 8px;border-radius:6px;border:1.5px solid #2e86c1;" type="number" value="0.5"/>
+<button class="btn" onclick="calcPropagacao()">Calcular</button>
+</div>
+<div class="sim-result" id="propagacaoRes"></div>
+</div>
+<!-- Sim 2: Comparador Analógico vs Digital -->
+<div class="sim-box">
+<h4>🔄 Simulação 2 — Analógico vs. Digital: Qual tem menor erro?</h4>
+<div class="sim-controls">
+<label>Valor a medir:</label>
+<input id="compVal" step="0.01" style="width:90px;padding:4px 8px;border-radius:6px;border:1.5px solid #2e86c1;" type="number" value="47.36"/>
+<label>Unidade:</label>
+<input id="compUnit" style="width:50px;padding:4px 8px;border-radius:6px;border:1.5px solid #2e86c1;" type="text" value="mm"/>
+<button class="btn" onclick="compareInstr()">Comparar</button>
+</div>
+<div id="compResult" style="display:none;margin-top:10px;">
+<table id="compTable">
+<tr><th>Instrumento</th><th>ξ</th><th>Leitura</th><th>Erro Δx₀</th><th>Erro rel.</th></tr>
+</table>
+</div>
+</div>
+<!-- Sim 3: Alvo interativo -->
+<div class="sim-box">
+<h4>🎯 Simulação 3 — Análise de Precisão e Exatidão</h4>
+<p style="font-size:0.9em;margin-bottom:8px;">Clica no alvo para "atirar". O sistema avalia a precisão e exatidão dos teus tiros.</p>
+<div style="display:flex;gap:20px;flex-wrap:wrap;align-items:flex-start;justify-content:center;">
+<div>
+<canvas height="260" id="targetCanvas" style="background:white;border:2px solid #2e86c1;border-radius:50%;cursor:crosshair;" width="260"></canvas>
+<div style="text-align:center;margin-top:6px;">
+<button class="btn" onclick="clearTarget()">Limpar</button>
+<button class="btn green" onclick="analyzeTarget()" style="margin-left:8px;">Analisar</button>
+</div>
+</div>
+<div style="flex:1;min-width:200px;">
+<div class="sim-result" id="targetRes" style="min-height:100px;">Clica no alvo para marcar pontos (máx. 10).</div>
+</div>
+</div>
+</div>
+<!-- Sim 4: Histograma ao vivo -->
+<div class="sim-box">
+<h4>📊 Simulação 4 — Lei dos Grandes Números</h4>
+<p style="font-size:0.9em;margin-bottom:8px;">Observa como o histograma se aproxima de uma distribuição normal à medida que N aumenta.</p>
+<div class="sim-controls">
+<label>N medições:</label>
+<select id="lgnN">
+<option value="5">N = 5</option>
+<option value="20">N = 20</option>
+<option value="50">N = 50</option>
+<option selected="" value="200">N = 200</option>
+<option value="1000">N = 1000</option>
+</select>
+<label>Desvio padrão σ:</label>
+<input id="lgnSigma" min="0.1" step="0.1" style="width:70px;padding:4px 8px;border-radius:6px;border:1.5px solid #2e86c1;" type="number" value="1.5"/>
+<button class="btn" onclick="drawLGN()">Gerar</button>
+</div>
+<canvas height="220" id="lgnCanvas" style="max-width:100%;background:white;border:1px solid #ccc;border-radius:8px;display:block;" width="660"></canvas>
+<div class="sim-result" id="lgnRes"></div>
+</div>
+
+<!-- Sim 5: Erros Aleatórios - Estatística -->
+<div class="sim-box">
+<h4>📐 Simulação 5 — Tratamento Estatístico de Medições Repetidas</h4>
+<p style="font-size:0.9em;margin-bottom:10px;">Insere valores de medições separados por vírgula ou espaço e obtém automaticamente a média, desvio padrão e representação correta com erro.</p>
+<div class="sim-controls">
+<label>Medições (ex: 12.1, 12.3, 11.9, 12.0, 12.2):</label>
+<input id="statMeds" placeholder="valores separados por vírgula ou espaço" style="width:300px;padding:4px 8px;border-radius:6px;border:1.5px solid #2e86c1;" type="text" value="12.1, 12.3, 11.9, 12.0, 12.2, 12.4, 11.8, 12.1, 12.3, 12.0"/>
+<label>Unidade:</label>
+<input id="statUnit" style="width:50px;padding:4px 8px;border-radius:6px;border:1.5px solid #2e86c1;" type="text" value="cm"/>
+<button class="btn" onclick="calcStat()">Calcular</button>
+</div>
+<div class="sim-result" id="statRes" style="min-height:60px;"></div>
+<canvas height="140" id="statCanvas" style="max-width:100%;background:white;border:1px solid #d5d8dc;border-radius:8px;display:block;margin-top:10px;" width="680"></canvas>
+</div>
+<!-- Sim 6: Notação Científica e Operações com AS -->
+<div class="sim-box">
+<h4>🔢 Simulação 6 — Operações com Algarismos Significativos</h4>
+<p style="font-size:0.9em;margin-bottom:10px;">Insere dois valores e uma operação para ver o resultado arredondado ao correto número de algarismos significativos, com explicação.</p>
+<div class="sim-controls">
+<label>Valor A:</label>
+<input id="asA" placeholder="ex: 12.50" style="width:90px;padding:4px 8px;border-radius:6px;border:1.5px solid #2e86c1;" type="text" value="12.50"/>
+<label>Operação:</label>
+<select id="asOp" style="padding:5px 10px;border-radius:6px;border:1.5px solid #2e86c1;">
+<option value="add">+ (Adição)</option>
+<option value="sub">− (Subtração)</option>
+<option selected="" value="mul">× (Multiplicação)</option>
+<option value="div">÷ (Divisão)</option>
+</select>
+<label>Valor B:</label>
+<input id="asB" placeholder="ex: 3.1" style="width:90px;padding:4px 8px;border-radius:6px;border:1.5px solid #2e86c1;" type="text" value="3.1"/>
+<button class="btn" onclick="calcASop()">Calcular</button>
+</div>
+<div class="sim-result" id="asOpRes" style="min-height:60px;"></div>
+</div>
+<!-- Sim 7: Paralaxe — ângulo vs erro de leitura -->
+<div class="sim-box">
+<h4>👁️ Simulação 7 — Erro de Paralaxe vs. Ângulo de Observação</h4>
+<p style="font-size:0.9em;margin-bottom:10px;">Observa como o erro de leitura depende do ângulo de observação, da altura do ponteiro e da distância à escala. Altera os parâmetros e vê o gráfico do erro.</p>
+<div class="sim-controls">
+<label>Altura do ponteiro (mm):</label>
+<input id="parH" max="10" min="0.5" oninput="calcParalax7()" step="0.5" style="width:70px;padding:4px 8px;border-radius:6px;border:1.5px solid #2e86c1;" type="number" value="2"/>
+<label>Escala (divisões/cm):</label>
+<input id="parScale" max="20" min="1" oninput="calcParalax7()" step="1" style="width:70px;padding:4px 8px;border-radius:6px;border:1.5px solid #2e86c1;" type="number" value="10"/>
+<label>Ângulo de observação (°):</label>
+<input id="parAngle" max="60" min="0" oninput="calcParalax7()" step="1" style="width:70px;padding:4px 8px;border-radius:6px;border:1.5px solid #2e86c1;" type="number" value="0"/>
+</div>
+<canvas height="220" id="paralaxChart" style="max-width:100%;background:white;border:1px solid #d5d8dc;border-radius:8px;display:block;margin:10px auto;" width="680"></canvas>
+<div class="sim-result" id="paralaxRes7">Altera o ângulo para ver o erro calculado.</div>
+</div>
+<!-- Sim 8: Melhor Escala Digital -->
+<div class="sim-box">
+<h4>🖩 Simulação 8 — Qual a Melhor Escala do Instrumento Digital?</h4>
+<p style="font-size:0.9em;margin-bottom:10px;">Insere o valor esperado da grandeza a medir e o instrumento digital sugere automaticamente a escala que minimiza o erro relativo.</p>
+<div class="sim-controls">
+<label>Valor esperado:</label>
+<input id="digVal" oninput="calcBestScale()" step="0.01" style="width:100px;padding:4px 8px;border-radius:6px;border:1.5px solid #2e86c1;" type="number" value="47.3"/>
+<label>Tipo de instrumento:</label>
+<select id="digInstrType" onchange="calcBestScale()" style="padding:5px 10px;border-radius:6px;border:1.5px solid #2e86c1;">
+<option value="voltmeter">Voltímetro (2/20/200/2000 V)</option>
+<option value="ammeter">Amperímetro (0.2/2/20/200 A)</option>
+<option value="ohmmeter">Ohmímetro (200Ω/2k/20k/200k)</option>
+<option value="ruler">Paquímetro digital (10/100/300 mm)</option>
+</select>
+</div>
+<canvas height="200" id="scaleChart" style="max-width:100%;background:white;border:1px solid #d5d8dc;border-radius:8px;display:block;margin:10px auto;" width="680"></canvas>
+<div class="sim-result" id="bestScaleRes">Insere um valor para ver a análise de escalas.</div>
+</div>
+<!-- Sim 9: Propagação de Erros — Velocidade v = d/t -->
+<div class="sim-box">
+<h4>🚀 Simulação 9 — Propagação de Erros: Velocidade v = d / t</h4>
+<p style="font-size:0.9em;margin-bottom:10px;">Calcula a velocidade e o seu erro propagado a partir de uma distância e tempo com incertezas. A fórmula usada é:</p>
+<div class="formula">Δv/v = Δd/d + Δt/t  →  Δv = v × (Δd/d + Δt/t)</div>
+<div class="sim-controls" style="margin-top:14px;">
+<label>d (m):</label>
+<input id="veld" step="0.01" style="width:75px;padding:4px 8px;border-radius:6px;border:1.5px solid #2e86c1;" type="number" value="25.0"/>
+<label>Δd (m):</label>
+<input id="velDd" min="0" step="0.01" style="width:70px;padding:4px 8px;border-radius:6px;border:1.5px solid #2e86c1;" type="number" value="0.5"/>
+<label>t (s):</label>
+<input id="velt" step="0.01" style="width:75px;padding:4px 8px;border-radius:6px;border:1.5px solid #2e86c1;" type="number" value="3.20"/>
+<label>Δt (s):</label>
+<input id="velDt" min="0" step="0.001" style="width:70px;padding:4px 8px;border-radius:6px;border:1.5px solid #2e86c1;" type="number" value="0.10"/>
+<button class="btn" onclick="calcVelocidade()">Calcular</button>
+</div>
+<div class="sim-result" id="velRes" style="min-height:60px;"></div>
+</div>
+</div>
+<!-- ===================== QUIZ ===================== -->
+
+        <!-- PARA SABER MAIS -->
+        <div class="section" id="referencias">
+          <div class="section-title"><span>📚</span> Para Saber Mais</div>
+
+          <div class="card">
+            <h3>Referências e Recursos</h3>
+            <p>Aqui encontras fontes e materiais complementares para aprofundar os temas abordados neste módulo sobre medições e erros.</p>
+          </div>
+
+          <div class="card green" id="refsContainer">
+          </div>
+
+          <div class="card orange">
+            <h3>➕ Adicionar Referência</h3>
+            <div class="sim-controls" style="flex-direction:column;align-items:flex-start;gap:10px;">
+              <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
+                <label>Autor(es) / Organização</label>
+                <input type="text" id="refAuthor" placeholder="ex: GlacierFilm, LLC." style="width:260px;padding:5px 8px;border-radius:6px;border:1.5px solid #2e86c1;font-size:0.95em;">
+              </div>
+              <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
+                <label>Ano</label>
+                <input type="number" id="refYear" placeholder="ex: 2013" style="width:90px;padding:5px 8px;border-radius:6px;border:1.5px solid #2e86c1;font-size:0.95em;">
+              </div>
+              <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
+                <label>Título</label>
+                <input type="text" id="refTitle" placeholder="ex: Propagation of Errors" style="width:320px;padding:5px 8px;border-radius:6px;border:1.5px solid #2e86c1;font-size:0.95em;">
+              </div>
+              <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
+                <label>URL (opcional)</label>
+                <input type="text" id="refUrl" placeholder="ex: https://www.youtube.com/watch?v=..." style="width:380px;padding:5px 8px;border-radius:6px;border:1.5px solid #2e86c1;font-size:0.95em;">
+              </div>
+              <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
+                <label>Tipo</label>
+                <select id="refType" style="padding:5px 10px;border-radius:6px;border:1.5px solid #2e86c1;font-size:0.9em;">
+                  <option value="video">📹 Vídeo</option>
+                  <option value="article">📄 Artigo</option>
+                  <option value="book">📖 Livro</option>
+                  <option value="website">🌐 Website</option>
+                  <option value="other">📎 Outro</option>
+                </select>
+              </div>
+              <button class="btn" onclick="addReference()">➕ Adicionar</button>
+            </div>
+          </div>
+        </div>
+
+<div class="section" id="quiz">
+<div class="section-title"><span>✅</span> Quiz — Testa os teus Conhecimentos</div>
+<div class="card">
+<p>Responde às seguintes questões. Verifica as tuas respostas individualmente.</p>
+<div class="progress-wrap"><div class="progress-bar" id="quizProgress" style="width:0%"></div></div>
+<p id="quizScore" style="font-size:0.9em;color:var(--muted)">0 / 16  respondidas corretamente</p>
+</div>
+<div id="quizContainer"></div>
+</div>
+</main>
+</div><!-- end content-area -->
+</div><!-- end page-wrapper -->
+<script>
+// ===== NAV =====
+
+// ===== SIDEBAR TOGGLE =====
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('collapsed');
+}
+
+// ===== NAV =====
+function showSection(id, btn) {
+  document.getElementById('homeScreen').style.display = 'none';
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('#mainNav button').forEach(b => b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  stopAnimation();
+  if(id==='leitura') { setTimeout(drawParalax,100); setTimeout(drawRuler,100); }
+  if(id==='analogico') { setTimeout(drawAnalogScale,100); setTimeout(drawPointer,100); }
+  if(id==='digital') { setTimeout(updateDigital,100); setTimeout(drawRelErr,100); }
+  if(id==='precisao') { setTimeout(drawTargets,100); }
+  if(id==='simulacoes') { setTimeout(drawTargetCanvas,100); }
+  if(id==='quiz') { setTimeout(initQuiz,100); }
+  if(id==='referencias') { renderRefs(); }
+}
+
+// ===== CINEMATIC ANIMATION (Opção 6) =====
+let animRAF = null;
+let animRunning = false;
+
+function stopAnimation() {
+  animRunning = false;
+  if(animRAF) { cancelAnimationFrame(animRAF); animRAF = null; }
+}
+
+function startCinematicAnimation() {
+  const canvas = document.getElementById('animCanvas');
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+
+  // Resize canvas to fit container
+  function resizeCanvas() {
+    const wrapper = canvas.parentElement;
+    const maxW = Math.min(wrapper.clientWidth - 40, 900);
+    const scale = maxW / 900;
+    canvas.style.width = maxW + 'px';
+    canvas.style.height = Math.round(560 * scale) + 'px';
+  }
+  resizeCanvas();
+  window.addEventListener('resize', resizeCanvas);
+
+  // --- STATE ---
+  let t = 0;
+  // Ruler
+  let rulerProgress = 0;
+  // Target
+  const targetScenarios = [
+    { label: 'Preciso + Exato', spread: 0.06, offsetX: 0, offsetY: 0 },
+    { label: 'Preciso, pouco exato', spread: 0.07, offsetX: 0.35, offsetY: 0.25 },
+    { label: 'Exato, pouco preciso', spread: 0.32, offsetX: 0, offsetY: 0 },
+    { label: 'Pouco preciso e pouco exato', spread: 0.3, offsetX: 0.3, offsetY: -0.2 }
+  ];
+  let scenarioIdx = 0;
+  let scenarioTimer = 0;
+  let dots = [];
+  let nextDotTimer = 0;
+
+  // Particles
+  let particles = [];
+  for(let i=0;i<38;i++) {
+    particles.push({
+      x: Math.random()*W, y: Math.random()*H,
+      vx: (Math.random()-0.5)*0.4, vy: (Math.random()-0.5)*0.4,
+      size: Math.random()*2.5+0.5,
+      alpha: Math.random()*0.5+0.1,
+      char: ['Δx','ξ','x̄','σ','±','√N','%','m','s','kg','A','K'][Math.floor(Math.random()*12)]
+    });
+  }
+
+  // Phrases
+  const phrases = [
+    'Medir é conhecer',
+    'Toda a medição tem incerteza',
+    'Precisão ≠ Exatidão',
+    'Δx = ξ / 2',
+    'x = x₀ ± Δx',
+    'Erros não são enganos'
+  ];
+  let phraseIdx = 0;
+  let phraseAlpha = 0;
+  let phraseState = 'in'; // in, hold, out
+  let phraseTimer = 0;
+
+  animRunning = true;
+
+  function getScenario() { return targetScenarios[scenarioIdx % targetScenarios.length]; }
+
+  function drawRulerBg() {
+    // Animated ruler at bottom
+    const rx = 40, ry = H - 52, rw = W - 80, rh = 28;
+    const prog = Math.min(rulerProgress, 1);
+    if(rulerProgress < 1) rulerProgress += 0.008;
+
+    ctx.save();
+    ctx.globalAlpha = 0.22;
+    ctx.fillStyle = '#a8d8f0';
+    ctx.fillRect(rx, ry, rw * prog, rh);
+
+    // Tick marks
+    ctx.strokeStyle = '#5dade2';
+    ctx.lineWidth = 1;
+    for(let i=0; i<=100; i++) {
+      const x = rx + (rw/100)*i;
+      if(x > rx + rw*prog) break;
+      const tH = (i%10===0) ? rh : (i%5===0 ? rh*0.6 : rh*0.35);
+      ctx.beginPath(); ctx.moveTo(x, ry); ctx.lineTo(x, ry+tH); ctx.stroke();
+    }
+    ctx.restore();
+  }
+
+  function drawTarget() {
+    const cx = W/2, cy = H/2;
+    const sc = getScenario();
+
+    // Rings
+    ctx.save();
+    const rings = [72, 56, 40, 24, 10];
+    const colors = ['#1a3a5c','#1f618d','#2980b9','#e74c3c','#f39c12'];
+    for(let i=0;i<rings.length;i++) {
+      ctx.beginPath();
+      ctx.arc(cx, cy, rings[i], 0, Math.PI*2);
+      ctx.fillStyle = colors[i];
+      ctx.globalAlpha = 0.18 + i*0.04;
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(255,255,255,0.12)';
+      ctx.lineWidth = 1;
+      ctx.globalAlpha = 0.4;
+      ctx.stroke();
+    }
+    ctx.restore();
+
+    // Cross hairs
+    ctx.save();
+    ctx.strokeStyle = 'rgba(255,255,255,0.12)';
+    ctx.lineWidth = 1;
+    ctx.setLineDash([4,4]);
+    ctx.beginPath(); ctx.moveTo(cx-80,cy); ctx.lineTo(cx+80,cy); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(cx,cy-80); ctx.lineTo(cx,cy+80); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.restore();
+
+    // Dots
+    for(let d of dots) {
+      ctx.save();
+      ctx.globalAlpha = d.alpha * 0.9;
+      ctx.beginPath();
+      ctx.arc(d.x, d.y, 5, 0, Math.PI*2);
+      ctx.fillStyle = '#e74c3c';
+      ctx.shadowColor = '#e74c3c';
+      ctx.shadowBlur = 8;
+      ctx.fill();
+      ctx.restore();
+    }
+
+    // Scenario label
+    ctx.save();
+    ctx.globalAlpha = 0.7;
+    ctx.font = 'bold 13px Segoe UI';
+    ctx.fillStyle = '#a8d8f0';
+    ctx.textAlign = 'center';
+    ctx.fillText(sc.label, cx, cy + 100);
+    ctx.restore();
+  }
+
+  function addDot() {
+    const cx = W/2, cy = H/2;
+    const sc = getScenario();
+    const r = 72;
+    const angle = Math.random()*Math.PI*2;
+    const dist = (Math.random()+Math.random())*0.5 * r * sc.spread * 3.5;
+    dots.push({
+      x: cx + sc.offsetX*r + Math.cos(angle)*dist,
+      y: cy + sc.offsetY*r + Math.sin(angle)*dist,
+      alpha: 1
+    });
+    if(dots.length > 18) dots.shift();
+  }
+
+  function drawParticles() {
+    for(let p of particles) {
+      p.x += p.vx; p.y += p.vy;
+      if(p.x < 0) p.x = W; if(p.x > W) p.x = 0;
+      if(p.y < 0) p.y = H; if(p.y > H) p.y = 0;
+      ctx.save();
+      ctx.globalAlpha = p.alpha * (0.5 + 0.5*Math.sin(t*0.03 + p.x));
+      ctx.font = p.size*7 + 'px Courier New';
+      ctx.fillStyle = '#5dade2';
+      ctx.fillText(p.char, p.x, p.y);
+      ctx.restore();
+    }
+  }
+
+  function drawPhrase() {
+    phraseTimer++;
+    if(phraseState==='in') {
+      phraseAlpha = Math.min(phraseAlpha+0.025, 1);
+      if(phraseAlpha>=1) { phraseState='hold'; phraseTimer=0; }
+    } else if(phraseState==='hold') {
+      if(phraseTimer>90) { phraseState='out'; phraseTimer=0; }
+    } else {
+      phraseAlpha = Math.max(phraseAlpha-0.02, 0);
+      if(phraseAlpha<=0) {
+        phraseIdx = (phraseIdx+1) % phrases.length;
+        phraseState='in'; phraseTimer=0;
+      }
+    }
+    const cx = W/2;
+    ctx.save();
+    ctx.globalAlpha = phraseAlpha;
+    ctx.font = 'bold 22px Segoe UI';
+    ctx.fillStyle = '#ffffff';
+    ctx.textAlign = 'center';
+    ctx.shadowColor = '#2980b9';
+    ctx.shadowBlur = 18;
+    ctx.fillText(phrases[phraseIdx], cx, H - 80);
+    ctx.restore();
+  }
+
+  function drawTitle() {
+    ctx.save();
+    ctx.font = 'bold 15px Segoe UI';
+    ctx.fillStyle = 'rgba(168,216,240,0.5)';
+    ctx.textAlign = 'center';
+    ctx.fillText('📏 Seleciona um tema no menu para começar', W/2, 36);
+    ctx.restore();
+  }
+
+  function loop() {
+    if(!animRunning) return;
+    t++;
+
+    ctx.clearRect(0,0,W,H);
+    // Background gradient
+    const grad = ctx.createRadialGradient(W/2,H/2,10,W/2,H/2,500);
+    grad.addColorStop(0,'#0d2137');
+    grad.addColorStop(1,'#070f1a');
+    ctx.fillStyle = grad;
+    ctx.fillRect(0,0,W,H);
+
+    drawRulerBg();
+    drawParticles();
+    drawTarget();
+    drawPhrase();
+    drawTitle();
+
+    // Scenario cycling
+    scenarioTimer++;
+    nextDotTimer++;
+    if(nextDotTimer >= 18) { addDot(); nextDotTimer=0; }
+    if(scenarioTimer >= 240) {
+      scenarioIdx++;
+      dots = [];
+      scenarioTimer = 0;
+    }
+
+    animRAF = requestAnimationFrame(loop);
+  }
+
+  loop();
+}
+
+
+// ===== AS CALCULATOR =====
+function calcAS() {
+  const raw = document.getElementById('numAS').value.trim();
+  const num = parseFloat(raw);
+  if(isNaN(num)) { document.getElementById('resAS').innerHTML='<span style="color:red">Número inválido!</span>'; return; }
+  // Count significant figures
+  let s = raw.replace(',','.');
+  // Remove leading minus
+  s = s.replace('-','');
+  // Remove leading zeros before decimal
+  let sig = 0; let started = false;
+  let digits = s.replace('.','');
+  for(let i=0;i<digits.length;i++){
+    if(digits[i]!=='0') started=true;
+    if(started) sig++;
+  }
+  // Check for trailing decimal point
+  let hasDecimal = s.includes('.');
+  let notation = '';
+  if(Math.abs(num)>=1000 || (Math.abs(num)<0.001 && num!==0)){
+    notation = ' (notação científica recomendada: ' + num.toExponential(sig-1) + ')';
+  }
+  document.getElementById('resAS').innerHTML =
+    `Número: <strong>${raw}</strong> &nbsp;|&nbsp; Algarismos significativos: <span style="color:#e74c3c;font-size:1.3em">${sig}</span>${notation}` +
+    `<br><small style="color:#7f8c8d">${hasDecimal?'Zeros após vírgula são significativos.':''}</small>`;
+}
+
+// ===== TARGET DIAGRAMS =====
+function drawTargets() {
+  const configs = [
+    { label: 'Exato e Pouco Preciso', cx:0, cy:0, spread:0.6, color:'#e74c3c' },
+    { label: 'Preciso e Pouco Exato', cx:0.5, cy:0.4, spread:0.12, color:'#2e86c1' },
+    { label: 'Pouco Preciso e Pouco Exato', cx:0.3, cy:-0.3, spread:0.65, color:'#e67e22' },
+    { label: 'Preciso e Exato', cx:0.05, cy:0.05, spread:0.1, color:'#27ae60' }
+  ];
+  const cont = document.getElementById('targets');
+  cont.innerHTML = '';
+  configs.forEach(cfg => {
+    const wrap = document.createElement('div');
+    wrap.className='target-wrap';
+    const cv = document.createElement('canvas');
+    cv.width=150; cv.height=150;
+    wrap.appendChild(cv);
+    const lbl = document.createElement('div');
+    lbl.className='target-label'; lbl.textContent=cfg.label;
+    wrap.appendChild(lbl);
+    cont.appendChild(wrap);
+    const ctx = cv.getContext('2d');
+    const cx=75, cy=75, R=65;
+    // Rings
+    ['#c0392b','#e74c3c','#e67e22','#f1c40f','white'].forEach((c,i)=>{
+      ctx.beginPath(); ctx.arc(cx,cy,R*(1-i*0.18),0,2*Math.PI);
+      ctx.fillStyle=c; ctx.fill();
+      ctx.strokeStyle='#888'; ctx.lineWidth=1; ctx.stroke();
+    });
+    ctx.beginPath(); ctx.arc(cx,cy,4,0,2*Math.PI); ctx.fillStyle='black'; ctx.fill();
+    // Points
+    const seed = cfg.label.charCodeAt(0);
+    for(let i=0;i<8;i++){
+      const angle = (seed*17+i*137.5)*Math.PI/180;
+      const r = cfg.spread * R * Math.sqrt(lcgRand(seed+i*7));
+      const px = cx + cfg.cx*R + r*Math.cos(angle);
+      const py = cy + cfg.cy*R + r*Math.sin(angle);
+      ctx.beginPath(); ctx.arc(px,py,5,0,2*Math.PI);
+      ctx.fillStyle=cfg.color; ctx.fill();
+      ctx.strokeStyle='white'; ctx.lineWidth=1.5; ctx.stroke();
+    }
+  });
+}
+function lcgRand(seed){ return ((seed*1664525+1013904223)&0x7fffffff)/0x7fffffff; }
+
+// ===== SIMULATION - HISTOGRAM =====
+function runSimulation() {
+  const trueV = parseFloat(document.getElementById('trueVal').value)||10;
+  const sigma = parseFloat(document.getElementById('randSig').value)||0.5;
+  const syst = parseFloat(document.getElementById('systErr').value)||0;
+  const N = parseInt(document.getElementById('nMeas').value)||10;
+  let data = [];
+  for(let i=0;i<N;i++) data.push(trueV + syst + gaussRand()*sigma);
+  const mean = data.reduce((a,b)=>a+b,0)/N;
+  const std = Math.sqrt(data.map(x=>(x-mean)**2).reduce((a,b)=>a+b,0)/(N-1));
+  const sem = std/Math.sqrt(N);
+  drawHistogram('histCanvas', data, mean, trueV);
+  document.getElementById('simResult').innerHTML =
+    `Média: <span>${mean.toFixed(3)}</span> | Desvio padrão: <span>${std.toFixed(3)}</span> | Erro padrão da média: <span>${sem.toFixed(4)}</span> | Valor verdadeiro: <span>${trueV}</span>` +
+    `<br>Desvio (exatidão): <span style="color:${Math.abs(mean-trueV-syst)<std?'#27ae60':'#e74c3c'}">${(mean-trueV).toFixed(3)}</span>`;
+}
+function gaussRand(){ let u=0,v=0; while(u===0)u=Math.random(); while(v===0)v=Math.random(); return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v); }
+
+function drawHistogram(canvasId, data, mean, trueV) {
+  const cv = document.getElementById(canvasId);
+  const ctx = cv.getContext('2d');
+  ctx.clearRect(0,0,cv.width,cv.height);
+  const W=cv.width, H=cv.height, pad=40;
+  const min=Math.min(...data), max=Math.max(...data);
+  const range = max-min || 1;
+  const bins = Math.max(5, Math.ceil(Math.sqrt(data.length)));
+  const binW = range/bins;
+  let counts = new Array(bins).fill(0);
+  data.forEach(x=>{ let b=Math.floor((x-min)/binW); if(b>=bins)b=bins-1; counts[b]++; });
+  const maxC = Math.max(...counts);
+  // Axes
+  ctx.strokeStyle='#333'; ctx.lineWidth=1.5;
+  ctx.beginPath(); ctx.moveTo(pad,10); ctx.lineTo(pad,H-pad); ctx.lineTo(W-10,H-pad); ctx.stroke();
+  // Bars
+  counts.forEach((c,i)=>{
+    const x = pad + (i/bins)*(W-pad-10);
+    const bw = ((W-pad-10)/bins)-2;
+    const bh = c/maxC*(H-pad-10);
+    ctx.fillStyle='rgba(46,134,193,0.7)';
+    ctx.fillRect(x, H-pad-bh, bw, bh);
+    ctx.strokeStyle='#1a5276'; ctx.lineWidth=1;
+    ctx.strokeRect(x, H-pad-bh, bw, bh);
+  });
+  // Mean line
+  const mx = pad + (mean-min)/range*(W-pad-10);
+  ctx.strokeStyle='#e74c3c'; ctx.lineWidth=2; ctx.setLineDash([5,3]);
+  ctx.beginPath(); ctx.moveTo(mx,10); ctx.lineTo(mx,H-pad); ctx.stroke();
+  // True value line
+  const tx = pad + (trueV-min)/range*(W-pad-10);
+  ctx.strokeStyle='#27ae60'; ctx.lineWidth=2; ctx.setLineDash([8,4]);
+  ctx.beginPath(); ctx.moveTo(tx,10); ctx.lineTo(tx,H-pad); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.font='11px Arial'; ctx.fillStyle='#e74c3c'; ctx.fillText('Média',mx+4,22);
+  ctx.fillStyle='#27ae60'; ctx.fillText('V. real',tx+4,38);
+}
+
+// ===== ESCALA CALC =====
+function updateEscalaCalc() {
+  const tipo = document.getElementById('instrType').value;
+  const xi = parseFloat(document.getElementById('xiVal').value)||1;
+  const unit = document.getElementById('xiUnit').value||'';
+  const err = tipo==='analogico' ? xi/2 : xi;
+  const tipo_str = tipo==='analogico' ? 'Analógico (Δx₀ = ξ/2)' : 'Digital (Δx₀ = ξ)';
+  document.getElementById('escalaRes').innerHTML =
+    `Tipo: <span>${tipo_str}</span> | Menor divisão: <span>${xi} ${unit}</span> | <strong>Erro máximo: <span>±${err} ${unit}</span></strong>`;
+}
+updateEscalaCalc();
+
+// ===== PARALAX =====
+function drawParalax() {
+  const cv = document.getElementById('paralaxCanvas');
+  if(!cv) return;
+  const ctx = cv.getContext('2d');
+  const W=cv.width, H=cv.height;
+  ctx.clearRect(0,0,W,H);
+  // Scale bar
+  ctx.fillStyle='#f5e6c8'; ctx.fillRect(40,60,520,30);
+  ctx.strokeStyle='#8B6914'; ctx.lineWidth=2; ctx.strokeRect(40,60,520,30);
+  // Divisions
+  for(let i=0;i<=10;i++){
+    const x=40+i*52;
+    ctx.beginPath(); ctx.moveTo(x,60); ctx.lineTo(x,90); ctx.strokeStyle='#333'; ctx.lineWidth=1.5; ctx.stroke();
+    ctx.font='11px Arial'; ctx.fillStyle='#333'; ctx.fillText(i,x-4,105);
+  }
+  ctx.font='11px Arial'; ctx.fillStyle='#333'; ctx.fillText('cm',565,105);
+  // Pointer (true position at 3.7 cm)
+  const trueX = 40 + 3.7*52;
+  ctx.strokeStyle='#333'; ctx.lineWidth=3;
+  ctx.beginPath(); ctx.moveTo(trueX,30); ctx.lineTo(trueX,60); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(trueX-8,30); ctx.lineTo(trueX+8,30); ctx.lineTo(trueX,40); ctx.closePath();
+  ctx.fillStyle='#333'; ctx.fill();
+  // Eyes
+  const eyes = [{x:trueX-90,label:'Olho esquerdo',color:'#e74c3c',reading:3.5},
+                 {x:trueX,label:'Olho correto',color:'#27ae60',reading:3.7},
+                 {x:trueX+90,label:'Olho direito',color:'#e67e22',reading:3.9}];
+  eyes.forEach(e=>{
+    ctx.strokeStyle=e.color; ctx.lineWidth=1.5; ctx.setLineDash([4,3]);
+    ctx.beginPath(); ctx.moveTo(e.x,15); ctx.lineTo(trueX,50); ctx.stroke();
+    ctx.setLineDash([]);
+    // Projected reading
+    const projX = e.x;
+    ctx.strokeStyle=e.color; ctx.lineWidth=1;
+    ctx.beginPath(); ctx.moveTo(projX,60); ctx.lineTo(projX,95); ctx.stroke();
+    ctx.font='10px Arial'; ctx.fillStyle=e.color;
+    ctx.fillText(e.reading+' cm',projX-16,115);
+    // Eye circle
+    ctx.beginPath(); ctx.arc(e.x,12,8,0,2*Math.PI); ctx.fillStyle=e.color; ctx.fill();
+    ctx.fillStyle='white'; ctx.font='9px Arial'; ctx.fillText('👁',e.x-5,16);
+  });
+  ctx.font='11px bold Arial'; ctx.fillStyle='#27ae60';
+  ctx.fillText('✓ Leitura correta: 3,7 cm',trueX-50,145);
+}
+
+// ===== RULER INTERACTIVE =====
+function drawRuler() {
+  const cv = document.getElementById('rulerCanvas');
+  if(!cv) return;
+  const ctx = cv.getContext('2d');
+  const W=cv.width, H=cv.height;
+  ctx.clearRect(0,0,W,H);
+  const pos = parseFloat(document.getElementById('rulerPos').value);
+  document.getElementById('anaPosLabel') && (document.getElementById('anaPosLabel').textContent = pos.toFixed(1)+' mm');
+  const scaleStart=30, scaleEnd=630, scaleLen=scaleEnd-scaleStart; // 100mm
+  const mmPerPx = scaleLen/100;
+  // Ruler body
+  ctx.fillStyle='#f5e6c8'; ctx.fillRect(20,20,640,55);
+  ctx.strokeStyle='#8B6914'; ctx.lineWidth=2; ctx.strokeRect(20,20,640,55);
+  // mm divisions
+  for(let mm=0;mm<=100;mm++){
+    const x=scaleStart+mm*mmPerPx;
+    let len=mm%10===0?30:(mm%5===0?20:12);
+    ctx.beginPath(); ctx.moveTo(x,20); ctx.lineTo(x,20+len);
+    ctx.strokeStyle='#333'; ctx.lineWidth=mm%10===0?1.5:1; ctx.stroke();
+    if(mm%10===0){ ctx.font='11px Arial'; ctx.fillStyle='#333'; ctx.fillText(mm,x-6,68); }
+  }
+  ctx.font='10px Arial'; ctx.fillStyle='#666'; ctx.fillText('mm',scaleEnd+8,38);
+  // Object marker
+  const mx = scaleStart+pos*mmPerPx;
+  ctx.strokeStyle='#e74c3c'; ctx.lineWidth=2.5;
+  ctx.beginPath(); ctx.moveTo(mx,10); ctx.lineTo(mx,75); ctx.stroke();
+  ctx.fillStyle='#e74c3c'; ctx.font='bold 12px Arial'; ctx.fillText('▼',mx-6,12);
+}
+drawRuler();
+document.getElementById('rulerPos') && document.getElementById('rulerPos').addEventListener('input', drawRuler);
+
+function checkRulerRead() {
+  const pos = parseFloat(document.getElementById('rulerPos').value);
+  const user = parseFloat(document.getElementById('userRulerRead').value);
+  const correct = Math.round(pos/1)*1; // nearest mm
+  const err = 0.5;
+  const div = document.getElementById('rulerResult');
+  div.style.display='block';
+  if(Math.abs(user - pos) <= err){
+    div.innerHTML=`✅ <strong>Correto!</strong> Valor real: ${pos.toFixed(1)} mm. A tua leitura ${user} mm está dentro do erro (±${err} mm). Resultado: <strong>(${correct.toFixed(1)} ± ${err}) mm</strong>`;
+    div.style.background='#d4efdf'; div.style.color='#1e8449';
+  } else {
+    div.innerHTML=`❌ Verifica! Valor real: ${pos.toFixed(1)} mm. A tua leitura ${user} mm está fora do erro. A leitura correta seria: <strong>(${correct.toFixed(1)} ± ${err}) mm</strong>`;
+    div.style.background='#fadbd8'; div.style.color='#c0392b';
+  }
+}
+
+// ===== DIGITAL DISPLAY =====
+function updateDigital() {
+  const val = parseFloat(document.getElementById('digRealVal').value)||8.4163;
+  const dec = parseInt(document.getElementById('digDecVal').textContent)||2;
+  const mode = document.getElementById('digMode').value;
+  let displayed, xi, err;
+  if(mode==='round'){
+    displayed = parseFloat(val.toFixed(dec));
+    xi = Math.pow(10,-dec);
+    err = xi/2;
+  } else {
+    const factor = Math.pow(10,dec);
+    displayed = Math.floor(val*factor)/factor;
+    xi = Math.pow(10,-dec);
+    err = xi;
+  }
+  // Draw display
+  const cv = document.getElementById('digitalDisplay');
+  const ctx = cv.getContext('2d');
+  ctx.clearRect(0,0,cv.width,cv.height);
+  ctx.fillStyle='#111'; ctx.fillRect(0,0,cv.width,cv.height);
+  ctx.font='bold 52px "Courier New"'; ctx.fillStyle='#00e5ff';
+  ctx.textAlign='center'; ctx.fillText(displayed.toFixed(dec), cv.width/2, 72);
+  ctx.font='14px Arial'; ctx.fillStyle='#90caf9';
+  ctx.fillText(document.getElementById('compUnit') && document.getElementById('compUnit').value || 'V', cv.width/2, 95);
+  document.getElementById('digitalRes').innerHTML =
+    `Valor real: <span>${val}</span> | Display: <span>${displayed.toFixed(dec)}</span> | ξ = ${xi} | <strong>Erro: ±${err}</strong> | Resultado: <strong>(${displayed.toFixed(dec)} ± ${err})</strong>` +
+    `<br>Erro relativo: <span>${(err/Math.abs(displayed)*100).toFixed(2)}%</span>`;
+}
+setTimeout(updateDigital,200);
+
+// ===== REL ERR GRAPH =====
+function drawRelErr() {
+  const cv = document.getElementById('relErrCanvas');
+  if(!cv) return;
+  const ctx = cv.getContext('2d');
+  const W=cv.width, H=cv.height, pad=45;
+  ctx.clearRect(0,0,W,H);
+  const xi=0.01;
+  const vals = [0.1,0.5,1,2,5,10,20,50,100];
+  const relErrs = vals.map(v=>xi/v*100);
+  const maxRE=relErrs[0], minRE=relErrs[relErrs.length-1];
+  // Axes
+  ctx.strokeStyle='#333'; ctx.lineWidth=1.5;
+  ctx.beginPath(); ctx.moveTo(pad,10); ctx.lineTo(pad,H-pad); ctx.lineTo(W-10,H-pad); ctx.stroke();
+  ctx.font='12px Arial'; ctx.fillStyle='#333';
+  ctx.save(); ctx.translate(14,H/2); ctx.rotate(-Math.PI/2); ctx.fillText('Erro relativo (%)',0,0); ctx.restore();
+  ctx.fillText('Valor medido (unidades)',W/2-60,H-5);
+  // Grid
+  ctx.strokeStyle='#e0e0e0'; ctx.lineWidth=1;
+  for(let i=0;i<5;i++){
+    const y=pad+i*(H-pad-10)/4;
+    ctx.beginPath(); ctx.moveTo(pad,y); ctx.lineTo(W-10,y); ctx.stroke();
+    const rv = maxRE*(1-i/4);
+    ctx.fillStyle='#888'; ctx.font='10px Arial'; ctx.fillText(rv.toFixed(1)+'%',2,y+4);
+  }
+  // Plot
+  ctx.beginPath(); ctx.strokeStyle='#2e86c1'; ctx.lineWidth=2.5;
+  vals.forEach((v,i)=>{
+    const x=pad+(v/100)*(W-pad-10);
+    const y=pad+(1-relErrs[i]/maxRE)*(H-pad-10);
+    if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+  });
+  ctx.stroke();
+  // Points
+  vals.forEach((v,i)=>{
+    const x=pad+(v/100)*(W-pad-10);
+    const y=pad+(1-relErrs[i]/maxRE)*(H-pad-10);
+    ctx.beginPath(); ctx.arc(x,y,5,0,2*Math.PI);
+    ctx.fillStyle='#e74c3c'; ctx.fill();
+    ctx.font='9px Arial'; ctx.fillStyle='#333'; ctx.fillText(v,x-4,H-pad+14);
+  });
+  ctx.fillStyle='#2e86c1'; ctx.font='11px Arial';
+  ctx.fillText('ξ = 0,01 unidades',pad+10,22);
+}
+setTimeout(drawRelErr,300);
+
+// ===== ANALOG SCALE =====
+function drawAnalogScale() {
+  const cv = document.getElementById('analogCanvas');
+  if(!cv) return;
+  const ctx = cv.getContext('2d');
+  const W=cv.width, H=cv.height;
+  ctx.clearRect(0,0,W,H);
+  const pos = parseFloat(document.getElementById('anaPos').value)||47.3;
+  document.getElementById('anaPosLabel').textContent = pos.toFixed(1)+' mm';
+  const scaleStart=40, scaleEnd=630, scaleLen=scaleEnd-scaleStart; // 120mm visible
+  const mmPerPx = scaleLen/120;
+  const scaleOffset = 0;
+  // Body
+  ctx.fillStyle='#f5e6c8'; ctx.fillRect(20,35,650,55);
+  ctx.strokeStyle='#8B6914'; ctx.lineWidth=2; ctx.strokeRect(20,35,650,55);
+  // Divisions
+  for(let mm=0;mm<=120;mm++){
+    const x=scaleStart+mm*mmPerPx;
+    let len=mm%10===0?30:(mm%5===0?20:10);
+    ctx.beginPath(); ctx.moveTo(x,35); ctx.lineTo(x,35+len);
+    ctx.strokeStyle='#333'; ctx.lineWidth=mm%10===0?1.5:1; ctx.stroke();
+    if(mm%10===0){ ctx.font='11px Arial'; ctx.fillStyle='#333'; ctx.fillText(mm,x-8,100); }
+  }
+  ctx.font='10px Arial'; ctx.fillStyle='#666'; ctx.fillText('mm',scaleEnd+14,53);
+  // Object
+  const ox=scaleStart+pos*mmPerPx;
+  ctx.strokeStyle='#e74c3c'; ctx.lineWidth=3;
+  ctx.beginPath(); ctx.moveTo(ox,20); ctx.lineTo(ox,90); ctx.stroke();
+  ctx.fillStyle='#e74c3c'; ctx.font='bold 14px Arial'; ctx.fillText('▼',ox-6,22);
+  // Reading line (to nearest mm)
+  const reading = Math.round(pos);
+  const rx=scaleStart+reading*mmPerPx;
+  ctx.strokeStyle='#27ae60'; ctx.lineWidth=2; ctx.setLineDash([5,3]);
+  ctx.beginPath(); ctx.moveTo(rx,35); ctx.lineTo(rx,90); ctx.stroke();
+  ctx.setLineDash([]);
+  // Result
+  document.getElementById('analogRes').innerHTML =
+    `Valor real: <span>${pos.toFixed(1)} mm</span> | Leitura (arredondada): <span>${reading},0 mm</span> | Erro: <span>±0,5 mm</span> | <strong>Resultado: (${reading},0 ± 0,5) mm</strong>`;
+}
+
+document.getElementById('anaPos') && document.getElementById('anaPos').addEventListener('input', drawAnalogScale);
+setTimeout(drawAnalogScale,300);
+
+// ===== POINTER =====
+function drawPointer() {
+  const cv = document.getElementById('pointerCanvas');
+  if(!cv) return;
+  const ctx = cv.getContext('2d');
+  const W=cv.width, H=cv.height;
+  ctx.clearRect(0,0,W,H);
+  const val = parseInt(document.getElementById('ptrVal').value)||63;
+  const divs = parseInt(document.getElementById('ptrDivs').value)||20;
+  const xi = 100/divs;
+  const err = xi/2;
+  const cx=W/2, cy=H-20, R=160;
+  const startAngle = Math.PI*1.1, endAngle = Math.PI*1.9;
+  // Arc background
+  ctx.beginPath(); ctx.arc(cx,cy,R,startAngle,endAngle);
+  ctx.strokeStyle='#ddd'; ctx.lineWidth=40; ctx.stroke();
+  // Scale divisions
+  for(let i=0;i<=divs;i++){
+    const frac=i/divs;
+    const angle=startAngle+frac*(endAngle-startAngle);
+    const len=i%(divs/5)===0?20:12;
+    const x1=cx+R*Math.cos(angle), y1=cy+R*Math.sin(angle);
+    const x2=cx+(R-len)*Math.cos(angle), y2=cy+(R-len)*Math.sin(angle);
+    ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2);
+    ctx.strokeStyle='#333'; ctx.lineWidth=i%(divs/5)===0?2:1; ctx.stroke();
+    if(i%(divs/5)===0){
+      const lv=Math.round(i*100/divs);
+      const lx=cx+(R-35)*Math.cos(angle), ly=cy+(R-35)*Math.sin(angle);
+      ctx.font='11px Arial'; ctx.fillStyle='#333'; ctx.textAlign='center';
+      ctx.fillText(lv,lx,ly+4);
+    }
+  }
+  // Pointer
+  const angle=startAngle+(val/100)*(endAngle-startAngle);
+  ctx.beginPath();
+  ctx.moveTo(cx+15*Math.cos(angle+Math.PI/2), cy+15*Math.sin(angle+Math.PI/2));
+  ctx.lineTo(cx+R*0.88*Math.cos(angle), cy+R*0.88*Math.sin(angle));
+  ctx.lineTo(cx+15*Math.cos(angle-Math.PI/2), cy+15*Math.sin(angle-Math.PI/2));
+  ctx.closePath();
+  ctx.fillStyle='#c0392b'; ctx.fill();
+  ctx.beginPath(); ctx.arc(cx,cy,12,0,2*Math.PI); ctx.fillStyle='#333'; ctx.fill();
+  // Reading
+  const reading = Math.round(val/xi)*xi;
+  ctx.font='13px Arial'; ctx.fillStyle='#1a5276'; ctx.textAlign='center';
+  ctx.fillText(`Leitura: ${reading} | Erro: ±${err}`,cx,cy-120);
+  document.getElementById('pointerRes').innerHTML =
+    `Valor: <span>${val}</span> | Leitura: <span>${reading}</span> | ξ = ${xi} | <strong>Erro: ±${err}</strong> | Resultado: <strong>(${reading} ± ${err})</strong>`;
+}
+setTimeout(drawPointer,300);
+document.getElementById('ptrVal') && document.getElementById('ptrVal').addEventListener('input',drawPointer);
+document.getElementById('ptrDivs') && document.getElementById('ptrDivs').addEventListener('change',drawPointer);
+
+// ===== PROPAGAÇÃO =====
+function calcPropagacao() {
+  const L=parseFloat(document.getElementById('propL').value), dL=parseFloat(document.getElementById('propDL').value);
+  const W=parseFloat(document.getElementById('propW').value), dW=parseFloat(document.getElementById('propDW').value);
+  if(isNaN(L)||isNaN(W)||isNaN(dL)||isNaN(dW)){ alert('Verifica os valores!'); return; }
+  const A=L*W;
+  const dA=W*dL+L*dW;
+  const relErr=(dA/A*100).toFixed(2);
+  document.getElementById('propagacaoRes').innerHTML =
+    `Área = L × W = ${L} × ${W} = <span>${A.toFixed(2)} cm²</span> | ΔA = W·ΔL + L·ΔW = ${W}×${dL} + ${L}×${dW} = <span>${dA.toFixed(2)} cm²</span><br>` +
+    `<strong>Resultado: A = (${A.toFixed(2)} ± ${dA.toFixed(2)}) cm²</strong> | Erro relativo: <span>${relErr}%</span>`;
+}
+
+// ===== COMPARAR INSTRUMENTOS =====
+function compareInstr() {
+  const val=parseFloat(document.getElementById('compVal').value)||47.36;
+  const unit=document.getElementById('compUnit').value||'mm';
+  const instruments=[
+    {name:'Régua (ξ=1mm)',xi:1,type:'a',unitfactor:1},
+    {name:'Craveira (ξ=0,1mm)',xi:0.1,type:'a',unitfactor:1},
+    {name:'Micrómetro (ξ=0,01mm)',xi:0.01,type:'a',unitfactor:1},
+    {name:'Digital 1 dec.',xi:0.1,type:'d',unitfactor:1},
+    {name:'Digital 2 dec.',xi:0.01,type:'d',unitfactor:1},
+    {name:'Digital 3 dec.',xi:0.001,type:'d',unitfactor:1},
+  ];
+  const tbl=document.getElementById('compTable');
+  while(tbl.rows.length>1) tbl.deleteRow(1);
+  instruments.forEach(ins=>{
+    const err=ins.type==='a'?ins.xi/2:ins.xi;
+    const reading=Math.round(val/ins.xi)*ins.xi;
+    const relErr=(err/Math.abs(reading)*100).toFixed(2);
+    const row=tbl.insertRow();
+    row.innerHTML=`<td>${ins.name}</td><td>${ins.xi} ${unit}</td><td>${reading.toFixed(ins.xi<0.1?3:ins.xi<1?2:1)} ${unit}</td><td>±${err} ${unit}</td><td>${relErr}%</td>`;
+  });
+  document.getElementById('compResult').style.display='block';
+}
+
+// ===== TARGET CANVAS =====
+let targetPoints=[];
+function drawTargetCanvas() {
+  const cv=document.getElementById('targetCanvas');
+  if(!cv) return;
+  const ctx=cv.getContext('2d');
+  const W=cv.width, H=cv.height, cx=W/2, cy=H/2, R=120;
+  ctx.clearRect(0,0,W,H);
+  ['#c0392b','#e74c3c','#e67e22','#f1c40f','white'].forEach((c,i)=>{
+    ctx.beginPath(); ctx.arc(cx,cy,R*(1-i*0.18),0,2*Math.PI);
+    ctx.fillStyle=c; ctx.fill();
+    ctx.strokeStyle='#aaa'; ctx.lineWidth=1; ctx.stroke();
+  });
+  // Center cross
+  ctx.strokeStyle='black'; ctx.lineWidth=1.5;
+  ctx.beginPath(); ctx.moveTo(cx-10,cy); ctx.lineTo(cx+10,cy); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(cx,cy-10); ctx.lineTo(cx,cy+10); ctx.stroke();
+  // Points
+  targetPoints.forEach((p,i)=>{
+    ctx.beginPath(); ctx.arc(p.x,p.y,7,0,2*Math.PI);
+    ctx.fillStyle='rgba(26,82,118,0.85)'; ctx.fill();
+    ctx.strokeStyle='white'; ctx.lineWidth=1.5; ctx.stroke();
+    ctx.fillStyle='white'; ctx.font='bold 9px Arial'; ctx.textAlign='center';
+    ctx.fillText(i+1,p.x,p.y+3);
+  });
+  cv.onclick=function(e){
+    if(targetPoints.length>=10) return;
+    const rect=cv.getBoundingClientRect();
+    targetPoints.push({x:e.clientX-rect.left, y:e.clientY-rect.top});
+    drawTargetCanvas();
+    document.getElementById('targetRes').textContent=`${targetPoints.length} tiro(s) registado(s). Clique em "Analisar" para ver resultados.`;
+  };
+}
+function clearTarget(){ targetPoints=[]; drawTargetCanvas(); document.getElementById('targetRes').textContent='Clica no alvo para marcar pontos (máx. 10).'; }
+function analyzeTarget(){
+  const cv=document.getElementById('targetCanvas');
+  const cx=cv.width/2, cy=cv.height/2;
+  if(targetPoints.length<2){ document.getElementById('targetRes').textContent='Precisas de pelo menos 2 pontos!'; return; }
+  const xs=targetPoints.map(p=>p.x), ys=targetPoints.map(p=>p.y);
+  const mx=xs.reduce((a,b)=>a+b)/xs.length, my=ys.reduce((a,b)=>a+b)/ys.length;
+  const distCenter=Math.sqrt((mx-cx)**2+(my-cy)**2);
+  const spreads=targetPoints.map(p=>Math.sqrt((p.x-mx)**2+(p.y-my)**2));
+  const spread=spreads.reduce((a,b)=>a+b)/spreads.length;
+  const preciso=spread<25, exato=distCenter<30;
+  const labels=['Pouco preciso e pouco exato','Pouco preciso mas exato','Preciso mas pouco exato','Preciso e exato'];
+  const label=labels[(preciso?2:0)+(exato?1:0)];
+  document.getElementById('targetRes').innerHTML=
+    `<strong>${label}</strong><br>Dispersão média: ${spread.toFixed(1)} px<br>Desvio do centro: ${distCenter.toFixed(1)} px<br>` +
+    `Precisão: <strong style="color:${preciso?'#27ae60':'#e74c3c'}">${preciso?'✓ Boa':'✗ Fraca'}</strong> | Exatidão: <strong style="color:${exato?'#27ae60':'#e74c3c'}">${exato?'✓ Boa':'✗ Fraca'}</strong>`;
+}
+
+// ===== LGN =====
+function drawLGN() {
+  const N=parseInt(document.getElementById('lgnN').value)||200;
+  const sigma=parseFloat(document.getElementById('lgnSigma').value)||1.5;
+  const mu=10;
+  let data=[];
+  for(let i=0;i<N;i++) data.push(mu+gaussRand()*sigma);
+  const mean=data.reduce((a,b)=>a+b)/N;
+  const std=Math.sqrt(data.map(x=>(x-mean)**2).reduce((a,b)=>a+b)/(N-1));
+  drawHistogram('lgnCanvas',data,mean,mu);
+  document.getElementById('lgnRes').innerHTML=
+    `N=${N} | Média obtida: <span>${mean.toFixed(3)}</span> | Desvio padrão: <span>${std.toFixed(3)}</span> (σ real=${sigma}) | Erro padrão: <span>${(std/Math.sqrt(N)).toFixed(4)}</span>`;
+}
+setTimeout(drawLGN,400);
+
+// ===== QUIZ =====
+const quizData=[
+  {q:'Numa régua com divisões de 1 mm, qual é o erro máximo do aparelho?',
+   opts:['±1 mm','±0,5 mm','±0,1 mm','±2 mm'],correct:1,exp:'Numa escala analógica, o erro máximo é metade da menor divisão: Δx₀ = ξ/2 = 1/2 = 0,5 mm.'},
+  {q:'Um voltímetro digital mostra "8,41 V". Qual é o erro máximo associado?',
+   opts:['±0,005 V','±0,41 V','±0,01 V','±0,1 V'],correct:2,exp:'Num instrumento digital, o erro é a menor unidade representável: ξ = 0,01 V, logo Δx₀ = ±0,01 V.'},
+  {q:'Quantos algarismos significativos tem o número 0,00456?',
+   opts:['5','3','6','2'],correct:1,exp:'Os zeros à esquerda não são significativos. Os algarismos significativos são: 4, 5 e 6 → 3 algarismos significativos.'},
+  {q:'Qual das seguintes situações descreve um erro SISTEMÁTICO?',
+   opts:['A leitura varia aleatoriamente','A balança marca 0,5 kg sem carga','A temperatura do laboratório flutua','Copiar incorretamente um valor'],correct:1,exp:'Um erro sistemático é constante e repetível. Uma balança que marca 0,5 kg sem carga tem um erro de zero que afeta todas as medições da mesma forma.'},
+  {q:'A exatidão de uma medição está relacionada com:',
+   opts:['A reprodutibilidade dos resultados','A proximidade ao valor verdadeiro','O número de casas decimais','A menor divisão do instrumento'],correct:1,exp:'Exatidão = proximidade ao valor real/verdadeiro. Precisão = reprodutibilidade (resultados próximos entre si).'},
+  {q:'Qual é o resultado correto de 4,573 + 0,6 (considerando algarismos significativos)?',
+   opts:['5,173','5,2','5,17','5,1730'],correct:1,exp:'Na adição, o resultado tem o mesmo número de casas decimais do número com menos casas decimais. 0,6 tem 1 casa decimal → resultado: 5,2.'},
+  {q:'Num instrumento analógico, o efeito de paralaxe é minimizado quando:',
+   opts:['O observador está longe do instrumento','O olho está perpendicular à escala','A medição é feita em ambiente escuro','Se usa uma lupa'],correct:1,exp:'O paralaxe resulta de o olho não estar alinhado perpendicularmente com a escala. A posição correta é com o olho diretamente em frente à marcação a ler.'},
+  {q:'Se a área de um retângulo é A = L × W, com L = (5,0 ± 0,1) cm e W = (3,0 ± 0,1) cm, qual é o erro de A?',
+   opts:['±0,1 cm²','±0,8 cm²','±0,01 cm²','±1,5 cm²'],correct:1,exp:'ΔA = W·ΔL + L·ΔW = 3,0×0,1 + 5,0×0,1 = 0,3 + 0,5 = 0,8 cm². Resultado: A = (15,0 ± 0,8) cm².'},
+,
+{ q: "Qual das seguintes grandezas NÃO pertence ao Sistema Internacional (SI)?", opts: ["Metro (m)", "Segundo (s)", "Grau Celsius (°C)", "Ampere (A)"], correct: 2, exp: "O grau Celsius (°C) não é unidade base do SI — a unidade de temperatura base é o Kelvin (K). O grau Celsius é uma unidade derivada aceite para uso quotidiano, mas não é unidade base do SI." },
+        { q: "Um micrómetro (palmer) tem uma resolução de 0,01 mm. Qual é o erro máximo associado a uma leitura?", opts: ["0,01 mm", "0,1 mm", "0,005 mm", "0,02 mm"], correct: 2, exp: "O micrómetro é um instrumento analógico. O erro máximo é metade da menor divisão: Δx₀ = 0,01/2 = 0,005 mm." },
+        { q: "Ao realizar 30 medições repetidas de uma grandeza, qual a expressão correta para representar o resultado?", opts: ["x = x̄ ± max|xᵢ - x̄|", "x = x̄ ± s", "x = x̄ ± s/√N", "x = x̄ ± s²"], correct: 2, exp: "Para N ≥ 20, usa-se o erro padrão da média: x = x̄ ± s/√N. Para N entre 10 e 20 usa-se o desvio padrão s, e para N < 10 usa-se o desvio máximo." },
+        { q: "Qual é o número de algarismos significativos de 1500?", opts: ["4", "2 (ambíguo)", "1", "3"], correct: 1, exp: "O número 1500 é ambíguo: pode ter 2 AS (1,5×10³) ou 4 AS (1,500×10³). Para eliminar a ambiguidade, deve usar-se notação científica." },
+        { q: "Um instrumento digital mostra 12,34 V (resolução 0,01 V). Qual o resultado correto da medição?", opts: ["(12,34 ± 0,005) V", "(12,34 ± 0,01) V", "(12,3 ± 0,1) V", "(12,34 ± 0,001) V"], correct: 1, exp: "Em instrumentos digitais assume-se sempre o erro como o valor do último dígito (situação mais conservadora): Δx₀ = 0,01 V. Resultado: V = (12,34 ± 0,01) V." },
+        { q: "O erro de paralaxe pode ser evitado colocando nos instrumentos analógicos:", opts: ["Um filtro de luz polarizada", "Uma lente de ampliação", "Um espelho por trás do ponteiro", "Uma escala digital auxiliar"], correct: 2, exp: "O espelho por trás do ponteiro permite ao utilizador ver o reflexo do ponteiro. Quando o ponteiro e o seu reflexo coincidem (ficam sobrepostos), o olho está perpendicularmente à escala — eliminando o erro de paralaxe." },
+        { q: "Se o volume de uma esfera é V = (4/3)πr³ e o erro no raio é Δr, qual a expressão da propagação de erros para ΔV?", opts: ["ΔV = (4/3)π Δr", "ΔV = 4πr² Δr", "ΔV = (4/3)π r² Δr", "ΔV = 3r² Δr"], correct: 1, exp: "Pela regra de propagação de erros para potências: ΔV = |dV/dr| × Δr = 4πr² × Δr. Este é o erro absoluto propagado do raio para o volume." },
+        { q: "Qual das seguintes afirmações sobre erros aleatórios é CORRETA?", opts: ["Afetam a exatidão e não se eliminam com repetição", "Afetam a precisão e podem ser reduzidos com mais medições", "São causados por calibração incorreta do instrumento", "São sempre maiores que os erros sistemáticos"], correct: 1, exp: "Os erros aleatórios afetam a precisão (dispersão dos valores). Ao realizar mais medições e calcular a média, o erro padrão da média (s/√N) diminui, reduzindo o efeito dos erros aleatórios." }
+];
+
+let quizCorrect=0;
+function initQuiz(){
+  const cont=document.getElementById('quizContainer');
+  if(cont.children.length>0) return;
+  quizData.forEach((q,qi)=>{
+    const div=document.createElement('div'); div.className='card'; div.id='q'+qi;
+    div.innerHTML=`<div class="quiz-q">Q${qi+1}. ${q.q}</div><div class="quiz-opts">${q.opts.map((o,oi)=>`<label><input type="radio" name="q${qi}" value="${oi}"> ${o}</label>`).join('')}</div><br><button class="btn" onclick="checkQ(${qi})">Verificar</button><div class="quiz-feedback" id="qf${qi}"></div>`;
+    cont.appendChild(div);
+  });
+}
+function checkQ(qi){
+  const sel=document.querySelector(`input[name="q${qi}"]:checked`);
+  if(!sel){ alert('Seleciona uma resposta!'); return; }
+  const fb=document.getElementById('qf'+qi);
+  const btn=document.querySelector(`#q${qi} .btn`);
+  if(parseInt(sel.value)===quizData[qi].correct){
+    fb.className='quiz-feedback correct';
+    fb.innerHTML='✅ Correto! '+quizData[qi].exp;
+    quizCorrect++;
+  } else {
+    fb.className='quiz-feedback wrong';
+    fb.innerHTML=`❌ Incorreto. Resposta: <strong>${quizData[qi].opts[quizData[qi].correct]}</strong>. ${quizData[qi].exp}`;
+  }
+  btn.disabled=true;
+  document.querySelectorAll(`input[name="q${qi}"]`).forEach(r=>r.disabled=true);
+  const answered=document.querySelectorAll('.quiz-feedback.correct').length + document.querySelectorAll('.quiz-feedback.wrong').length;
+  document.getElementById('quizProgress').style.width=(answered/quizData.length*100)+'%';
+  document.getElementById('quizScore').textContent=`${document.querySelectorAll('.quiz-feedback.correct').length} / ${quizData.length}  respondidas corretamente`;
+}
+
+// ===== INIT =====
+window.addEventListener('load', ()=>{
+  startCinematicAnimation();
+});
+
+// ====== SIM 5: Estatística de Medições ======
+function calcStat() {
+    const raw = document.getElementById('statMeds').value;
+    const unit = document.getElementById('statUnit').value || '';
+    const vals = raw.split(/[,\s]+/).map(v => parseFloat(v.replace(',','.'))).filter(v => !isNaN(v));
+    if (vals.length < 2) {
+        document.getElementById('statRes').innerHTML = '<span style="color:red">Insere pelo menos 2 valores.</span>';
+        return;
+    }
+    const N = vals.length;
+    const mean = vals.reduce((a,b) => a+b, 0) / N;
+    const s = Math.sqrt(vals.map(x => (x - mean)**2).reduce((a,b) => a+b, 0) / (N - 1));
+    const sem = s / Math.sqrt(N);
+    let errExpr, err;
+    if (N >= 20)      { err = sem;  errExpr = `s/√N = ${sem.toFixed(4)} (erro padrão da média)`; }
+    else if (N >= 10) { err = s;    errExpr = `s = ${s.toFixed(4)} (desvio padrão)`; }
+    else              { err = Math.max(...vals.map(x => Math.abs(x - mean))); errExpr = `desvio máximo = ${err.toFixed(4)}`; }
+
+    // Round to same decimal as err
+    const dec = Math.max(0, -Math.floor(Math.log10(err)));
+    const meanR = mean.toFixed(dec + 1);
+    const errR = err.toFixed(dec + 1);
+
+    document.getElementById('statRes').innerHTML =
+        `N = ${N} medições &nbsp;|&nbsp; x̄ = ${meanR} ${unit} &nbsp;|&nbsp; s = ${s.toFixed(4)} &nbsp;|&nbsp; Erro usado: ${errExpr}<br>
+         <b style="font-size:1.15em;color:#1a5276;">Resultado: x = (${meanR} ± ${errR}) ${unit}</b>`;
+
+    // Draw simple histogram
+    const cv = document.getElementById('statCanvas');
+    const ctx = cv.getContext('2d');
+    ctx.clearRect(0,0,cv.width,cv.height);
+    const W = cv.width, H = cv.height, pad = 30;
+    const mn = Math.min(...vals), mx = Math.max(...vals);
+    const range = mx - mn || 1;
+    ctx.fillStyle = '#f4f6f9'; ctx.fillRect(0,0,W,H);
+    // axis
+    ctx.strokeStyle = '#333'; ctx.lineWidth = 1.5;
+    ctx.beginPath(); ctx.moveTo(pad, pad); ctx.lineTo(pad, H-pad); ctx.lineTo(W-pad, H-pad); ctx.stroke();
+    // points
+    vals.forEach((v, i) => {
+        const x = pad + ((v - mn) / range) * (W - 2*pad);
+        const y = H - pad - 20;
+        ctx.beginPath(); ctx.arc(x, y, 5, 0, 2*Math.PI);
+        ctx.fillStyle = '#2e86c1'; ctx.globalAlpha = 0.7; ctx.fill(); ctx.globalAlpha = 1;
+    });
+    // mean line
+    const mx2 = pad + ((mean - mn) / range) * (W - 2*pad);
+    ctx.strokeStyle = '#e74c3c'; ctx.lineWidth = 2; ctx.setLineDash([5,4]);
+    ctx.beginPath(); ctx.moveTo(mx2, pad); ctx.lineTo(mx2, H-pad); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = '#e74c3c'; ctx.font = 'bold 11px sans-serif'; ctx.fillText('x̄', mx2+4, pad+14);
+    // error band
+    const ex1 = pad + ((mean - err - mn) / range) * (W - 2*pad);
+    const ex2 = pad + ((mean + err - mn) / range) * (W - 2*pad);
+    ctx.fillStyle = 'rgba(231,76,60,0.12)'; ctx.fillRect(ex1, pad, ex2-ex1, H-2*pad);
+    ctx.font = '10px sans-serif'; ctx.fillStyle = '#333';
+    ctx.fillText(mn.toFixed(2), pad-8, H-pad+12); ctx.fillText(mx.toFixed(2), W-pad-20, H-pad+12);
+}
+
+// ====== SIM 6: Operações com AS ======
+function countAS(s) {
+    s = s.trim().replace(',', '.');
+    let num = s.replace(/^-/, '');
+    let sig = 0, started = false, digits = num.replace('.','');
+    for (let c of digits) { if (c !== '0') started = true; if (started) sig++; }
+    return sig;
+}
+function decimalPlaces(s) {
+    s = s.replace(',','.');
+    return s.includes('.') ? s.split('.')[1].length : 0;
+}
+function calcASop() {
+    const aStr = document.getElementById('asA').value.trim();
+    const bStr = document.getElementById('asB').value.trim();
+    const op = document.getElementById('asOp').value;
+    const a = parseFloat(aStr.replace(',','.')), b = parseFloat(bStr.replace(',','.'));
+    if (isNaN(a) || isNaN(b)) { document.getElementById('asOpRes').innerHTML = '<span style="color:red">Valores inválidos.</span>'; return; }
+    const asA = countAS(aStr), asB = countAS(bStr);
+    const dpA = decimalPlaces(aStr), dpB = decimalPlaces(bStr);
+    let raw, limitAS, limitDP, rule, sym;
+    if (op === 'add' || op === 'sub') {
+        raw = op === 'add' ? a + b : a - b;
+        limitDP = Math.min(dpA, dpB); rule = 'casas decimais'; sym = op === 'add' ? '+' : '−';
+        const factor = Math.pow(10, limitDP);
+        raw = Math.round(raw * factor) / factor;
+        limitAS = countAS(raw.toFixed(limitDP));
+    } else {
+        raw = op === 'mul' ? a * b : a / b; sym = op === 'mul' ? '×' : '÷';
+        limitAS = Math.min(asA, asB); rule = 'algarismos significativos';
+        raw = parseFloat(raw.toPrecision(limitAS));
+    }
+    const resStr = (op === 'add' || op === 'sub') ? raw.toFixed(limitDP) : raw.toPrecision(limitAS);
+    document.getElementById('asOpRes').innerHTML =
+        `${aStr} (${asA} AS, ${dpA} casas dec.) &nbsp; ${sym} &nbsp; ${bStr} (${asB} AS, ${dpB} casas dec.)<br>
+         Regra aplicada: <b>${rule}</b> → limitar a <b>${op === 'add' || op === 'sub' ? limitDP + ' casas decimais' : limitAS + ' AS'}</b><br>
+         <b style="font-size:1.15em;color:#1a5276;">Resultado = ${resStr}</b>`;
+}
+
+// ====== SIM 7: Paralaxe ======
+function calcParalax7() {
+    const h = parseFloat(document.getElementById('parH').value) || 2;  // mm
+    const scale = parseFloat(document.getElementById('parScale').value) || 10; // div/cm
+    const angle = parseFloat(document.getElementById('parAngle').value) || 0; // degrees
+    const divSize = 10 / scale; // mm per division
+    const errMM = h * Math.tan(angle * Math.PI / 180);
+    const errDiv = errMM / divSize;
+    document.getElementById('paralaxRes7').innerHTML =
+        `Ângulo: ${angle}° | Altura do ponteiro: ${h} mm | Divisão = ${divSize.toFixed(2)} mm<br>
+         <b>Erro de paralaxe: ${errMM.toFixed(3)} mm = ${errDiv.toFixed(2)} divisões</b>
+         ${angle === 0 ? '&nbsp; ✅ <span style="color:green">Sem erro de paralaxe</span>' : '&nbsp; ⚠️ <span style="color:#e74c3c">Erro de paralaxe presente!</span>'}`;
+    // Draw chart showing error vs angle
+    const cv = document.getElementById('paralaxChart');
+    if (!cv) return;
+    const ctx = cv.getContext('2d');
+    const W = cv.width, H = cv.height, pad = 40;
+    ctx.clearRect(0,0,W,H);
+    ctx.fillStyle = '#f8f9fa'; ctx.fillRect(0,0,W,H);
+    // draw curve
+    ctx.beginPath(); ctx.strokeStyle = '#2e86c1'; ctx.lineWidth = 2;
+    for (let a = 0; a <= 60; a++) {
+        const e = h * Math.tan(a * Math.PI / 180);
+        const x = pad + (a/60) * (W-2*pad);
+        const y = H - pad - (e / (h * Math.tan(60 * Math.PI / 180))) * (H - 2*pad);
+        a === 0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y);
+    }
+    ctx.stroke();
+    // current point
+    const cx = pad + (angle/60) * (W-2*pad);
+    const cy = H - pad - (errMM / (h * Math.tan(60 * Math.PI / 180))) * (H - 2*pad);
+    ctx.beginPath(); ctx.arc(cx, cy, 7, 0, 2*Math.PI);
+    ctx.fillStyle = '#e74c3c'; ctx.fill();
+    // labels
+    ctx.fillStyle = '#333'; ctx.font = '11px sans-serif';
+    ctx.fillText('0°', pad-10, H-pad+14); ctx.fillText('60°', W-pad-10, H-pad+14);
+    ctx.fillText('Ângulo de observação →', W/2-60, H-5);
+    ctx.save(); ctx.translate(12, H/2); ctx.rotate(-Math.PI/2);
+    ctx.fillText('Erro (mm)', -30, 0); ctx.restore();
+    // axis
+    ctx.strokeStyle='#ccc'; ctx.lineWidth=1;
+    ctx.beginPath(); ctx.moveTo(pad,pad); ctx.lineTo(pad,H-pad); ctx.lineTo(W-pad,H-pad); ctx.stroke();
+}
+
+// ====== SIM 8: Melhor Escala Digital ======
+const digInstrScales = {
+    voltmeter:  { scales: [2, 20, 200, 2000], resol: [0.001, 0.01, 0.1, 1], unit: 'V' },
+    ammeter:    { scales: [0.2, 2, 20, 200],  resol: [0.0001,0.001,0.01,0.1], unit: 'A' },
+    ohmmeter:   { scales: [200, 2000, 20000, 200000], resol: [0.1, 1, 10, 100], unit: 'Ω' },
+    ruler:      { scales: [10, 100, 300], resol: [0.01, 0.01, 0.1], unit: 'mm' }
+};
+function calcBestScale() {
+    const val = parseFloat(document.getElementById('digVal').value);
+    const type = document.getElementById('digInstrType').value;
+    const instr = digInstrScales[type];
+    if (!instr || isNaN(val) || val <= 0) return;
+    const cv = document.getElementById('scaleChart');
+    const ctx = cv.getContext('2d');
+    const W = cv.width, H = cv.height, pad = 50;
+    ctx.clearRect(0,0,W,H); ctx.fillStyle='#f8f9fa'; ctx.fillRect(0,0,W,H);
+    let bestIdx = -1, bestErr = Infinity, results = [];
+    instr.scales.forEach((s, i) => {
+        if (val <= s) {
+            const relErr = (instr.resol[i] / val) * 100;
+            results.push({ scale: s, resol: instr.resol[i], relErr, valid: true });
+            if (relErr < bestErr) { bestErr = relErr; bestIdx = i; }
+        } else {
+            results.push({ scale: s, resol: instr.resol[i], relErr: null, valid: false });
+        }
+    });
+    // bar chart
+    const barW = (W - 2*pad) / results.length - 10;
+    const maxErr = Math.max(...results.filter(r=>r.valid).map(r=>r.relErr), 1);
+    results.forEach((r, i) => {
+        const x = pad + i * ((W-2*pad)/results.length) + 5;
+        const label = `${r.scale}${instr.unit}`;
+        if (!r.valid) {
+            ctx.fillStyle = '#e0e0e0'; ctx.fillRect(x, pad, barW, H-2*pad);
+            ctx.fillStyle = '#999'; ctx.font = '11px sans-serif'; ctx.textAlign='center';
+            ctx.fillText('Fora de', x+barW/2, H-pad-20); ctx.fillText('escala', x+barW/2, H-pad-8);
+        } else {
+            const bh = (r.relErr / maxErr) * (H - 2*pad);
+            const bestScale = results.filter(r=>r.valid).reduce((a,b) => a.relErr < b.relErr ? a : b).scale;
+            ctx.fillStyle = r.scale === bestScale ? '#27ae60' : '#2e86c1';
+            ctx.fillRect(x, H-pad-bh, barW, bh);
+            ctx.fillStyle = '#333'; ctx.font = 'bold 11px sans-serif'; ctx.textAlign='center';
+            ctx.fillText(r.relErr.toFixed(2)+'%', x+barW/2, H-pad-bh-6);
+        }
+        ctx.fillStyle='#333'; ctx.font='11px sans-serif'; ctx.textAlign='center';
+        ctx.fillText(label, x+barW/2, H-pad+14);
+    });
+    ctx.strokeStyle='#ccc'; ctx.lineWidth=1; ctx.textAlign='left';
+    ctx.beginPath(); ctx.moveTo(pad,pad); ctx.lineTo(pad,H-pad); ctx.lineTo(W-pad,H-pad); ctx.stroke();
+    const best = results[bestIdx];
+    if (best) {
+        document.getElementById('bestScaleRes').innerHTML =
+            `✅ <b>Melhor escala: ${best.scale} ${instr.unit}</b> (resolução ${best.resol} ${instr.unit})<br>
+             Erro relativo mínimo: <b style="color:#27ae60">${best.relErr.toFixed(3)}%</b><br>
+             Resultado: <b>(${val.toFixed(String(best.resol).split('.')[1]?.length||0)} ± ${best.resol}) ${instr.unit}</b>`;
+    } else {
+        document.getElementById('bestScaleRes').innerHTML = '<span style="color:red">Valor excede todas as escalas disponíveis.</span>';
+    }
+}
+
+// ====== SIM 9: Propagação de Erros — Velocidade ======
+function calcVelocidade() {
+    const d = parseFloat(document.getElementById('veld').value);
+    const Dd = parseFloat(document.getElementById('velDd').value);
+    const t = parseFloat(document.getElementById('velt').value);
+    const Dt = parseFloat(document.getElementById('velDt').value);
+    if ([d,Dd,t,Dt].some(isNaN) || t === 0) {
+        document.getElementById('velRes').innerHTML='<span style="color:red">Valores inválidos.</span>'; return;
+    }
+    const v = d / t;
+    const Dv = v * (Dd/d + Dt/t);
+    const relErr = (Dv/v) * 100;
+    const relD = (Dd/d)*100, relT = (Dt/t)*100;
+    // round to significant figures of Dv
+    const dec = Math.max(0, -Math.floor(Math.log10(Dv)));
+    document.getElementById('velRes').innerHTML =
+        `d = (${d} ± ${Dd}) m &nbsp;→&nbsp; erro relativo Δd/d = <b>${relD.toFixed(2)}%</b><br>
+         t = (${t} ± ${Dt}) s &nbsp;→&nbsp; erro relativo Δt/t = <b>${relT.toFixed(2)}%</b><br>
+         v = d/t = ${v.toFixed(dec+1)} m/s<br>
+         Δv = v × (Δd/d + Δt/t) = ${v.toFixed(dec+1)} × ${(Dd/d + Dt/t).toFixed(4)} = <b>${Dv.toFixed(dec+1)} m/s</b><br>
+         <b style="font-size:1.15em;color:#1a5276;">v = (${v.toFixed(dec+1)} ± ${Dv.toFixed(dec+1)}) m/s &nbsp;|&nbsp; Erro relativo total: ${relErr.toFixed(2)}%</b>`;
+}
+
+// auto init sims on load
+document.addEventListener('DOMContentLoaded', () => {
+    calcParalax7();
+    calcBestScale();
+});
+
+  // ===== PARA SABER MAIS - REFERÊNCIAS =====
+  const defaultRefs = [
+    {
+      author: "GlacierFilm, LLC.",
+      year: "2013",
+      title: "Propagation of Errors",
+      url: "https://www.youtube.com/watch?v=V0ZRvvHfF0E",
+      type: "video"
+    }
+  ];
+
+  let userRefs = [...defaultRefs];
+
+  const refTypeIcons = { video:"📹", article:"📄", book:"📖", website:"🌐", other:"📎" };
+
+  function renderRefs() {
+    const cont = document.getElementById("refsContainer");
+    if (!cont) return;
+    if (userRefs.length === 0) {
+      cont.innerHTML = "<h3>📋 Lista de Referências</h3><p style='color:var(--muted);font-style:italic;'>Ainda não há referências.</p>";
+      return;
+    }
+    cont.innerHTML = "<h3>📋 Lista de Referências</h3>" + userRefs.map((r, i) => {
+      const icon = refTypeIcons[r.type] || "📎";
+      const linkPart = r.url
+        ? `<br><a href="${r.url}" target="_blank" rel="noopener noreferrer" style="color:var(--secondary);word-break:break-all;">${r.url}</a>`
+        : "";
+      return `<div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:14px;padding:10px 14px;background:#f0f4ff;border-radius:8px;border-left:4px solid var(--secondary);">
+        <span style="font-size:1.4em;flex-shrink:0;">${icon}</span>
+        <div style="flex:1;font-size:0.97em;line-height:1.7;">
+          <strong>${r.author}</strong>${r.year ? " " + r.year + "." : ""}
+          <em>${r.title}</em>${linkPart}
+        </div>
+        <button onclick="removeRef(${i})" title="Remover" style="background:none;border:none;cursor:pointer;color:#c0392b;font-size:1.1em;padding:2px 6px;border-radius:4px;">✕</button>
+      </div>`;
+    }).join("");
+  }
+
+  function addReference() {
+    const author = document.getElementById("refAuthor").value.trim();
+    const year   = document.getElementById("refYear").value.trim();
+    const title  = document.getElementById("refTitle").value.trim();
+    const url    = document.getElementById("refUrl").value.trim();
+    const type   = document.getElementById("refType").value;
+    if (!author && !title) { alert("Preenche pelo menos o Autor ou o Título!"); return; }
+    userRefs.push({ author, year, title, url, type });
+    renderRefs();
+    ["refAuthor","refYear","refTitle","refUrl"].forEach(id => document.getElementById(id).value = "");
+  }
+
+  function removeRef(i) {
+    userRefs.splice(i, 1);
+    renderRefs();
+  }
+
+</script>
+</body>
+</html>

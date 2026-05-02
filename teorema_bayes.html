@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Teorema de Bayes</title>
+<link rel="icon" type="image/png" href="favicon_bayes.png">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+  onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]});"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;font-size:16px}
+:root{
+  --topbar-h:56px;
+  --footer-h:42px;
+  --sidebar-w:228px;
+}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:#f0f4f8;color:#1e293b;line-height:1.6;overflow:hidden}
+
+.topbar{
+  position:fixed;top:0;left:0;right:0;height:var(--topbar-h);z-index:2000;
+  background:linear-gradient(135deg,#0f2744 0%,#1d4ed8 55%,#4f46e5 100%);
+  color:#fff;display:flex;align-items:center;justify-content:center;
+  padding:8px 18px;box-shadow:0 2px 12px rgba(0,0,0,.18)
+}
+.topbar-inner{text-align:center;display:flex;align-items:center;justify-content:center;gap:18px}
+.topbar h1{font-size:1.45rem;font-weight:800;letter-spacing:-.02em;line-height:1}
+.topbar .sub{font-size:.88rem;opacity:.82}
+
+.footerbar{
+  position:fixed;left:0;right:0;bottom:0;height:var(--footer-h);z-index:2000;
+  background:#0f2744;color:#b8c3d6;display:flex;align-items:center;justify-content:center;
+  font-size:.82rem;box-shadow:0 -2px 10px rgba(0,0,0,.12)
+}
+.footerbar strong{color:#e2e8f0}
+
+.app-shell{
+  position:fixed;top:var(--topbar-h);bottom:var(--footer-h);left:0;right:0;
+  display:grid;grid-template-columns:var(--sidebar-w) 1fr;overflow:hidden
+}
+
+.sidebar{background:#0f2744;overflow-y:auto;padding:14px 0 18px;border-right:1px solid rgba(255,255,255,.08)}
+.sidebar-title{color:#4a90d9;font-size:.68rem;font-weight:700;letter-spacing:.11em;text-transform:uppercase;padding:10px 20px 6px}
+.sidebar a{color:#9fb0c8;text-decoration:none;padding:11px 20px;font-size:.85rem;font-weight:500;display:block;border-left:3px solid transparent;transition:.2s}
+.sidebar a:hover,.sidebar a.active{background:rgba(37,99,235,.24);color:#fff;border-left-color:#60a5fa}
+
+.main-content{overflow-y:auto;overflow-x:hidden;padding:22px 26px 26px}
+
+.welcome-panel{
+  min-height:calc(100vh - var(--topbar-h) - var(--footer-h) - 44px);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;color:#64748b;padding:34px 20px
+}
+.welcome-panel h2{font-size:1.45rem;color:#0f2744;margin-bottom:8px}
+.welcome-panel p{max-width:520px;font-size:.97rem}
+.welcome-formula{
+  margin-top:22px;background:#fff;border:1px solid #dbe4f0;border-radius:18px;
+  box-shadow:0 10px 30px rgba(15,39,68,.08);padding:26px 40px
+}
+
+.section-panel{display:none;padding:6px 0 16px;max-width:1180px;margin:0 auto}
+.section-panel.active{display:block}
+section h2{font-size:1.6rem;font-weight:700;color:#0f2744;padding-bottom:10px;border-bottom:3px solid #2563eb;margin-bottom:6px}
+.sec-desc{color:#64748b;margin:8px 0 24px;font-size:.94rem}
+.card{background:#fff;border-radius:18px;padding:24px;box-shadow:0 1px 4px rgba(0,0,0,.07),0 6px 20px rgba(0,0,0,.05);margin-bottom:20px}
+.card h3{font-size:1rem;font-weight:700;color:#0f2744;margin-bottom:14px}
+.formula-box{background:linear-gradient(135deg,#eff6ff,#eef2ff);border:2px solid #c7d2fe;border-radius:14px;padding:26px 22px;text-align:center;margin:12px 0}
+.f-note{font-size:.8rem;color:#94a3b8;margin-top:12px}
+
+.sym-tbl{width:100%;border-collapse:collapse;margin-top:14px;font-size:.9rem}
+.sym-tbl th{background:#0f2744;color:#fff;padding:9px 14px;text-align:left;font-weight:600}
+.sym-tbl td{padding:9px 14px;border-bottom:1px solid #f1f5f9}
+.sym-tbl tr:nth-child(even) td{background:#f8fafc}
+.sym-tbl .s{font-family:Georgia,serif;font-size:1.05rem;color:#2563eb;font-weight:700;white-space:nowrap}
+
+.itgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:20px}
+.ititem{background:#fff;border-radius:12px;padding:18px;text-align:center;border:1px solid #e2e8f0;box-shadow:0 1px 4px rgba(0,0,0,.05)}
+.ititem .icon{font-size:1.9rem;margin-bottom:8px}
+.ititem h4{font-size:.88rem;font-weight:700;color:#0f2744;margin-bottom:6px}
+.ititem p{font-size:.8rem;color:#64748b;line-height:1.5}
+
+.flex-visual{display:grid;grid-template-columns:minmax(270px,340px) 1fr;gap:18px;align-items:start}
+.controls-stack{display:grid;gap:12px}
+.slider-g{background:#f8fafc;border-radius:12px;padding:14px;border:1px solid #e2e8f0}
+.slider-g label{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-weight:600;font-size:.88rem;gap:8px}
+.slider-g .sym{font-family:Georgia,serif;color:#2563eb}
+.slider-g .val{background:#2563eb;color:#fff;padding:2px 9px;border-radius:20px;font-size:.8rem;min-width:48px;text-align:center}
+.slider-g .desc{font-size:.76rem;color:#94a3b8;margin-top:5px}
+input[type=range]{width:100%;-webkit-appearance:none;height:6px;border-radius:3px;background:#bfdbfe;outline:none;cursor:pointer}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:#2563eb;cursor:pointer;box-shadow:0 1px 5px rgba(37,99,235,.4)}
+.canvas-wrap{background:#fff;border-radius:14px;padding:14px;border:1px solid #e2e8f0}
+canvas{display:block;width:100%}
+.legend{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;justify-content:center;font-size:.78rem}
+.leg-item{display:flex;align-items:center;gap:5px}
+.leg-dot{width:13px;height:13px;border-radius:3px;flex-shrink:0}
+
+.res3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px}
+.res-item{background:#f8fafc;border-radius:12px;padding:14px;text-align:center;border:2px solid #e2e8f0;transition:all .3s}
+.res-item.hl{background:linear-gradient(135deg,#eff6ff,#eef2ff);border-color:#2563eb;transform:scale(1.02)}
+.res-item .rl{font-family:Georgia,serif;font-size:1rem;color:#4f46e5;font-weight:700}
+.res-item .rv{font-size:1.55rem;font-weight:800;color:#0f2744;margin:4px 0}
+.res-item .rd{font-size:.73rem;color:#94a3b8;line-height:1.3}
+
+.belief-wrap{margin:18px 0}
+.blabel{font-size:.82rem;color:#64748b;margin-bottom:5px;display:flex;justify-content:space-between;align-items:center}
+.blabel strong{color:#1e293b}
+.bbar-bg{width:100%;height:24px;background:#e2e8f0;border-radius:13px;overflow:hidden}
+.bbar-fill{height:100%;border-radius:13px;transition:width .65s cubic-bezier(.4,0,.2,1);display:flex;align-items:center;justify-content:flex-end;padding-right:10px;font-size:.78rem;font-weight:700;color:#fff;min-width:44px}
+.bar-p{background:linear-gradient(90deg,#94a3b8,#64748b)}
+.bar-q{background:linear-gradient(90deg,#2563eb,#4f46e5)}
+.upd-arrow{display:flex;align-items:center;justify-content:center;gap:10px;margin:5px 0;font-size:.82rem;color:#6366f1}
+.upd-arrow::before,.upd-arrow::after{content:'';flex:1;height:1px;background:#c7d2fe}
+
+.step-card{display:flex;gap:16px;background:#fff;border-radius:12px;padding:18px;margin-bottom:14px;border-left:4px solid #2563eb;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.snum{width:34px;height:34px;background:#2563eb;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.95rem;flex-shrink:0}
+.scont h4{font-weight:700;color:#0f2744;margin-bottom:5px;font-size:.95rem}
+.scont p{font-size:.88rem;color:#475569}
+.calc{font-family:Georgia,serif;color:#4f46e5;font-size:.95rem;background:#f8fafc;padding:8px 12px;border-radius:8px;margin-top:8px;display:inline-block;border:1px solid #e2e8f0}
+.scenario{background:#fffbeb;border-left:4px solid #f59e0b;padding:15px 18px;border-radius:0 10px 10px 0;margin:16px 0}
+.scenario .sl{font-weight:700;color:#92400e;font-size:.8rem;letter-spacing:.06em;margin-bottom:6px}
+.scenario p{color:#78350f;font-size:.9rem;margin:3px 0}
+
+.act-card{background:#fff;border-radius:18px;box-shadow:0 1px 4px rgba(0,0,0,.07),0 4px 16px rgba(0,0,0,.04);margin-bottom:22px;overflow:hidden}
+.act-hdr{background:linear-gradient(135deg,#0f2744,#1d4ed8);color:#fff;padding:18px 22px;display:flex;justify-content:space-between;align-items:flex-start;gap:14px}
+.act-hdr h3{font-size:1rem;font-weight:700}
+.act-hdr p{font-size:.8rem;opacity:.75;margin-top:3px}
+.badge{background:rgba(255,255,255,.18);border-radius:20px;padding:3px 12px;font-size:.78rem;white-space:nowrap;flex-shrink:0}
+.act-body{padding:22px}
+.act-body p{margin-bottom:10px;color:#475569;font-size:.9rem;line-height:1.7}
+.act-body strong{color:#0f2744}
+.sol-btn{background:#2563eb;color:#fff;border:none;padding:9px 22px;border-radius:8px;cursor:pointer;font-size:.88rem;font-weight:600;margin-top:6px;transition:background .2s}
+.sol-btn:hover{background:#1d4ed8}
+.sol-panel{display:none;background:#f0fdf4;border-top:2px solid #86efac;padding:20px 22px}
+.sol-panel.open{display:block}
+.sol-panel h4{color:#065f46;font-weight:700;margin-bottom:12px;font-size:.95rem}
+.calc-line{font-family:Georgia,serif;font-size:.9rem;color:#1e293b;background:#fff;padding:9px 13px;border-radius:8px;margin:5px 0;border:1px solid #d1fae5}
+.res-box{background:#065f46;color:#fff;padding:11px 16px;border-radius:10px;margin-top:12px;font-weight:700;font-family:Georgia,serif;font-size:1rem}
+.interp{margin-top:12px;font-size:.85rem;color:#047857;font-style:italic;line-height:1.6}
+.sv-calc{font-family:Georgia,serif;font-size:.9rem;line-height:1.9;color:#374151;background:#f8fafc;padding:16px;border-radius:10px;border:1px solid #e2e8f0;margin-top:14px}
+
+@media(max-width:900px){
+  .flex-visual{grid-template-columns:1fr}
+  .itgrid{grid-template-columns:1fr 1fr}
+  .res3{grid-template-columns:1fr 1fr}
+}
+@media(max-width:640px){
+  :root{--sidebar-w:190px;--topbar-h:62px}
+  .main-content{padding:14px}
+  .itgrid,.res3{grid-template-columns:1fr}
+}
+
+.ref-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px;margin-top:8px}
+.ref-card{display:flex;flex-direction:column;background:#fff;border-radius:18px;overflow:hidden;
+  box-shadow:0 1px 4px rgba(0,0,0,.07),0 6px 20px rgba(0,0,0,.06);
+  text-decoration:none;color:inherit;transition:transform .2s,box-shadow .2s;border:1px solid #e2e8f0}
+.ref-card:hover{transform:translateY(-4px);box-shadow:0 8px 28px rgba(37,99,235,.15)}
+.ref-thumb{position:relative;height:110px;display:flex;align-items:center;justify-content:center}
+.ref-thumb.yt{background:linear-gradient(135deg,#1a1a2e 0%,#c0392b 100%)}
+.ref-thumb.yt2{background:linear-gradient(135deg,#1a1a2e 0%,#8e44ad 100%)}
+.ref-thumb.doc{background:linear-gradient(135deg,#0f2744 0%,#1d4ed8 100%)}
+.play-btn{width:48px;height:48px;background:rgba(255,255,255,.22);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;font-size:1.3rem;color:#fff;
+  padding-left:4px}
+.doc-icon{font-size:2.6rem}
+.ref-type-badge{position:absolute;top:10px;right:12px;background:rgba(0,0,0,.35);
+  color:#fff;font-size:.7rem;font-weight:700;padding:3px 9px;border-radius:20px;letter-spacing:.05em}
+.ref-body{padding:16px 18px 20px}
+.ref-channel{font-size:.75rem;font-weight:700;color:#2563eb;letter-spacing:.03em;
+  text-transform:uppercase;margin-bottom:6px}
+.ref-title{font-size:.97rem;font-weight:700;color:#0f2744;line-height:1.4;margin-bottom:8px}
+.ref-meta{font-size:.78rem;color:#94a3b8;line-height:1.4}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="topbar-inner">
+    <h1>Teorema de Bayes</h1>
+    <div class="sub">Atualizar crenças com base em evidências</div>
+  </div>
+</header>
+
+<div class="app-shell">
+  <nav class="sidebar">
+    <div class="sidebar-title">Navegação</div>
+    <a href="#" class="active" onclick="goHome(this);return false;">&#8962; Início</a>
+    <a href="#" onclick="showPanel('teoria',this);return false;">&#9312; Fórmula</a>
+    <a href="#" onclick="showPanel('visual',this);return false;">&#9313; Visualização</a>
+    <a href="#" onclick="showPanel('exemplo',this);return false;">&#9314; Exemplo</a>
+    <a href="#" onclick="showPanel('sim',this);return false;">&#9315; Simulação</a>
+    <a href="#" onclick="showPanel('ativ',this);return false;">&#9316; Atividades</a>
+    <a href="#" onclick="showPanel('mais',this);return false;">&#9317; Para saber mais</a>
+  </nav>
+
+  <main class="main-content" id="mainContent">
+    <div id="welcome" class="welcome-panel">
+      <div style="font-size:2.8rem">&#128208;</div>
+      <h2>Teorema de Bayes</h2>
+      <p>Selecione uma secção no menu lateral para explorar a fórmula, visualização interativa, exemplo guiado, simulação livre e atividades.</p>
+      <div class="welcome-formula">
+        $$P(A\mid B)=\dfrac{P(B\mid A)\cdot P(A)}{P(B)}$$
+      </div>
+    </div>
+    <!-- PAINEL 1: FÓRMULA -->
+    <div id="panel-teoria" class="section-panel">
+      <section>
+        <h2>A Fórmula</h2>
+        <p class="sec-desc">O Teorema de Bayes combina uma crença inicial (<em>priori</em>) com a evidência dos dados para produzir uma crença atualizada (<em>posteriori</em>).</p>
+        <div class="card">
+          <div class="formula-box">
+            <div>$$P(A\mid B)\;=\;\frac{P(B\mid A)\cdot P(A)}{P(B)}$$</div>
+            <div style="margin-top:16px">$$P(B)\;=\;P(B\mid A)\cdot P(A)\;+\;P(B\mid\neg A)\cdot P(\neg A)$$</div>
+            <div class="f-note">Lei da Probabilidade Total</div>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Significado das grandezas</h3>
+          <table class="sym-tbl">
+            <tr><th>Símbolo</th><th>Definição</th></tr>
+            <tr><td class="s">$A$</td><td>Hipótese em estudo</td></tr>
+            <tr><td class="s">$\neg A$</td><td>Complemento de $A$ &nbsp;·&nbsp; $P(\neg A) = 1 - P(A)$</td></tr>
+            <tr><td class="s">$B$</td><td>Evento observado (os dados)</td></tr>
+            <tr><td class="s">$P(A)$</td><td><strong>Priori</strong> — crença inicial antes de ver $B$, baseada em literatura ou experiência</td></tr>
+            <tr><td class="s">$P(B\mid A)$</td><td><strong>Verosimilhança</strong> — probabilidade de observar $B$ se $A$ for verdadeira</td></tr>
+            <tr><td class="s">$P(B\mid\neg A)$</td><td>Verosimilhança do complemento — probabilidade de $B$ se $A$ for falsa</td></tr>
+            <tr><td class="s">$P(B)$</td><td>Probabilidade marginal de $B$ — normaliza a expressão (Lei da Prob. Total)</td></tr>
+            <tr><td class="s">$P(A\mid B)$</td><td><strong>Posteriori</strong> — crença atualizada após observar $B$</td></tr>
+          </table>
+        </div>
+        <div class="itgrid">
+          <div class="ititem"><div class="icon">&#127919;</div><h4>Priori $P(A)$</h4><p>O que sabemos <em>antes</em> dos dados. Baseia-se em estudos anteriores, literatura ou elicitação de especialistas.</p></div>
+          <div class="ititem"><div class="icon">&#128300;</div><h4>Verosimilhança $P(B\mid A)$</h4><p>Quão bem a hipótese explica os dados. Valor alto: os dados são muito compatíveis com $A$.</p></div>
+          <div class="ititem"><div class="icon">&#128202;</div><h4>Posteriori $P(A\mid B)$</h4><p>A crença <em>atualizada</em> após combinar priori e evidência. É o resultado do Teorema de Bayes.</p></div>
+        </div>
+      </section>
+    </div>
+    <!-- PAINEL 2: VISUALIZAÇÃO -->
+    <div id="panel-visual" class="section-panel">
+      <section>
+        <h2>Visualização Interativa</h2>
+        <p class="sec-desc">Mova os controlos e observe como o diagrama de mosaico muda em tempo real. A área azul escura representa $B\cap A$; o contorno vermelho é exatamente $P(A\mid B)$.</p>
+        <div class="card">
+          <div class="flex-visual">
+            <div class="controls-stack">
+              <div class="slider-g">
+                <label><span class="sym">$P(A)$</span><span class="val" id="v-PA">0.70</span></label>
+                <input type="range" id="sl-PA" min="0.01" max="0.99" step="0.01" value="0.70" oninput="upd2()">
+                <div class="desc">Probabilidade inicial da hipótese $A$</div>
+              </div>
+              <div class="slider-g">
+                <label><span class="sym">$P(B\mid A)$</span><span class="val" id="v-PBA">0.90</span></label>
+                <input type="range" id="sl-PBA" min="0.01" max="0.99" step="0.01" value="0.90" oninput="upd2()">
+                <div class="desc">Probabilidade de $B$ se $A$ for verdadeira</div>
+              </div>
+              <div class="slider-g">
+                <label><span class="sym">$P(B\mid\neg A)$</span><span class="val" id="v-PBnA">0.06</span></label>
+                <input type="range" id="sl-PBnA" min="0.01" max="0.99" step="0.01" value="0.06" oninput="upd2()">
+                <div class="desc">Probabilidade de $B$ se $A$ for falsa</div>
+              </div>
+              <div class="belief-wrap">
+                <div class="blabel"><strong>Priori $P(A)$</strong><span id="lbl-prior">70.0%</span></div>
+                <div class="bbar-bg"><div class="bbar-fill bar-p" id="bar-p" style="width:70%">70.0%</div></div>
+                <div class="upd-arrow">após observar evidência $B$</div>
+                <div class="blabel"><strong>Posteriori $P(A\mid B)$</strong><span id="lbl-post">97.2%</span></div>
+                <div class="bbar-bg"><div class="bbar-fill bar-q" id="bar-q" style="width:97.2%">97.2%</div></div>
+              </div>
+            </div>
+            <div>
+              <div class="canvas-wrap"><canvas id="mosaic" height="310"></canvas></div>
+              <div class="legend">
+                <div class="leg-item"><div class="leg-dot" style="background:#1d4ed8"></div>$B\cap A$</div>
+                <div class="leg-item"><div class="leg-dot" style="background:#bfdbfe"></div>$\neg B\cap A$</div>
+                <div class="leg-item"><div class="leg-dot" style="background:#6366f1"></div>$B\cap\neg A$</div>
+                <div class="leg-item"><div class="leg-dot" style="background:#e2e8f0;border:1px solid #cbd5e1"></div>$\neg B\cap\neg A$</div>
+                <div class="leg-item"><div class="leg-dot" style="background:none;border:2px solid #ef4444;border-radius:3px"></div>$P(A\mid B)$</div>
+              </div>
+            </div>
+          </div>
+          <div class="res3">
+            <div class="res-item"><div class="rl">$P(B)$</div><div class="rv" id="res-PB">0.648</div><div class="rd">Prob. total de observar $B$</div></div>
+            <div class="res-item hl"><div class="rl">$P(A\mid B)$</div><div class="rv" id="res-PAB">0.972</div><div class="rd"><strong>Posteriori</strong> de $A$</div></div>
+            <div class="res-item"><div class="rl">$P(\neg A\mid B)$</div><div class="rv" id="res-PnAB">0.028</div><div class="rd">Posteriori do complemento</div></div>
+          </div>
+        </div>
+      </section>
+    </div>
+    <!-- PAINEL 3: EXEMPLO -->
+    <div id="panel-exemplo" class="section-panel">
+      <section>
+        <h2>Exemplo Guiado</h2>
+        <div class="scenario">
+          <div class="sl">CENÁRIO</div>
+          <p><strong>Hipótese $A$:</strong> "A aula prática melhora significativamente a aprendizagem face ao ensino tradicional."</p>
+          <p><strong>Evento $B$:</strong> "85% dos alunos passaram a explicar corretamente a origem do som na avaliação formativa."</p>
+        </div>
+        <div class="step-card">
+          <div class="snum">1</div>
+          <div class="scont">
+            <h4>Definir a priori com base em literatura</h4>
+            <p>Com base em investigação existente, estima-se 70% de probabilidade de que a metodologia prática seja eficaz.</p>
+            <span class="calc">$P(A)=0{,}70 \qquad P(\neg A)=0{,}30$</span>
+          </div>
+        </div>
+        <div class="step-card">
+          <div class="snum">2</div>
+          <div class="scont">
+            <h4>Estimar as verosimilhanças</h4>
+            <p>Se a metodologia <em>for</em> eficaz: 90% de probabilidade de obter este resultado. Sem eficácia: apenas 6%.</p>
+            <span class="calc">$P(B\mid A)=0{,}90 \qquad P(B\mid\neg A)=0{,}06$</span>
+          </div>
+        </div>
+        <div class="step-card">
+          <div class="snum">3</div>
+          <div class="scont">
+            <h4>Calcular $P(B)$ — Lei da Probabilidade Total</h4>
+            <p>Combina as verosimilhanças ponderadas pelas probabilidades iniciais.</p>
+            <span class="calc">$P(B)=0{,}90\times0{,}70+0{,}06\times0{,}30=0{,}630+0{,}018=0{,}648$</span>
+          </div>
+        </div>
+        <div class="step-card" style="border-left-color:#4f46e5">
+          <div class="snum" style="background:#4f46e5">4</div>
+          <div class="scont">
+            <h4>Aplicar o Teorema de Bayes</h4>
+            <p>Atualiza-se a probabilidade de $A$ à luz dos dados $B$ observados.</p>
+            <span class="calc">$P(A\mid B)=\dfrac{0{,}90\times0{,}70}{0{,}648}=\dfrac{0{,}630}{0{,}648}\approx\mathbf{0{,}972}$</span>
+          </div>
+        </div>
+        <div class="card" style="background:linear-gradient(135deg,#eff6ff,#eef2ff);border:2px solid #a5b4fc">
+          <h3 style="color:#4f46e5">Interpretação</h3>
+          <p style="font-size:.92rem;color:#3730a3;margin-bottom:8px">A probabilidade <em>a posteriori</em> de $A$ subiu de <strong>70%</strong> (priori) para <strong>97,2%</strong> (posteriori). Os dados são muito discriminativos: $P(B\mid A)=0{,}90$ é muito superior a $P(B\mid\neg A)=0{,}06$.</p>
+          <p style="font-size:.83rem;color:#6366f1">Nota: este valor depende do modelo assumido e dos parâmetros escolhidos — não é uma certeza absoluta.</p>
+        </div>
+      </section>
+    </div>
+    <!-- PAINEL 4: SIMULAÇÃO -->
+    <div id="panel-sim" class="section-panel">
+      <section>
+        <h2>Simulação Livre</h2>
+        <p class="sec-desc">Introduza os valores do seu problema. O diagrama e o cálculo atualizam em tempo real.</p>
+        <div class="card">
+          <div class="flex-visual">
+            <div class="controls-stack">
+              <div class="slider-g">
+                <label><span class="sym">$P(A)$</span><span class="val" id="sv-PA">0.50</span></label>
+                <input type="range" id="ssl-PA" min="0.01" max="0.99" step="0.01" value="0.50" oninput="upd4()">
+              </div>
+              <div class="slider-g">
+                <label><span class="sym">$P(B\mid A)$</span><span class="val" id="sv-PBA">0.75</span></label>
+                <input type="range" id="ssl-PBA" min="0.01" max="0.99" step="0.01" value="0.75" oninput="upd4()">
+              </div>
+              <div class="slider-g">
+                <label><span class="sym">$P(B\mid\neg A)$</span><span class="val" id="sv-PBnA">0.45</span></label>
+                <input type="range" id="ssl-PBnA" min="0.01" max="0.99" step="0.01" value="0.45" oninput="upd4()">
+              </div>
+            </div>
+            <div>
+              <div class="canvas-wrap"><canvas id="mosaic2" height="310"></canvas></div>
+            </div>
+          </div>
+          <div class="res3" style="margin-top:16px">
+            <div class="res-item"><div class="rl">$P(A)$</div><div class="rv" id="sv-PA-r">0.500</div><div class="rd">Priori</div></div>
+            <div class="res-item"><div class="rl">$P(B)$</div><div class="rv" id="sv-PB-r">0.600</div><div class="rd">Prob. total de $B$</div></div>
+            <div class="res-item hl"><div class="rl">$P(A\mid B)$</div><div class="rv" id="sv-PAB-r">0.625</div><div class="rd"><strong>Posteriori</strong></div></div>
+          </div>
+          <div class="sv-calc" id="sv-calc"></div>
+        </div>
+      </section>
+    </div>
+    <!-- PAINEL 5: ATIVIDADES -->
+    <div id="panel-ativ" class="section-panel">
+      <section>
+        <h2>Atividades</h2>
+        <p class="sec-desc">Resolva cada exercício antes de consultar a solução. $A$ denota a hipótese e $\neg A$ o seu complemento.</p>
+
+        <!-- A1 -->
+        <div class="act-card">
+          <div class="act-hdr">
+            <div><h3>Atividade 1 — O Teste do Peixinho</h3><p>Priori baseada em três anos de registos e literatura</p></div>
+            <span class="badge">1.º ano</span>
+          </div>
+          <div class="act-body">
+            <p>Uma professora realizou uma atividade com aquário para ensinar o <strong>ciclo de vida dos peixes</strong>. Com base em registos anteriores e artigos, estimou $P(A)=0{,}65$.</p>
+            <p>Após a atividade, 78% dos alunos descreveram o ciclo de vida com detalhe. Da literatura: se atividades práticas com animais vivos forem eficazes, $P(B\mid A)=0{,}82$; se não forem a causa principal, $P(B\mid\neg A)=0{,}12$.</p>
+            <p><strong>Questão:</strong> Identifique $P(A)$, $P(\neg A)$, $P(B\mid A)$ e $P(B\mid\neg A)$. Calcule $P(B)$ e determine $P(A\mid B)$.</p>
+            <button class="sol-btn" onclick="toggleSol('s1',this)">Mostrar solução</button>
+          </div>
+          <div class="sol-panel" id="s1">
+            <h4>&#10003; Solução</h4>
+            <div class="calc-line">$P(A)=0{,}65 \qquad P(\neg A)=0{,}35$</div>
+            <div class="calc-line">$P(B\mid A)=0{,}82 \qquad P(B\mid\neg A)=0{,}12$</div>
+            <div class="calc-line">$P(B)=0{,}82\times0{,}65+0{,}12\times0{,}35=0{,}533+0{,}042=0{,}575$</div>
+            <div class="calc-line">$P(A\mid B)=\dfrac{0{,}82\times0{,}65}{0{,}575}=\dfrac{0{,}533}{0{,}575}\approx0{,}927$</div>
+            <div class="res-box">$P(A\mid B)\approx0{,}927\quad(92{,}7\%)$</div>
+            <p class="interp">A probabilidade a posteriori de eficácia é cerca de 92,7%. Os dados são muito consistentes com a hipótese de que a metodologia prática funciona.</p>
+          </div>
+        </div>
+
+        <!-- A2 -->
+        <div class="act-card">
+          <div class="act-hdr">
+            <div><h3>Atividade 2 — A Nova Abordagem</h3><p>Priori não informativa — ausência de estudos prévios</p></div>
+            <span class="badge">3.º ano</span>
+          </div>
+          <div class="act-body">
+            <p>Um professor estagiário testa uma nova estratégia para ensinar <strong>frações com objetos reais</strong> (maçãs, folhas). Sem estudos específicos, usa uma <em>priori não informativa</em>: $P(A)=0{,}50$.</p>
+            <p>Resultado: 72% corretos. Taxa típica sem intervenção: 45% $\Rightarrow P(B\mid\neg A)=0{,}45$. Se eficaz: $P(B\mid A)=0{,}75$.</p>
+            <p><strong>Questão:</strong> Calcule $P(A\mid B)$. Explique a priori não informativa. Discuta se o resultado justifica replicar a abordagem.</p>
+            <button class="sol-btn" onclick="toggleSol('s2',this)">Mostrar solução</button>
+          </div>
+          <div class="sol-panel" id="s2">
+            <h4>&#10003; Solução</h4>
+            <div class="calc-line">$P(A)=0{,}50 \qquad P(\neg A)=0{,}50$</div>
+            <div class="calc-line">$P(B\mid A)=0{,}75 \qquad P(B\mid\neg A)=0{,}45$</div>
+            <div class="calc-line">$P(B)=0{,}75\times0{,}50+0{,}45\times0{,}50=0{,}375+0{,}225=0{,}600$</div>
+            <div class="calc-line">$P(A\mid B)=\dfrac{0{,}375}{0{,}600}=0{,}625$</div>
+            <div class="res-box">$P(A\mid B)=0{,}625\quad(62{,}5\%)$</div>
+            <p class="interp">A priori não informativa (0,50) expressa ausência de preferência inicial. Os dados elevam a probabilidade de 50% para 62,5%: atualização favorável mas moderada — insuficiente para generalizações fortes sem replicação em amostras maiores.</p>
+          </div>
+        </div>
+
+        <!-- A3 -->
+        <div class="act-card">
+          <div class="act-hdr">
+            <div><h3>Atividade 3 — O Diagnóstico do Erro Conceptual</h3><p>Escolha e justificação explícita da priori</p></div>
+            <span class="badge">2.º ano</span>
+          </div>
+          <div class="act-body">
+            <p>Após uma aula sobre <strong>plantas</strong>, pergunta-se a 20 alunos "De onde vem a energia da planta?". Catorze respondem corretamente, seis mantêm a conceção alternativa.</p>
+            <p>$P(B\mid A)=0{,}78$ (prob. de $\geq 14$ corretos se eficaz) $\quad\cdot\quad P(B\mid\neg A)=0{,}22$</p>
+            <p><strong>Questão A:</strong> Defina $A$ e $B$. Escolha e justifique uma priori. Calcule $P(A\mid B)$.</p>
+            <p><strong>Questão B:</strong> O resultado com $n=20$ é suficiente para afirmar eficácia pedagógica?</p>
+            <button class="sol-btn" onclick="toggleSol('s3',this)">Mostrar solução</button>
+          </div>
+          <div class="sol-panel" id="s3">
+            <h4>&#10003; Solução</h4>
+            <div class="calc-line">$A$: "A atividade é eficaz a desconstruir a conceção alternativa"</div>
+            <div class="calc-line">$B$: "$\geq 14$ alunos em 20 respondem corretamente"</div>
+            <div class="calc-line">Priori adotada: $P(A)=0{,}60 \qquad P(\neg A)=0{,}40$</div>
+            <div class="calc-line">$P(B)=0{,}78\times0{,}60+0{,}22\times0{,}40=0{,}468+0{,}088=0{,}556$</div>
+            <div class="calc-line">$P(A\mid B)=\dfrac{0{,}468}{0{,}556}\approx0{,}842$</div>
+            <div class="res-box">$P(A\mid B)\approx0{,}842\quad(84{,}2\%)$</div>
+            <p class="interp">Com apenas 20 alunos, a variabilidade é elevada e a amostra é insuficiente para conclusões generalizáveis. O resultado é promissor, mas requer replicação com grupos maiores e, idealmente, um grupo de controlo.</p>
+          </div>
+        </div>
+
+        <!-- A4 -->
+        <div class="act-card">
+          <div class="act-hdr">
+            <div><h3>Atividade 4 — A Priori Mal Calibrada</h3><p>Influência da priori quando os dados não são muito discriminativos</p></div>
+            <span class="badge">4.º ano</span>
+          </div>
+          <div class="act-body">
+            <p>Ana e Bruno aplicam a mesma atividade experimental sobre <strong>dissolução de sólidos</strong> a turmas semelhantes do 4.º ano. Ambos observam 80% de sucesso e usam $P(B\mid A)=0{,}85$ e $P(B\mid\neg A)=0{,}35$.</p>
+            <p>Diferença: <strong>Ana</strong> usa $P(A)=0{,}95$ (muito otimista). <strong>Bruno</strong> usa $P(A)=0{,}30$ (cético).</p>
+            <p><strong>Questão A:</strong> Calcule $P(A\mid B)$ para cada professor.</p>
+            <p><strong>Questão B e C:</strong> Discuta o papel da priori e avalie a postura epistemológica mais adequada.</p>
+            <button class="sol-btn" onclick="toggleSol('s4',this)">Mostrar solução</button>
+          </div>
+          <div class="sol-panel" id="s4">
+            <h4>&#10003; Professora Ana — $P(A)=0{,}95$</h4>
+            <div class="calc-line">$P(B)=0{,}85\times0{,}95+0{,}35\times0{,}05=0{,}8075+0{,}0175=0{,}825$</div>
+            <div class="calc-line">$P(A\mid B)=\dfrac{0{,}8075}{0{,}825}\approx0{,}979$</div>
+            <div class="res-box">Ana: $P(A\mid B)\approx0{,}979\quad(97{,}9\%)$</div>
+            <h4 style="margin-top:16px">&#10003; Professor Bruno — $P(A)=0{,}30$</h4>
+            <div class="calc-line">$P(B)=0{,}85\times0{,}30+0{,}35\times0{,}70=0{,}255+0{,}245=0{,}500$</div>
+            <div class="calc-line">$P(A\mid B)=\dfrac{0{,}255}{0{,}500}=0{,}510$</div>
+            <div class="res-box">Bruno: $P(A\mid B)=0{,}510\quad(51{,}0\%)$</div>
+            <p class="interp">Os mesmos dados e as mesmas verosimilhanças levam a conclusões separadas por ~47 p.p., unicamente por causa da priori. Quando $P(B\mid A)$ e $P(B\mid\neg A)$ não diferem muito (0,85 vs 0,35), a priori tem grande peso. A postura de Bruno (cético, $P(A)=0{,}30$) é epistemologicamente mais adequada: exige evidência mais robusta antes de aceitar a eficácia.</p>
+          </div>
+        </div>
+
+      </section>
+    </div>
+
+
+    <!-- PAINEL 6: PARA SABER MAIS -->
+    <div id="panel-mais" class="section-panel">
+      <section>
+        <h2>Para saber mais</h2>
+        <p class="sec-desc">Recursos selecionados para aprofundar o Teorema de Bayes — vídeos e leitura académica.</p>
+
+        <div class="ref-grid">
+
+          <a class="ref-card" href="https://www.youtube.com/watch?v=HZGCoVF3YvM" target="_blank" rel="noopener">
+            <div class="ref-thumb yt">
+              <div class="play-btn">&#9654;</div>
+              <div class="ref-type-badge">YouTube</div>
+            </div>
+            <div class="ref-body">
+              <div class="ref-channel">3Blue1Brown</div>
+              <h3 class="ref-title">Bayes theorem, the geometry of changing beliefs</h3>
+              <div class="ref-meta">2019 &nbsp;·&nbsp; Visualização geométrica intuitiva do teorema</div>
+            </div>
+          </a>
+
+          <a class="ref-card" href="https://www.youtube.com/watch?v=u6PUTOjtQRs" target="_blank" rel="noopener">
+            <div class="ref-thumb yt2">
+              <div class="play-btn">&#9654;</div>
+              <div class="ref-type-badge">YouTube</div>
+            </div>
+            <div class="ref-body">
+              <div class="ref-channel">Verve Científica &nbsp;·&nbsp; Universidade Federal de São Paulo</div>
+              <h3 class="ref-title">A incerteza científica: A visão Bayesiana da probabilidade</h3>
+              <div class="ref-meta">2024 &nbsp;·&nbsp; Abordagem conceptual em português</div>
+            </div>
+          </a>
+
+          <a class="ref-card" href="https://repositorio.ifpb.edu.br/handle/177683/4396" target="_blank" rel="noopener">
+            <div class="ref-thumb doc">
+              <div class="doc-icon">&#128196;</div>
+              <div class="ref-type-badge">Repositório</div>
+            </div>
+            <div class="ref-body">
+              <div class="ref-channel">Silva, Sara Lopes &nbsp;·&nbsp; IFPB</div>
+              <h3 class="ref-title">O Teorema de Bayes: Aplicações e abordagens didáticas no ensino e na tomada de decisão</h3>
+              <div class="ref-meta">Trabalho académico &nbsp;·&nbsp; Didática e aplicações práticas</div>
+            </div>
+          </a>
+
+        </div>
+      </section>
+    </div>
+  </main>
+</div>
+<footer class="footerbar">
+  <strong>versão 2026.05.01.2 por Jorge Fonseca e Trindade</strong>
+</footer>
+
+<script>
+/* ── NAVIGATION ─────────────────────────────────────────── */
+function clearAll(){
+  document.querySelectorAll('.section-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.sidebar a').forEach(a=>a.classList.remove('active'));
+}
+function goHome(el){
+  clearAll();
+  document.getElementById('welcome').style.display='flex';
+  if(el) el.classList.add('active');
+  document.getElementById('mainContent').scrollTop=0;
+}
+function showPanel(id,el){
+  clearAll();
+  document.getElementById('welcome').style.display='none';
+  const p=document.getElementById('panel-'+id);
+  if(p) p.classList.add('active');
+  if(el) el.classList.add('active');
+  document.getElementById('mainContent').scrollTop=0;
+  setTimeout(()=>{
+    if(id==='visual') upd2();
+    if(id==='sim') upd4();
+    if(window.renderMathInElement) renderMathInElement(p,{
+      delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]
+    });
+  },60);
+}
+
+/* ── MOSAIC CANVAS ──────────────────────────────────────── */
+function drawMosaic(id, PA, PBA, PBnA){
+  const cv=document.getElementById(id); if(!cv) return;
+  const wrap=cv.parentElement;
+  const cW=Math.max(300, wrap.clientWidth-28);
+  cv.width=cW;
+  const cH=cv.height;
+  const ctx=cv.getContext('2d'); ctx.clearRect(0,0,cW,cH);
+  const pad={t:42,b:52,l:46,r:14};
+  const W=cW-pad.l-pad.r, H=cH-pad.t-pad.b;
+  const ox=pad.l, oy=pad.t;
+  const PnA=+(1-PA).toFixed(10);
+  const wA=PA*W, wNA=PnA*W, hBA=PBA*H, hBNA=PBnA*H;
+
+  ctx.fillStyle='#1d4ed8'; ctx.fillRect(ox,oy,wA,hBA);
+  ctx.fillStyle='#bfdbfe'; ctx.fillRect(ox,oy+hBA,wA,H-hBA);
+  ctx.fillStyle='#6366f1'; ctx.fillRect(ox+wA,oy,wNA,hBNA);
+  ctx.fillStyle='#e2e8f0'; ctx.fillRect(ox+wA,oy+hBNA,wNA,H-hBNA);
+
+  ctx.strokeStyle='#94a3b8'; ctx.lineWidth=1; ctx.strokeRect(ox,oy,W,H);
+  ctx.strokeStyle='#1e293b'; ctx.lineWidth=2;
+  ctx.beginPath(); ctx.moveTo(ox+wA,oy); ctx.lineTo(ox+wA,oy+H); ctx.stroke();
+
+  ctx.setLineDash([5,3]); ctx.lineWidth=1.2;
+  ctx.strokeStyle='#2563eb'; ctx.beginPath(); ctx.moveTo(ox,oy+hBA); ctx.lineTo(ox+wA,oy+hBA); ctx.stroke();
+  ctx.strokeStyle='#818cf8'; ctx.beginPath(); ctx.moveTo(ox+wA,oy+hBNA); ctx.lineTo(ox+wA+wNA,oy+hBNA); ctx.stroke();
+  ctx.setLineDash([]);
+
+  ctx.strokeStyle='#ef4444'; ctx.lineWidth=2.5; ctx.strokeRect(ox+1,oy+1,wA-2,hBA-2);
+
+  const PB=PBA*PA+PBnA*PnA;
+  const PAB=PB>0?(PBA*PA)/PB:0;
+
+  ctx.textAlign='center';
+  if(wA>55&&hBA>28){ctx.fillStyle='rgba(255,255,255,.92)';ctx.font='bold 11px system-ui';ctx.fillText('B\u2229A',ox+wA/2,oy+hBA/2-7);ctx.font='11px system-ui';ctx.fillText((PAB*100).toFixed(1)+'%',ox+wA/2,oy+hBA/2+8);}
+  if(wA>55&&(H-hBA)>28){ctx.fillStyle='rgba(30,58,95,.7)';ctx.font='10px system-ui';ctx.fillText('\u00acB\u2229A',ox+wA/2,oy+hBA+(H-hBA)/2+4);}
+  if(wNA>55&&hBNA>28){ctx.fillStyle='rgba(255,255,255,.9)';ctx.font='bold 10px system-ui';ctx.fillText('B\u2229\u00acA',ox+wA+wNA/2,oy+hBNA/2-5);ctx.font='10px system-ui';ctx.fillText(((1-PAB)*100).toFixed(1)+'%',ox+wA+wNA/2,oy+hBNA/2+7);}
+
+  ctx.fillStyle='#1e3a5f'; ctx.font='bold 11px system-ui';
+  if(wA>18) ctx.fillText('A',ox+wA/2,oy+H+18);
+  if(wNA>18) ctx.fillText('\u00acA',ox+wA+wNA/2,oy+H+18);
+  ctx.fillStyle='#64748b'; ctx.font='10px system-ui';
+  if(wA>32) ctx.fillText('P(A)='+PA.toFixed(2),ox+wA/2,oy+H+32);
+  if(wNA>32) ctx.fillText('P(\u00acA)='+PnA.toFixed(2),ox+wA+wNA/2,oy+H+32);
+  ctx.textAlign='right'; ctx.fillStyle='#475569'; ctx.font='10px system-ui';
+  if(hBA>14) ctx.fillText('B',ox-5,oy+hBA/2+4);
+  if(H-hBA>14) ctx.fillText('\u00acB',ox-5,oy+hBA+(H-hBA)/2+4);
+  ctx.fillStyle='#0f2744'; ctx.font='bold 11px system-ui'; ctx.textAlign='center';
+  ctx.fillText('Diagrama de Mosaico',ox+W/2,20);
+}
+
+/* ── VISUALIZAÇÃO ───────────────────────────────────────── */
+function upd2(){
+  const PA=+document.getElementById('sl-PA').value;
+  const PBA=+document.getElementById('sl-PBA').value;
+  const PBnA=+document.getElementById('sl-PBnA').value;
+  const PnA=1-PA, PB=PBA*PA+PBnA*PnA, PAB=PB>0?(PBA*PA)/PB:0;
+  document.getElementById('v-PA').textContent=PA.toFixed(2);
+  document.getElementById('v-PBA').textContent=PBA.toFixed(2);
+  document.getElementById('v-PBnA').textContent=PBnA.toFixed(2);
+  document.getElementById('res-PB').textContent=PB.toFixed(3);
+  document.getElementById('res-PAB').textContent=PAB.toFixed(3);
+  document.getElementById('res-PnAB').textContent=(1-PAB).toFixed(3);
+  const pp=(PA*100).toFixed(1)+'%', qp=(PAB*100).toFixed(1)+'%';
+  document.getElementById('bar-p').style.width=(PA*100)+'%'; document.getElementById('bar-p').textContent=pp;
+  document.getElementById('bar-q').style.width=(PAB*100)+'%'; document.getElementById('bar-q').textContent=qp;
+  document.getElementById('lbl-prior').textContent=pp; document.getElementById('lbl-post').textContent=qp;
+  drawMosaic('mosaic',PA,PBA,PBnA);
+}
+
+/* ── SIMULAÇÃO ──────────────────────────────────────────── */
+function upd4(){
+  const PA=+document.getElementById('ssl-PA').value;
+  const PBA=+document.getElementById('ssl-PBA').value;
+  const PBnA=+document.getElementById('ssl-PBnA').value;
+  const PnA=1-PA, PB=PBA*PA+PBnA*PnA, PAB=PB>0?(PBA*PA)/PB:0;
+  document.getElementById('sv-PA').textContent=PA.toFixed(2);
+  document.getElementById('sv-PBA').textContent=PBA.toFixed(2);
+  document.getElementById('sv-PBnA').textContent=PBnA.toFixed(2);
+  document.getElementById('sv-PA-r').textContent=PA.toFixed(3);
+  document.getElementById('sv-PB-r').textContent=PB.toFixed(3);
+  document.getElementById('sv-PAB-r').textContent=PAB.toFixed(3);
+  document.getElementById('sv-calc').innerHTML=
+    'P(\u00acA) = 1 \u2212 '+PA.toFixed(2)+' = '+PnA.toFixed(2)+'<br>'+
+    'P(B) = P(B|A)\u00b7P(A) + P(B|\u00acA)\u00b7P(\u00acA)<br>'+
+    '\u00a0\u00a0\u00a0 = '+PBA.toFixed(2)+' \u00d7 '+PA.toFixed(2)+' + '+PBnA.toFixed(2)+' \u00d7 '+PnA.toFixed(2)+'<br>'+
+    '\u00a0\u00a0\u00a0 = '+(PBA*PA).toFixed(4)+' + '+(PBnA*PnA).toFixed(4)+' = <strong>'+PB.toFixed(4)+'</strong><br><br>'+
+    'P(A|B) = P(B|A) \u00b7 P(A) / P(B)<br>'+
+    '\u00a0\u00a0\u00a0 = ('+PBA.toFixed(2)+' \u00d7 '+PA.toFixed(2)+') / '+PB.toFixed(4)+'<br>'+
+    '\u00a0\u00a0\u00a0 = '+(PBA*PA).toFixed(4)+' / '+PB.toFixed(4)+' = <strong>'+PAB.toFixed(4)+'</strong>';
+  drawMosaic('mosaic2',PA,PBA,PBnA);
+}
+
+/* ── TOGGLE SOLUTION ────────────────────────────────────── */
+function toggleSol(id,btn){
+  const p=document.getElementById(id);
+  const open=p.classList.toggle('open');
+  btn.textContent=open?'Ocultar solução':'Mostrar solução';
+  if(open&&window.renderMathInElement){
+    setTimeout(()=>renderMathInElement(p,{
+      delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]
+    }),30);
+  }
+}
+
+/* ── INIT ───────────────────────────────────────────────── */
+window.addEventListener('resize',()=>{
+  if(document.getElementById('panel-visual').classList.contains('active')) upd2();
+  if(document.getElementById('panel-sim').classList.contains('active')) upd4();
+});
+window.addEventListener('load',()=>{
+  goHome(document.querySelector('.sidebar a'));
+  upd2(); upd4();
+});
+</script>
+</body>
+</html>
