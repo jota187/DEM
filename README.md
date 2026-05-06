@@ -1,1 +1,1 @@
-Aprender a medir e a controlar os erros de medição
+Material de apoio para Didática do Estudo do Meio
