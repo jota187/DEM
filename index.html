@@ -1,40 +1,27 @@
 <!DOCTYPE html>
 <html lang="pt">
 <head>
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Didática do Estudo do Meio | Hub de Apoio</title>
-    <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Didática do Estudo do Meio | Hub de Apoio</title>
-    
-    <link rel="icon" type="image/png" href="favicon_dem.png">
-    
-    <!-- Fonte Moderna: Inter -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    ...
-    <!-- Fonte Moderna: Inter -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Did&aacute;tica do Estudo do Meio | Hub de Apoio</title>
+    <link rel="icon" type="image/png" href="favicon_dem.png" />
+    <link rel="stylesheet" href="assets/css/shared.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
     <style>
         :root {
-            /* Paleta de Cores Consistente */
-            --primary: #2563eb;       /* Blue 600 */
-            --primary-hover: #1d4ed8; /* Blue 700 */
-            --secondary: #3b82f6;     /* Blue 500 */
-            --accent: #10b981;        /* Emerald 500 */
-            --bg-main: #f8fafc;       /* Slate 50 */
-            --bg-hero: #0f172a;       /* Slate 900 */
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --secondary: #3b82f6;
+            --accent: #10b981;
+            --bg-main: #f8fafc;
+            --bg-hero: #0f172a;
             --card-bg: #ffffff;
-            --text-main: #1e293b;     /* Slate 800 */
-            --text-muted: #64748b;    /* Slate 500 */
+            --text-main: #1e293b;
+            --text-muted: #64748b;
             --text-hero: #f8fafc;
-            --border: #e2e8f0;        /* Slate 200 */
-            
-            /* Efeitos */
+            --border: #e2e8f0;
             --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
             --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
             --shadow-hover: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
@@ -44,48 +31,46 @@
         }
 
         * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
             font-family: 'Inter', sans-serif;
         }
 
         body {
             background-color: var(--bg-main);
             color: var(--text-main);
-            line-height: 1.6;
-            -webkit-font-smoothing: antialiased;
             display: flex;
             flex-direction: column;
             min-height: 100vh;
         }
 
-        /* --- HERO SECTION (Cabeçalho) --- */
         .hero {
             position: relative;
             background: linear-gradient(135deg, var(--bg-hero) 0%, #1e3a8a 100%);
             padding: 80px 24px;
             text-align: center;
             overflow: hidden;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
         }
 
-        /* Efeito de fundo abstrato */
         .hero::before {
             content: '';
             position: absolute;
-            top: -50%; left: -10%;
-            width: 400px; height: 400px;
-            background: radial-gradient(circle, rgba(59,130,246,0.3) 0%, rgba(0,0,0,0) 70%);
+            top: -50%;
+            left: -10%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.3) 0%, rgba(0, 0, 0, 0) 70%);
             border-radius: 50%;
             pointer-events: none;
         }
+
         .hero::after {
             content: '';
             position: absolute;
-            bottom: -30%; right: -5%;
-            width: 300px; height: 300px;
-            background: radial-gradient(circle, rgba(16,185,129,0.2) 0%, rgba(0,0,0,0) 70%);
+            bottom: -30%;
+            right: -5%;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(16, 185, 129, 0.2) 0%, rgba(0, 0, 0, 0) 70%);
             border-radius: 50%;
             pointer-events: none;
         }
@@ -93,7 +78,7 @@
         .hero-content {
             position: relative;
             z-index: 10;
-            max-width: 800px;
+            max-width: 860px;
             margin: 0 auto;
             animation: fadeInDown 0.8s ease-out;
         }
@@ -122,6 +107,13 @@
             margin-bottom: 16px;
         }
 
+        .hero p {
+            color: #dbeafe;
+            font-size: 1.05rem;
+            max-width: 760px;
+            margin: 0 auto;
+        }
+
         .author-box {
             display: inline-flex;
             align-items: center;
@@ -133,132 +125,156 @@
             color: #cbd5e1;
             font-size: 1.05em;
         }
+
         .author-box strong {
             color: white;
             font-weight: 600;
         }
 
-        /* --- CONTEÚDO PRINCIPAL (Menu) --- */
         main {
             flex: 1;
             max-width: 1000px;
-            margin: -40px auto 40px; /* Sobe por cima do hero */
+            margin: -40px auto 40px;
             padding: 0 24px;
             position: relative;
             z-index: 20;
             width: 100%;
         }
 
-        .section-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 24px;
-            padding-left: 12px;
+        .panel {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-md);
+            overflow: hidden;
+            animation: fadeInUp 0.8s ease-out 0.15s both;
         }
 
-        .section-header h2 {
+        .panel-header {
+            padding: 24px;
+            border-bottom: 1px solid var(--border);
+            background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+        }
+
+        .panel-header h2 {
             font-size: 1.5em;
             font-weight: 700;
             color: var(--primary);
-            display: flex;
-            align-items: center;
-            gap: 10px;
+            margin-bottom: 8px;
         }
 
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 24px;
-        }
-
-        /* --- CARTÕES (Cards) --- */
-        .card {
-            background: var(--card-bg);
-            border-radius: var(--radius-xl);
-            padding: 32px 28px;
-            text-decoration: none;
-            color: var(--text-main);
-            border: 1px solid var(--border);
-            box-shadow: var(--shadow-md);
-            transition: var(--transition);
-            display: flex;
-            flex-direction: column;
-            position: relative;
-            overflow: hidden;
-        }
-
-        /* Efeito de brilho no topo do cartão */
-        .card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0;
-            height: 4px;
-            background: var(--border);
-            transition: var(--transition);
-        }
-
-        .card:hover {
-            transform: translateY(-6px);
-            box-shadow: var(--shadow-hover);
-            border-color: #cbd5e1;
-        }
-        
-        /* Cores temáticas para cada cartão ao fazer hover */
-        .card.bayes:hover::before { background: #8b5cf6; } /* Purple */
-        .card.medir:hover::before { background: #3b82f6; } /* Blue */
-
-        .card-icon {
-            width: 56px;
-            height: 56px;
-            border-radius: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.8em;
-            margin-bottom: 20px;
-            background: #f1f5f9;
-            transition: var(--transition);
-        }
-
-        .card.bayes .card-icon { color: #7c3aed; background: #ede9fe; }
-        .card.medir .card-icon { color: #2563eb; background: #dbeafe; }
-
-        .card:hover .card-icon {
-            transform: scale(1.1) rotate(-5deg);
-        }
-
-        .card h3 {
-            font-size: 1.35em;
-            font-weight: 700;
-            margin-bottom: 10px;
-            letter-spacing: -0.3px;
-        }
-
-        .card p {
+        .panel-header p {
             color: var(--text-muted);
             font-size: 0.95em;
-            line-height: 1.6;
-            flex: 1;
         }
 
-        .card-action {
-            margin-top: 24px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-weight: 600;
-            font-size: 0.95em;
-            color: var(--primary);
+        .accordion-level-1 {
+            padding: 16px;
+            display: grid;
+            gap: 12px;
+        }
+
+        .theme-item,
+        .mode-item {
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            background: #fff;
             transition: var(--transition);
         }
 
-        .card:hover .card-action {
-            gap: 12px;
-            color: var(--primary-hover);
+        .theme-item:hover,
+        .mode-item:hover {
+            box-shadow: var(--shadow-sm);
+            border-color: #cbd5e1;
         }
 
-        /* --- FOOTER --- */
+        .theme-trigger,
+        .mode-trigger {
+            width: 100%;
+            border: 0;
+            background: #fff;
+            color: var(--text-main);
+            padding: 16px 18px;
+            text-align: left;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .mode-trigger {
+            background: #f8fafc;
+            font-size: 0.95rem;
+            padding: 12px 14px;
+        }
+
+        .theme-trigger:hover,
+        .mode-trigger:hover {
+            background: #f1f5f9;
+        }
+
+        .chevron {
+            display: inline-block;
+            transition: transform 0.28s ease;
+            color: var(--secondary);
+            font-size: 0.95rem;
+            flex-shrink: 0;
+        }
+
+        .theme-item.open > .theme-trigger .chevron,
+        .mode-item.open > .mode-trigger .chevron {
+            transform: rotate(90deg);
+        }
+
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.34s ease;
+        }
+
+        .theme-body {
+            padding: 0 12px 12px;
+            display: grid;
+            gap: 10px;
+            background: #fff;
+        }
+
+        .mode-body {
+            padding: 12px 14px;
+            border-top: 1px solid var(--border);
+            background: #ffffff;
+        }
+
+        .mode-description {
+            color: var(--text-muted);
+            font-size: 0.92rem;
+            margin-bottom: 10px;
+        }
+
+        .activity-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--primary);
+            color: #fff;
+            text-decoration: none;
+            border-radius: 10px;
+            padding: 8px 14px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .activity-link:hover {
+            background: var(--primary-hover);
+            transform: translateY(-1px);
+        }
+
         footer {
             background: white;
             border-top: 1px solid var(--border);
@@ -292,86 +308,259 @@
             color: var(--text-main);
         }
 
-        /* Keyframes */
         @keyframes fadeInDown {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
-        .grid { animation: fadeInUp 0.8s ease-out 0.2s both; }
+        @media (max-width: 760px) {
+            .hero {
+                padding: 60px 20px;
+            }
 
+            main {
+                padding: 0 14px;
+            }
+
+            .panel-header {
+                padding: 18px;
+            }
+
+            .theme-trigger,
+            .mode-trigger {
+                font-size: 0.92rem;
+            }
+        }
     </style>
 </head>
 <body>
-
-    <!-- CABEÇALHO / HERO -->
     <header class="hero">
         <div class="hero-content">
             <span class="badge">Material de Apoio</span>
-            <h1>Didática do Estudo do Meio</h1>
+            <h1>Did&aacute;tica do Estudo do Meio</h1>
+            <p>
+                Procedimento: escolha um tema, abra o tipo de atividade (Aberta ou Fechada),
+                leia a descri&ccedil;&atilde;o e aceda ao respetivo ficheiro.
+            </p>
             <div class="author-box">
                 por <strong>Jorge Fonseca e Trindade</strong>
             </div>
         </div>
     </header>
 
-    <!-- CONTEÚDO PRINCIPAL -->
     <main>
-        <div class="section-header">
-            <h2>📚 Índice</h2>
-        </div>
-        
-        <div class="grid">
-            
-            <!-- CARTÃO 1: Teorema de Bayes -->
-            <a href="bayes/teorema_bayes.html" class="card bayes">
-                <div class="card-icon">📊</div>
-                <h3>Teorema de Bayes</h3>
-                <p>Módulo interativo focado no estudo das probabilidades condicionais, raciocínio lógico e o processo de atualização de crenças (raciocínio bayesiano).</p>
-                <div class="card-action">
-                    Aceder ao módulo <span>→</span>
-                </div>
-            </a>
+        <section class="panel">
+            <div class="panel-header">
+                <h2>&Iacute;ndice de atividades experimentais</h2>
+                <p>Navega&ccedil;&atilde;o por acorde&atilde;o em tr&ecirc;s n&iacute;veis para facilitar a explora&ccedil;&atilde;o dos recursos.</p>
+            </div>
 
-            <!-- CARTÃO 2: Aprender a Medir -->
-            <!-- NOTA: Usa o nome de ficheiro exato que escolheres. -->
-            <a href="medir/aprender_medir.html" class="card medir">
-                <div class="card-icon">📏</div>
-                <h3>Aprender a Medir</h3>
-                <p>Conceitos fundamentais sobre medições em física, algarismos significativos, precisão, exatidão e análise de incertezas (erros).</p>
-                <div class="card-action">
-                    Aceder ao módulo <span>→</span>
-                </div>
-            </a>
-            
-            <!-- CARTÃO 3: Atividades Experimentais -->
-            <a href="experimenta/index.html" class="card medir">
-                <div class="card-icon">🧪</div>
-                <h3>Atividades Experimentais</h3>
-                <p>Planeamento de atividades experimentais focado na progressão da autonomia do aluno e na variação do grau de abertura, percorrendo todas as fases do trabalho prático e o papel mediador do docente.</p>
-                <div class="card-action">
-                    Aceder ao módulo <span>→</span>
-                </div>
-            </a>
-        </div>
+            <div id="accordion-root" class="accordion-level-1"></div>
+        </section>
     </main>
 
-    <!-- RODAPÉ / INFORMAÇÃO DA VERSÃO -->
     <footer>
         <div class="footer-content">
             <div class="footer-item">
-                📅 Ano: <b>2026</b>
+                &#128197; Ano: <b>2026</b>
             </div>
             <div class="footer-item">
-                ⚙️ Versão: <b>2026.05.06</b>
+                &#9881;&#65039; Vers&atilde;o: <b>2026.05.08</b>
             </div>
         </div>
     </footer>
 
+    <script>
+        const activityData = [
+            {
+                tema: '&Aacute;gua',
+                aberta: {
+                    descricao: 'Atividade aberta sobre &aacute;gua para investiga&ccedil;&atilde;o guiada pelos alunos.',
+                    ficheiro: 'experimenta/public/activities/agua_aberta.html'
+                },
+                fechada: {
+                    descricao: 'Atividade fechada sobre &aacute;gua com protocolo e passos definidos.',
+                    ficheiro: 'experimenta/public/activities/agua_fechada.html'
+                }
+            },
+            {
+                tema: 'Calor',
+                aberta: {
+                    descricao: 'Exploracao aberta de fenomenos de calor, observando hipoteses e resultados.',
+                    ficheiro: 'experimenta/public/activities/calor_aberta.html'
+                },
+                fechada: {
+                    descricao: 'Exploracao fechada de calor com roteiro estruturado para a turma.',
+                    ficheiro: 'experimenta/public/activities/calor_fechada.html'
+                }
+            },
+            {
+                tema: 'Cor',
+                aberta: {
+                    descricao: 'Atividade aberta de cor para testar misturas e perce&ccedil;&atilde;o visual.',
+                    ficheiro: 'experimenta/public/activities/cor_aberta.html'
+                },
+                fechada: {
+                    descricao: 'Atividade fechada de cor com sequencia previamente definida.',
+                    ficheiro: 'experimenta/public/activities/cor_fechada.html'
+                }
+            },
+            {
+                tema: 'Corrente El&eacute;trica',
+                aberta: {
+                    descricao: 'Atividade aberta para investigar circuitos e condicoes de funcionamento.',
+                    ficheiro: 'experimenta/public/activities/corrente_eletrica_aberta.html'
+                },
+                fechada: {
+                    descricao: 'Atividade fechada de corrente el&eacute;trica com tarefas orientadas.',
+                    ficheiro: 'experimenta/public/activities/corrente_eletrica_fechada.html'
+                }
+            },
+            {
+                tema: 'Densidade',
+                aberta: {
+                    descricao: 'Atividade aberta para comparar materiais e inferir densidade.',
+                    ficheiro: 'experimenta/public/activities/densidade_aberta.html'
+                },
+                fechada: {
+                    descricao: 'Atividade fechada de densidade com medi&ccedil;&otilde;es controladas.',
+                    ficheiro: 'experimenta/public/activities/densidade_fechada.html'
+                }
+            },
+            {
+                tema: 'Espelhos',
+                aberta: {
+                    descricao: 'Atividade aberta sobre espelhos para explorar reflexao e imagem.',
+                    ficheiro: 'experimenta/public/activities/espelhos_aberta.html'
+                },
+                fechada: {
+                    descricao: 'Atividade fechada de espelhos com guiao de observacao.',
+                    ficheiro: 'experimenta/public/activities/espelhos_fechada.html'
+                }
+            },
+            {
+                tema: 'Luz',
+                aberta: {
+                    descricao: 'Atividade aberta para investigar propagacao e interacoes da luz.',
+                    ficheiro: 'experimenta/public/activities/luz_aberta.html'
+                },
+                fechada: {
+                    descricao: 'Atividade fechada de luz com objetivos e etapas definidos.',
+                    ficheiro: 'experimenta/public/activities/luz_fechada.html'
+                }
+            },
+            {
+                tema: 'Pressao do Ar',
+                aberta: {
+                    descricao: 'Atividade aberta para testar efeitos da press&atilde;o do ar no quotidiano.',
+                    ficheiro: 'experimenta/public/activities/pressao_ar_aberta.html'
+                },
+                fechada: {
+                    descricao: 'Atividade fechada de press&atilde;o do ar com experi&ecirc;ncia orientada.',
+                    ficheiro: 'experimenta/public/activities/pressao_ar_fechada.html'
+                }
+            },
+            {
+                tema: 'Som',
+                aberta: {
+                    descricao: 'Atividade aberta para explorar fontes sonoras e propagacao do som.',
+                    ficheiro: 'experimenta/public/activities/som_aberta.html'
+                },
+                fechada: {
+                    descricao: 'Atividade fechada sobre som com roteiro detalhado.',
+                    ficheiro: 'experimenta/public/activities/som_fechada.html'
+                }
+            }
+        ];
+
+        function createModeSection(modeLabel, modeData) {
+            const modeItem = document.createElement('article');
+            modeItem.className = 'mode-item';
+
+            const modeTrigger = document.createElement('button');
+            modeTrigger.className = 'mode-trigger';
+            modeTrigger.type = 'button';
+            modeTrigger.innerHTML = `<span>${modeLabel}</span><span class="chevron">&#9654;</span>`;
+
+            const content = document.createElement('div');
+            content.className = 'accordion-content';
+
+            const body = document.createElement('div');
+            body.className = 'mode-body';
+            body.innerHTML = `
+                <p class="mode-description">${modeData.descricao}</p>
+                <a class="activity-link" href="${modeData.ficheiro}">Abrir ficheiro</a>
+            `;
+
+            content.appendChild(body);
+
+            modeTrigger.addEventListener('click', () => {
+                modeItem.classList.toggle('open');
+                content.style.maxHeight = modeItem.classList.contains('open')
+                    ? `${content.scrollHeight}px`
+                    : '0px';
+            });
+
+            modeItem.appendChild(modeTrigger);
+            modeItem.appendChild(content);
+            return modeItem;
+        }
+
+        function createThemeSection(themeData) {
+            const themeItem = document.createElement('section');
+            themeItem.className = 'theme-item';
+
+            const themeTrigger = document.createElement('button');
+            themeTrigger.className = 'theme-trigger';
+            themeTrigger.type = 'button';
+            themeTrigger.innerHTML = `<span>${themeData.tema}</span><span class="chevron">&#9654;</span>`;
+
+            const content = document.createElement('div');
+            content.className = 'accordion-content';
+
+            const body = document.createElement('div');
+            body.className = 'theme-body';
+            body.appendChild(createModeSection('Aberta', themeData.aberta));
+            body.appendChild(createModeSection('Fechada', themeData.fechada));
+            content.appendChild(body);
+
+            themeTrigger.addEventListener('click', () => {
+                themeItem.classList.toggle('open');
+                content.style.maxHeight = themeItem.classList.contains('open')
+                    ? `${content.scrollHeight}px`
+                    : '0px';
+            });
+
+            themeItem.appendChild(themeTrigger);
+            themeItem.appendChild(content);
+            return themeItem;
+        }
+
+        const root = document.getElementById('accordion-root');
+        activityData.forEach((theme) => root.appendChild(createThemeSection(theme)));
+
+        window.addEventListener('resize', () => {
+            document.querySelectorAll('.theme-item.open > .accordion-content, .mode-item.open > .accordion-content').forEach((content) => {
+                content.style.maxHeight = `${content.scrollHeight}px`;
+            });
+        });
+    </script>
 </body>
 </html>
