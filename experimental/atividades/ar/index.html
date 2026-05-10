@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Pressão do Ar</title>
+<link rel="icon" type="image/png" href="../favicon_experimental.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--primary:#2563eb;--primary-hover:#1d4ed8;--bg:#f8fafc;--card:#fff;--text:#1e293b;--muted:#64748b;--border:#e2e8f0;--hero:#0f172a;--accent:#10b981;--purple:#7c3aed;--radius:16px;--shadow:0 4px 6px -1px rgb(0 0 0 / .08),0 2px 4px -2px rgb(0 0 0 / .06);--shadow-hover:0 20px 25px -5px rgb(0 0 0 / .12),0 8px 10px -6px rgb(0 0 0 / .08);--t:all .25s cubic-bezier(.4,0,.2,1)}
+body{font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100vh;display:flex;flex-direction:column}
+a{color:var(--primary);text-decoration:none}
+a:hover{text-decoration:underline}
+.site-nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);padding:10px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;font-size:.92rem}
+.site-nav .crumbs{display:flex;align-items:center;gap:6px;flex-wrap:wrap;color:var(--muted)}
+.site-nav .crumbs a{color:var(--muted);font-weight:500}
+.site-nav .crumbs a:hover{color:var(--primary);text-decoration:none}
+.site-nav .crumbs .sep{opacity:.5}
+.site-nav .crumbs .current{color:var(--text);font-weight:600}
+.site-nav .actions{margin-left:auto;display:flex;gap:8px}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:999px;font-size:.85rem;font-weight:600;border:1px solid var(--border);background:#fff;color:var(--text);transition:var(--t)}
+.btn:hover{border-color:var(--primary);color:var(--primary);text-decoration:none;transform:translateY(-1px)}
+.btn.primary{background:var(--primary);color:#fff;border-color:var(--primary)}
+.btn.primary:hover{background:var(--primary-hover);color:#fff}
+.hero{position:relative;background:linear-gradient(135deg,var(--hero) 0%,#1e3a8a 100%);color:#fff;padding:54px 24px 60px;text-align:center;overflow:hidden}
+.hero::before,.hero::after{content:"";position:absolute;border-radius:50%;pointer-events:none}
+.hero::before{top:-50%;left:-10%;width:400px;height:400px;background:radial-gradient(circle,rgba(59,130,246,.3) 0%,transparent 70%)}
+.hero::after{bottom:-30%;right:-5%;width:300px;height:300px;background:radial-gradient(circle,rgba(16,185,129,.2) 0%,transparent 70%)}
+.hero-content{position:relative;z-index:1;max-width:900px;margin:0 auto;animation:fadeDown .6s ease-out}
+.badge{display:inline-block;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#bae6fd;padding:5px 14px;border-radius:999px;font-size:.78rem;font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:16px}
+.hero h1{font-size:clamp(2rem,4.5vw,3.4rem);font-weight:800;letter-spacing:-1px;line-height:1.15;margin-bottom:10px}
+.hero p.lead{color:#cbd5e1;font-size:1.05rem;max-width:640px;margin:0 auto}
+main{flex:1;max-width:1080px;margin:-32px auto 48px;padding:0 24px;width:100%;position:relative;z-index:2}
+.section-header{margin:8px 0 20px;padding-left:6px}
+.section-header h2{font-size:1.35rem;font-weight:700;color:var(--primary);display:flex;align-items:center;gap:10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:22px;animation:fadeUp .6s ease-out .15s both}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:26px 24px;box-shadow:var(--shadow);color:var(--text);text-decoration:none;display:flex;flex-direction:column;transition:var(--t);position:relative;overflow:hidden}
+.card::before{content:"";position:absolute;top:0;left:0;right:0;height:4px;background:var(--border);transition:var(--t)}
+.card:hover{transform:translateY(-5px);box-shadow:var(--shadow-hover);text-decoration:none;border-color:#cbd5e1}
+.card:hover::before{background:var(--primary)}
+.card.bayes:hover::before{background:var(--purple)}
+.card.medir:hover::before{background:#3b82f6}
+.card.experimental:hover::before{background:var(--accent)}
+.card-icon{width:52px;height:52px;border-radius:14px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;font-size:1.6rem;margin-bottom:16px;transition:var(--t)}
+.card.bayes .card-icon{background:#ede9fe;color:#7c3aed}
+.card.medir .card-icon{background:#dbeafe;color:#2563eb}
+.card.experimental .card-icon{background:#d1fae5;color:#059669}
+.card:hover .card-icon{transform:scale(1.1) rotate(-5deg)}
+.card h3{font-size:1.18rem;font-weight:700;margin-bottom:6px;letter-spacing:-.3px}
+.card p{color:var(--muted);font-size:.92rem;flex:1}
+.card-action{margin-top:18px;font-weight:600;font-size:.9rem;color:var(--primary);display:flex;align-items:center;gap:6px;transition:var(--t)}
+.card:hover .card-action{gap:10px}
+footer{margin-top:auto;padding:24px;text-align:center;color:var(--muted);font-size:.85rem;border-top:1px solid var(--border);background:#fff}
+@keyframes fadeDown{from{opacity:0;transform:translateY(-12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:600px){.hero{padding:40px 16px 50px}main{padding:0 16px}.site-nav{font-size:.82rem}}
+
+.card.aberta_card::before{background:#10b981 !important}
+.card.fechada_card::before{background:#2563eb !important}
+.card.aberta_card .card-icon{background:#d1fae5;color:#065f46}
+.card.fechada_card .card-icon{background:#dbeafe;color:#1e3a8a}
+</style>
+
+</head>
+<body>
+
+<nav class="site-nav" aria-label="Navegação"><div class="crumbs"><a href="../../../index.html">Início</a><span class="sep">›</span><a href="../../experimental_index.html">Atividades Experimentais</a><span class="sep">›</span><a href="../index.html">Atividades</a><span class="sep">›</span><span class="current">Pressão do Ar</span></div><div class="actions"><a class="btn" href="../index.html">↑ Voltar</a><a class="btn primary" href="../../../index.html">🏠 Início</a></div></nav>
+<header class="hero">
+  <div class="hero-content">
+    <span class="badge">Índice da secção</span>
+    <h1>Pressão do Ar</h1>
+    <p class="lead">Atividades experimentais sobre pressão atmosférica e compressibilidade do ar.</p>
+  </div>
+</header>
+<main>
+  <div class="section-header"><h2>📚 Conteúdos</h2></div>
+  <div class="grid">
+    <a href="pressao_ar_aberta.html" class="card aberta_card"><div class="card-icon">🔓</div><h3>Atividade Aberta</h3><p>Os alunos definem a questão e o plano de investigação.</p><span class="card-action">Ler →</span></a><a href="pressao_ar_fechada.html" class="card fechada_card"><div class="card-icon">🔒</div><h3>Atividade Fechada</h3><p>Atividade estruturada com questão e procedimento pré-definidos.</p><span class="card-action">Ler →</span></a>
+  </div>
+</main>
+
+<footer>© Didática do Estudo do Meio · Jorge Fonseca e Trindade</footer>
+</body>
+</html>

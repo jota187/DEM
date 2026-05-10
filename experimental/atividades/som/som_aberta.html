@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Som – Formulário (atividade ABERTA)</title>
+
+<link rel="stylesheet" href="../../../assets/css/shared.css">
+<style>
+/* Detect aberta/fechada for section coloring */
+.sec { --sec-type: aberta; }
+</style>
+</head>
+<body>
+<!--SITE_NAV_INJECTED--><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"><style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--primary:#2563eb;--primary-hover:#1d4ed8;--bg:#f8fafc;--card:#fff;--text:#1e293b;--muted:#64748b;--border:#e2e8f0;--hero:#0f172a;--accent:#10b981;--purple:#7c3aed;--radius:16px;--shadow:0 4px 6px -1px rgb(0 0 0 / .08),0 2px 4px -2px rgb(0 0 0 / .06);--shadow-hover:0 20px 25px -5px rgb(0 0 0 / .12),0 8px 10px -6px rgb(0 0 0 / .08);--t:all .25s cubic-bezier(.4,0,.2,1)}
+body{font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100vh;display:flex;flex-direction:column}
+a{color:var(--primary);text-decoration:none}
+a:hover{text-decoration:underline}
+.site-nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);padding:10px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;font-size:.92rem}
+.site-nav .crumbs{display:flex;align-items:center;gap:6px;flex-wrap:wrap;color:var(--muted)}
+.site-nav .crumbs a{color:var(--muted);font-weight:500}
+.site-nav .crumbs a:hover{color:var(--primary);text-decoration:none}
+.site-nav .crumbs .sep{opacity:.5}
+.site-nav .crumbs .current{color:var(--text);font-weight:600}
+.site-nav .actions{margin-left:auto;display:flex;gap:8px}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:999px;font-size:.85rem;font-weight:600;border:1px solid var(--border);background:#fff;color:var(--text);transition:var(--t)}
+.btn:hover{border-color:var(--primary);color:var(--primary);text-decoration:none;transform:translateY(-1px)}
+.btn.primary{background:var(--primary);color:#fff;border-color:var(--primary)}
+.btn.primary:hover{background:var(--primary-hover);color:#fff}
+.hero{position:relative;background:linear-gradient(135deg,var(--hero) 0%,#1e3a8a 100%);color:#fff;padding:54px 24px 60px;text-align:center;overflow:hidden}
+.hero::before,.hero::after{content:"";position:absolute;border-radius:50%;pointer-events:none}
+.hero::before{top:-50%;left:-10%;width:400px;height:400px;background:radial-gradient(circle,rgba(59,130,246,.3) 0%,transparent 70%)}
+.hero::after{bottom:-30%;right:-5%;width:300px;height:300px;background:radial-gradient(circle,rgba(16,185,129,.2) 0%,transparent 70%)}
+.hero-content{position:relative;z-index:1;max-width:900px;margin:0 auto;animation:fadeDown .6s ease-out}
+.badge{display:inline-block;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#bae6fd;padding:5px 14px;border-radius:999px;font-size:.78rem;font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:16px}
+.hero h1{font-size:clamp(2rem,4.5vw,3.4rem);font-weight:800;letter-spacing:-1px;line-height:1.15;margin-bottom:10px}
+.hero p.lead{color:#cbd5e1;font-size:1.05rem;max-width:640px;margin:0 auto}
+main{flex:1;max-width:1080px;margin:-32px auto 48px;padding:0 24px;width:100%;position:relative;z-index:2}
+.section-header{margin:8px 0 20px;padding-left:6px}
+.section-header h2{font-size:1.35rem;font-weight:700;color:var(--primary);display:flex;align-items:center;gap:10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:22px;animation:fadeUp .6s ease-out .15s both}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:26px 24px;box-shadow:var(--shadow);color:var(--text);text-decoration:none;display:flex;flex-direction:column;transition:var(--t);position:relative;overflow:hidden}
+.card::before{content:"";position:absolute;top:0;left:0;right:0;height:4px;background:var(--border);transition:var(--t)}
+.card:hover{transform:translateY(-5px);box-shadow:var(--shadow-hover);text-decoration:none;border-color:#cbd5e1}
+.card:hover::before{background:var(--primary)}
+.card.bayes:hover::before{background:var(--purple)}
+.card.medir:hover::before{background:#3b82f6}
+.card.experimental:hover::before{background:var(--accent)}
+.card-icon{width:52px;height:52px;border-radius:14px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;font-size:1.6rem;margin-bottom:16px;transition:var(--t)}
+.card.bayes .card-icon{background:#ede9fe;color:#7c3aed}
+.card.medir .card-icon{background:#dbeafe;color:#2563eb}
+.card.experimental .card-icon{background:#d1fae5;color:#059669}
+.card:hover .card-icon{transform:scale(1.1) rotate(-5deg)}
+.card h3{font-size:1.18rem;font-weight:700;margin-bottom:6px;letter-spacing:-.3px}
+.card p{color:var(--muted);font-size:.92rem;flex:1}
+.card-action{margin-top:18px;font-weight:600;font-size:.9rem;color:var(--primary);display:flex;align-items:center;gap:6px;transition:var(--t)}
+.card:hover .card-action{gap:10px}
+footer{margin-top:auto;padding:24px;text-align:center;color:var(--muted);font-size:.85rem;border-top:1px solid var(--border);background:#fff}
+@keyframes fadeDown{from{opacity:0;transform:translateY(-12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:600px){.hero{padding:40px 16px 50px}main{padding:0 16px}.site-nav{font-size:.82rem}}
+
+.site-nav{margin-bottom:16px}</style><nav class="site-nav" aria-label="Navegação"><div class="crumbs"><a href="../../../index.html">Início</a><span class="sep">›</span><a href="../../experimental_index.html">Atividades Experimentais</a><span class="sep">›</span><a href="../index.html">Atividades</a><span class="sep">›</span><a href="./index.html">Som</a></div><div class="actions"><a class="btn" href="./index.html">↑ Índice da secção</a><a class="btn primary" href="../../../index.html">🏠 Início</a></div></nav>
+<main class="content-body">
+<h1>Som – Formulário de planificação</h1>
+
+<style>
+.ativ-switcher{
+  display:flex;gap:10px;margin-bottom:24px;
+  background:#f1f5f9;padding:6px;border-radius:999px;
+  width:fit-content;
+}
+.ativ-switcher a{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:7px 18px;border-radius:999px;
+  font-size:.84rem;font-weight:600;
+  color:#64748b;text-decoration:none;transition:all .18s;
+}
+.ativ-switcher a.active{background:#fff;color:#1e293b;box-shadow:0 1px 4px rgb(0 0 0/.1)}
+.ativ-switcher a.aberta.active{color:#065f46}
+.ativ-switcher a.fechada.active{color:#1e3a8a}
+</style>
+
+<div class="ativ-switcher"><a href="som_aberta.html" class="aberta active">🔓 Atividade Aberta</a><a href="som_fechada.html" class="fechada">🔒 Atividade Fechada</a></div>
+
+<div class="sec aberta"><h2>Atividade experimental ABERTA</h2>
+
+  <div class="bloco">
+    <h3>1. Conhecimento (o que quero ensinar/aprender)</h3>
+
+    <label>Questão geral orientadora (área de investigação):</label>
+    <textarea name="aberto_questao">Como diferentes objetos da sala podem produzir sons diferentes (mais fortes, mais fracos, mais agudos, mais graves)?</textarea>
+  </div>
+
+  <div class="bloco">
+    <h3>2. Equipamento e materiais</h3>
+
+    <label>Equipamento disponível:</label>
+    <textarea name="aberto_equipamento">Objetos diversos (copos, caixas, elásticos, lápis, papel, água em copos, etc.).</textarea>
+
+    <!-- ESQUEMA DA MONTAGEM -->
+    <figure>
+      <svg viewBox="0 0 1100 500" xmlns="http://www.w3.org/2000/svg">
+
+        <!-- Fundo -->
+        <rect x="0" y="0" width="1100" height="500" fill="#ffffff"/>
+
+        <!-- Título interno -->
+        <text x="550" y="40" font-size="22" text-anchor="middle" fill="#222">
+          Esquema da montagem para explorar produção de som
+        </text>
+
+        <!-- Mesa -->
+        <rect x="80" y="420" width="940" height="12" fill="#dcdcdc"/>
+
+        <!-- Conjunto 1: Copo com água -->
+        <g transform="translate(200,250)">
+          <rect x="-40" y="-80" width="80" height="80" fill="#b3e5fc" stroke="#0288d1" stroke-width="3"/>
+          <rect x="-40" y="0" width="80" height="20" fill="#0288d1"/>
+          <text x="0" y="-95" font-size="16" text-anchor="middle">Copo com água</text>
+          <text x="0" y="110" font-size="14" text-anchor="middle">Variar quantidade de água</text>
+        </g>
+
+        <!-- Conjunto 2: Elástico esticado -->
+        <g transform="translate(550,250)">
+          <line x1="-60" y1="0" x2="60" y2="0" stroke="#ff7043" stroke-width="6"/>
+          <circle cx="-60" cy="0" r="10" fill="#555"/>
+          <circle cx="60" cy="0" r="10" fill="#555"/>
+          <text x="0" y="-95" font-size="16" text-anchor="middle">Elástico</text>
+          <text x="0" y="110" font-size="14" text-anchor="middle">Variar tensão</text>
+        </g>
+
+        <!-- Conjunto 3: Caixa / tambor improvisado -->
+        <g transform="translate(900,250)">
+          <rect x="-60" y="-60" width="120" height="120" fill="#ffe082" stroke="#ffb300" stroke-width="3"/>
+          <text x="0" y="-80" font-size="16" text-anchor="middle">Caixa / tambor</text>
+          <text x="0" y="110" font-size="14" text-anchor="middle">Variar forma de bater</text>
+        </g>
+
+        <!-- Setas explicativas -->
+        <defs>
+          <marker id="arrow" markerWidth="10" markerHeight="10" refX="6" refY="5" orient="auto">
+            <polygon points="0 0, 10 5, 0 10" fill="#333"/>
+          </marker>
+        </defs>
+
+        <line x1="200" y1="350" x2="200" y2="420" stroke="#333" stroke-width="2" marker-end="url(#arrow)"/>
+        <text x="200" y="445" font-size="14" text-anchor="middle">Tocar no copo</text>
+
+        <line x1="550" y1="350" x2="550" y2="420" stroke="#333" stroke-width="2" marker-end="url(#arrow)"/>
+        <text x="550" y="445" font-size="14" text-anchor="middle">Dedilhar o elástico</text>
+
+        <line x1="900" y1="350" x2="900" y2="420" stroke="#333" stroke-width="2" marker-end="url(#arrow)"/>
+        <text x="900" y="445" font-size="14" text-anchor="middle">Bater na caixa</text>
+
+        <!-- Legenda -->
+        <rect x="80" y="60" width="350" height="120" fill="#fff" stroke="#ccc"/>
+        <text x="100" y="85" font-size="16">Legenda</text>
+        <text x="100" y="110" font-size="14">• Copo com água → altura do som depende da água</text>
+        <text x="100" y="130" font-size="14">• Elástico → som depende da tensão</text>
+        <text x="100" y="150" font-size="14">• Caixa → som depende da força e do material</text>
+
+      </svg>
+
+      <figcaption>Esquema didático: três fontes de som (copo, elástico, caixa) para explorar intensidade e altura do som.</figcaption>
+    </figure>
+
+  </div>
+
+  <div class="bloco">
+    <h3>3. Etapas do trabalho prático</h3>
+
+    <label>ANTES da experimentação:</label>
+    <textarea name="aberto_antes">Lançar o desafio de construir “uma orquestra da sala”; grupos formulam perguntas (por exemplo, “mais água no copo muda o som?”).</textarea>
+
+    <label>DURANTE a experimentação:</label>
+    <textarea name="aberto_durante">Grupos experimentam, variando quantidade de água, tipo de objeto, forma de bater, etc., e registam.</textarea>
+
+    <label>DEPOIS da experimentação:</label>
+    <textarea name="aberto_depois">Apresentar os “instrumentos” criados, relacionar altura do som com propriedades físicas (tamanho, tensão, quantidade de água).</textarea>
+  </div>
+</div>
+</main>
+
+<style>
+.scroll-top{
+  position:fixed;bottom:24px;right:24px;
+  width:40px;height:40px;border-radius:50%;
+  background:var(--primary,#2563eb);color:#fff;
+  border:none;cursor:pointer;font-size:1.1rem;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 4px 12px rgb(0 0 0/.2);
+  opacity:0;transition:opacity .25s,transform .25s;
+  z-index:500;transform:translateY(8px);
+}
+.scroll-top.visible{opacity:1;transform:translateY(0)}
+.scroll-top:hover{background:#1d4ed8}
+</style>
+<button class="scroll-top" id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Voltar ao topo">↑</button>
+<script>
+(function(){
+  var btn=document.getElementById('scrollTop');
+  window.addEventListener('scroll',function(){
+    btn.classList.toggle('visible',window.scrollY>300);
+  });
+})();
+</script>
+
+</body>
+</html>

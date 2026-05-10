@@ -1,377 +1,85 @@
 <!DOCTYPE html>
 <html lang="pt">
 <head>
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Didática do Estudo do Meio | Hub de Apoio</title>
-    <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Didática do Estudo do Meio | Hub de Apoio</title>
-    
-    <link rel="icon" type="image/png" href="favicon_dem.png">
-    
-    <!-- Fonte Moderna: Inter -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    ...
-    <!-- Fonte Moderna: Inter -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Didática do Estudo do Meio</title>
+<link rel="icon" type="image/png" href="favicon_dem.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--primary:#2563eb;--primary-hover:#1d4ed8;--bg:#f8fafc;--card:#fff;--text:#1e293b;--muted:#64748b;--border:#e2e8f0;--hero:#0f172a;--accent:#10b981;--purple:#7c3aed;--radius:16px;--shadow:0 4px 6px -1px rgb(0 0 0 / .08),0 2px 4px -2px rgb(0 0 0 / .06);--shadow-hover:0 20px 25px -5px rgb(0 0 0 / .12),0 8px 10px -6px rgb(0 0 0 / .08);--t:all .25s cubic-bezier(.4,0,.2,1)}
+/* scrollbar */
+body{font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100vh;display:flex;flex-direction:column}
+a{color:var(--primary);text-decoration:none}
+a:hover{text-decoration:underline}
+.hero{position:relative;background:linear-gradient(135deg,var(--hero) 0%,#1e3a8a 100%);color:#fff;padding:64px 24px 80px;text-align:center;overflow:hidden}
+.hero::before,.hero::after{content:"";position:absolute;border-radius:50%;pointer-events:none}
+.hero::before{top:-50%;left:-10%;width:400px;height:400px;background:radial-gradient(circle,rgba(59,130,246,.3) 0%,transparent 70%)}
+.hero::after{bottom:-30%;right:-5%;width:300px;height:300px;background:radial-gradient(circle,rgba(16,185,129,.2) 0%,transparent 70%)}
+.hero-content{position:relative;z-index:1;max-width:900px;margin:0 auto;animation:fadeDown .6s ease-out}
+.badge{display:inline-block;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#bae6fd;padding:5px 14px;border-radius:999px;font-size:.78rem;font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:16px}
+.hero h1{font-size:clamp(2rem,4.5vw,3.4rem);font-weight:800;letter-spacing:-1px;line-height:1.15;margin-bottom:12px}
+.hero p.lead{color:#cbd5e1;font-size:1.1rem;max-width:680px;margin:0 auto}
+main{flex:1;max-width:1080px;margin:-40px auto 56px;padding:0 24px;width:100%;position:relative;z-index:2}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:22px;animation:fadeUp .6s ease-out .15s both}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:28px 26px;box-shadow:var(--shadow);color:var(--text);text-decoration:none;display:flex;flex-direction:column;transition:var(--t);position:relative;overflow:hidden}
+.card::before{content:"";position:absolute;top:0;left:0;right:0;height:4px;background:var(--border);transition:var(--t)}
+.card:hover{transform:translateY(-5px);box-shadow:var(--shadow-hover);text-decoration:none;border-color:#cbd5e1}
+.card.bayes:hover::before{background:var(--purple)}
+.card.medir:hover::before{background:#3b82f6}
+.card.experimental:hover::before{background:var(--accent)}
+.card-icon{width:56px;height:56px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.7rem;margin-bottom:18px;transition:var(--t)}
+.card.bayes .card-icon{background:#ede9fe;color:#7c3aed}
+.card.medir .card-icon{background:#dbeafe;color:#2563eb}
+.card.experimental .card-icon{background:#d1fae5;color:#059669}
+.card:hover .card-icon{transform:scale(1.1) rotate(-5deg)}
+.card h3{font-size:1.22rem;font-weight:700;margin-bottom:10px;letter-spacing:-.3px}
+.card p{color:var(--muted);font-size:.95rem;flex:1}
+.card-action{margin-top:20px;font-weight:600;font-size:.92rem;color:var(--primary);display:flex;align-items:center;gap:6px;transition:var(--t)}
+.card:hover .card-action{gap:10px}
+footer{margin-top:auto;padding:24px;text-align:center;color:var(--muted);font-size:.85rem;border-top:1px solid var(--border);background:#fff}
 
-    <style>
-        :root {
-            /* Paleta de Cores Consistente */
-            --primary: #2563eb;       /* Blue 600 */
-            --primary-hover: #1d4ed8; /* Blue 700 */
-            --secondary: #3b82f6;     /* Blue 500 */
-            --accent: #10b981;        /* Emerald 500 */
-            --bg-main: #f8fafc;       /* Slate 50 */
-            --bg-hero: #0f172a;       /* Slate 900 */
-            --card-bg: #ffffff;
-            --text-main: #1e293b;     /* Slate 800 */
-            --text-muted: #64748b;    /* Slate 500 */
-            --text-hero: #f8fafc;
-            --border: #e2e8f0;        /* Slate 200 */
-            
-            /* Efeitos */
-            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-            --shadow-hover: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
-            --radius-lg: 16px;
-            --radius-xl: 24px;
-            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
+/* Scroll progress */
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,#2563eb,#10b981);width:0;z-index:9999;transition:width .1s linear}
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Inter', sans-serif;
-        }
-
-        body {
-            background-color: var(--bg-main);
-            color: var(--text-main);
-            line-height: 1.6;
-            -webkit-font-smoothing: antialiased;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
-
-        /* --- HERO SECTION (Cabeçalho) --- */
-        .hero {
-            position: relative;
-            background: linear-gradient(135deg, var(--bg-hero) 0%, #1e3a8a 100%);
-            padding: 80px 24px;
-            text-align: center;
-            overflow: hidden;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-        }
-
-        /* Efeito de fundo abstrato */
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: -50%; left: -10%;
-            width: 400px; height: 400px;
-            background: radial-gradient(circle, rgba(59,130,246,0.3) 0%, rgba(0,0,0,0) 70%);
-            border-radius: 50%;
-            pointer-events: none;
-        }
-        .hero::after {
-            content: '';
-            position: absolute;
-            bottom: -30%; right: -5%;
-            width: 300px; height: 300px;
-            background: radial-gradient(circle, rgba(16,185,129,0.2) 0%, rgba(0,0,0,0) 70%);
-            border-radius: 50%;
-            pointer-events: none;
-        }
-
-        .hero-content {
-            position: relative;
-            z-index: 10;
-            max-width: 800px;
-            margin: 0 auto;
-            animation: fadeInDown 0.8s ease-out;
-        }
-
-        .badge {
-            display: inline-block;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            color: #bae6fd;
-            padding: 6px 16px;
-            border-radius: 9999px;
-            font-size: 0.85em;
-            font-weight: 600;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            margin-bottom: 20px;
-            backdrop-filter: blur(4px);
-        }
-
-        .hero h1 {
-            color: var(--text-hero);
-            font-size: clamp(2.5em, 5vw, 4em);
-            font-weight: 800;
-            letter-spacing: -1px;
-            line-height: 1.1;
-            margin-bottom: 16px;
-        }
-
-        .author-box {
-            display: inline-flex;
-            align-items: center;
-            gap: 12px;
-            margin-top: 24px;
-            background: rgba(0, 0, 0, 0.2);
-            padding: 8px 24px;
-            border-radius: 999px;
-            color: #cbd5e1;
-            font-size: 1.05em;
-        }
-        .author-box strong {
-            color: white;
-            font-weight: 600;
-        }
-
-        /* --- CONTEÚDO PRINCIPAL (Menu) --- */
-        main {
-            flex: 1;
-            max-width: 1000px;
-            margin: -40px auto 40px; /* Sobe por cima do hero */
-            padding: 0 24px;
-            position: relative;
-            z-index: 20;
-            width: 100%;
-        }
-
-        .section-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 24px;
-            padding-left: 12px;
-        }
-
-        .section-header h2 {
-            font-size: 1.5em;
-            font-weight: 700;
-            color: var(--primary);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 24px;
-        }
-
-        /* --- CARTÕES (Cards) --- */
-        .card {
-            background: var(--card-bg);
-            border-radius: var(--radius-xl);
-            padding: 32px 28px;
-            text-decoration: none;
-            color: var(--text-main);
-            border: 1px solid var(--border);
-            box-shadow: var(--shadow-md);
-            transition: var(--transition);
-            display: flex;
-            flex-direction: column;
-            position: relative;
-            overflow: hidden;
-        }
-
-        /* Efeito de brilho no topo do cartão */
-        .card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0;
-            height: 4px;
-            background: var(--border);
-            transition: var(--transition);
-        }
-
-        .card:hover {
-            transform: translateY(-6px);
-            box-shadow: var(--shadow-hover);
-            border-color: #cbd5e1;
-        }
-        
-        /* Cores temáticas para cada cartão ao fazer hover */
-        .card.bayes:hover::before { background: #8b5cf6; } /* Purple */
-        .card.medir:hover::before { background: #3b82f6; } /* Blue */
-
-        .card-icon {
-            width: 56px;
-            height: 56px;
-            border-radius: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.8em;
-            margin-bottom: 20px;
-            background: #f1f5f9;
-            transition: var(--transition);
-        }
-
-        .card.bayes .card-icon { color: #7c3aed; background: #ede9fe; }
-        .card.medir .card-icon { color: #2563eb; background: #dbeafe; }
-
-        .card:hover .card-icon {
-            transform: scale(1.1) rotate(-5deg);
-        }
-
-        .card h3 {
-            font-size: 1.35em;
-            font-weight: 700;
-            margin-bottom: 10px;
-            letter-spacing: -0.3px;
-        }
-
-        .card p {
-            color: var(--text-muted);
-            font-size: 0.95em;
-            line-height: 1.6;
-            flex: 1;
-        }
-
-        .card-action {
-            margin-top: 24px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-weight: 600;
-            font-size: 0.95em;
-            color: var(--primary);
-            transition: var(--transition);
-        }
-
-        .card:hover .card-action {
-            gap: 12px;
-            color: var(--primary-hover);
-        }
-
-        /* --- FOOTER --- */
-        footer {
-            background: white;
-            border-top: 1px solid var(--border);
-            padding: 32px 24px;
-            text-align: center;
-            margin-top: auto;
-        }
-
-        .footer-content {
-            max-width: 800px;
-            margin: 0 auto;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 24px;
-            color: var(--text-muted);
-            font-size: 0.9em;
-        }
-
-        .footer-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            background: #f8fafc;
-            padding: 6px 16px;
-            border-radius: 8px;
-            border: 1px solid var(--border);
-        }
-
-        .footer-item b {
-            color: var(--text-main);
-        }
-
-        /* Keyframes */
-        @keyframes fadeInDown {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .grid { animation: fadeInUp 0.8s ease-out 0.2s both; }
-
-    </style>
+@keyframes fadeDown{from{opacity:0;transform:translateY(-12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:600px){.hero{padding:48px 16px 64px}main{padding:0 16px}}
+</style>
 </head>
 <body>
-
-    <!-- CABEÇALHO / HERO -->
-    <header class="hero">
-        <div class="hero-content">
-            <span class="badge">Material de Apoio</span>
-            <h1>Didática do Estudo do Meio</h1>
-            <div class="author-box">
-                por <strong>Jorge Fonseca e Trindade</strong>
-            </div>
-        </div>
-    </header>
-
-    <!-- CONTEÚDO PRINCIPAL -->
-    <main>
-        <div class="section-header">
-            <h2>📚 Índice</h2>
-        </div>
-        
-        <div class="grid">
-            
-            <!-- CARTÃO 1: Teorema de Bayes -->
-            <a href="bayes/teorema_bayes.html" class="card bayes">
-                <div class="card-icon">📊</div>
-                <h3>Teorema de Bayes</h3>
-                <p>Módulo interativo focado no estudo das probabilidades condicionais, raciocínio lógico e o processo de atualização de crenças (raciocínio bayesiano).</p>
-                <div class="card-action">
-                    Aceder ao módulo <span>→</span>
-                </div>
-            </a>
-
-            <!-- CARTÃO 2: Aprender a Medir -->
-            <!-- NOTA: Usa o nome de ficheiro exato que escolheres. -->
-            <a href="medir/aprender_medir.html" class="card medir">
-                <div class="card-icon">📏</div>
-                <h3>Aprender a Medir</h3>
-                <p>Conceitos fundamentais sobre medições em física, algarismos significativos, precisão, exatidão e análise de incertezas (erros).</p>
-                <div class="card-action">
-                    Aceder ao módulo <span>→</span>
-                </div>
-            </a>
-            
-            <!-- CARTÃO 3: Atividades Experimentais -->
-            <a href="experimenta/index.html" class="card medir">
-                <div class="card-icon">🧪</div>
-                <h3>Atividades Experimentais</h3>
-                <p>Planeamento de atividades experimentais focado na progressão da autonomia do aluno e na variação do grau de abertura, percorrendo todas as fases do trabalho prático e o papel mediador do docente.</p>
-                <div class="card-action">
-                    Aceder ao módulo <span>→</span>
-                </div>
-            </a>
-        </div>
-    </main>
-
-    <!-- RODAPÉ / INFORMAÇÃO DA VERSÃO -->
-    <footer>
-        <div class="footer-content">
-            <div class="footer-item">
-                📅 Ano: <b>2026</b>
-            </div>
-            <div class="footer-item">
-                ⚙️ Versão: <b>2026.05.06</b>
-            </div>
-        </div>
-    </footer>
-
+<header class="hero">
+  <div class="hero-content">
+    <span class="badge">Índice principal</span>
+    <h1>Didática do Estudo do Meio</h1>
+    <p class="lead">Recursos didáticos para explorar o pensamento probabilístico, a medição e as atividades experimentais nas Ciências.</p>
+  </div>
+</header>
+<main>
+  <div class="grid">
+    <a href="bayes/bayes.html" class="card bayes">
+      <div class="card-icon">📊</div>
+      <h3>Teorema de Bayes</h3>
+      <p>Introdução ao raciocínio probabilístico: como atualizar crenças face a nova informação, com exemplos resolvidos e aplicações no quotidiano.</p>
+      <span class="card-action">Abrir →</span>
+    </a>
+    <a href="medir/medir.html" class="card medir">
+      <div class="card-icon">📏</div>
+      <h3>Aprender a Medir</h3>
+      <p>O conceito de grandeza, unidades de medida, instrumentos e procedimentos para realizar medições rigorosas em contexto escolar.</p>
+      <span class="card-action">Abrir →</span>
+    </a>
+    <a href="experimental/experimental_index.html" class="card experimental">
+      <div class="card-icon">🧪</div>
+      <h3>Atividades Experimentais</h3>
+      <p>Quadro teórico do trabalho experimental e propostas de atividades práticas — água, ar, calor, luz, som, eletricidade e mais.</p>
+      <span class="card-action">Abrir →</span>
+    </a>
+  </div>
+</main>
+<footer>© Didática do Estudo do Meio · Jorge Fonseca e Trindade</footer>
+<div class="progress-bar" id="pb"></div>
+<script>var pb=document.getElementById("pb");window.addEventListener("scroll",function(){var s=document.documentElement,p=s.scrollTop/(s.scrollHeight-s.clientHeight);pb.style.width=(p*100)+"%"});</script>
 </body>
 </html>

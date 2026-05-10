@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Luz – Formulário (atividade ABERTA)</title>
+
+<link rel="stylesheet" href="../../../assets/css/shared.css">
+<style>
+/* Detect aberta/fechada for section coloring */
+.sec { --sec-type: aberta; }
+</style>
+</head>
+<body>
+<!--SITE_NAV_INJECTED--><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"><style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--primary:#2563eb;--primary-hover:#1d4ed8;--bg:#f8fafc;--card:#fff;--text:#1e293b;--muted:#64748b;--border:#e2e8f0;--hero:#0f172a;--accent:#10b981;--purple:#7c3aed;--radius:16px;--shadow:0 4px 6px -1px rgb(0 0 0 / .08),0 2px 4px -2px rgb(0 0 0 / .06);--shadow-hover:0 20px 25px -5px rgb(0 0 0 / .12),0 8px 10px -6px rgb(0 0 0 / .08);--t:all .25s cubic-bezier(.4,0,.2,1)}
+body{font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100vh;display:flex;flex-direction:column}
+a{color:var(--primary);text-decoration:none}
+a:hover{text-decoration:underline}
+.site-nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);padding:10px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;font-size:.92rem}
+.site-nav .crumbs{display:flex;align-items:center;gap:6px;flex-wrap:wrap;color:var(--muted)}
+.site-nav .crumbs a{color:var(--muted);font-weight:500}
+.site-nav .crumbs a:hover{color:var(--primary);text-decoration:none}
+.site-nav .crumbs .sep{opacity:.5}
+.site-nav .crumbs .current{color:var(--text);font-weight:600}
+.site-nav .actions{margin-left:auto;display:flex;gap:8px}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:999px;font-size:.85rem;font-weight:600;border:1px solid var(--border);background:#fff;color:var(--text);transition:var(--t)}
+.btn:hover{border-color:var(--primary);color:var(--primary);text-decoration:none;transform:translateY(-1px)}
+.btn.primary{background:var(--primary);color:#fff;border-color:var(--primary)}
+.btn.primary:hover{background:var(--primary-hover);color:#fff}
+.hero{position:relative;background:linear-gradient(135deg,var(--hero) 0%,#1e3a8a 100%);color:#fff;padding:54px 24px 60px;text-align:center;overflow:hidden}
+.hero::before,.hero::after{content:"";position:absolute;border-radius:50%;pointer-events:none}
+.hero::before{top:-50%;left:-10%;width:400px;height:400px;background:radial-gradient(circle,rgba(59,130,246,.3) 0%,transparent 70%)}
+.hero::after{bottom:-30%;right:-5%;width:300px;height:300px;background:radial-gradient(circle,rgba(16,185,129,.2) 0%,transparent 70%)}
+.hero-content{position:relative;z-index:1;max-width:900px;margin:0 auto;animation:fadeDown .6s ease-out}
+.badge{display:inline-block;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#bae6fd;padding:5px 14px;border-radius:999px;font-size:.78rem;font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:16px}
+.hero h1{font-size:clamp(2rem,4.5vw,3.4rem);font-weight:800;letter-spacing:-1px;line-height:1.15;margin-bottom:10px}
+.hero p.lead{color:#cbd5e1;font-size:1.05rem;max-width:640px;margin:0 auto}
+main{flex:1;max-width:1080px;margin:-32px auto 48px;padding:0 24px;width:100%;position:relative;z-index:2}
+.section-header{margin:8px 0 20px;padding-left:6px}
+.section-header h2{font-size:1.35rem;font-weight:700;color:var(--primary);display:flex;align-items:center;gap:10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:22px;animation:fadeUp .6s ease-out .15s both}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:26px 24px;box-shadow:var(--shadow);color:var(--text);text-decoration:none;display:flex;flex-direction:column;transition:var(--t);position:relative;overflow:hidden}
+.card::before{content:"";position:absolute;top:0;left:0;right:0;height:4px;background:var(--border);transition:var(--t)}
+.card:hover{transform:translateY(-5px);box-shadow:var(--shadow-hover);text-decoration:none;border-color:#cbd5e1}
+.card:hover::before{background:var(--primary)}
+.card.bayes:hover::before{background:var(--purple)}
+.card.medir:hover::before{background:#3b82f6}
+.card.experimental:hover::before{background:var(--accent)}
+.card-icon{width:52px;height:52px;border-radius:14px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;font-size:1.6rem;margin-bottom:16px;transition:var(--t)}
+.card.bayes .card-icon{background:#ede9fe;color:#7c3aed}
+.card.medir .card-icon{background:#dbeafe;color:#2563eb}
+.card.experimental .card-icon{background:#d1fae5;color:#059669}
+.card:hover .card-icon{transform:scale(1.1) rotate(-5deg)}
+.card h3{font-size:1.18rem;font-weight:700;margin-bottom:6px;letter-spacing:-.3px}
+.card p{color:var(--muted);font-size:.92rem;flex:1}
+.card-action{margin-top:18px;font-weight:600;font-size:.9rem;color:var(--primary);display:flex;align-items:center;gap:6px;transition:var(--t)}
+.card:hover .card-action{gap:10px}
+footer{margin-top:auto;padding:24px;text-align:center;color:var(--muted);font-size:.85rem;border-top:1px solid var(--border);background:#fff}
+@keyframes fadeDown{from{opacity:0;transform:translateY(-12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:600px){.hero{padding:40px 16px 50px}main{padding:0 16px}.site-nav{font-size:.82rem}}
+
+.site-nav{margin-bottom:16px}</style><nav class="site-nav" aria-label="Navegação"><div class="crumbs"><a href="../../../index.html">Início</a><span class="sep">›</span><a href="../../experimental_index.html">Atividades Experimentais</a><span class="sep">›</span><a href="../index.html">Atividades</a><span class="sep">›</span><a href="./index.html">Luz</a></div><div class="actions"><a class="btn" href="./index.html">↑ Índice da secção</a><a class="btn primary" href="../../../index.html">🏠 Início</a></div></nav>
+<main class="content-body">
+<h1>Luz – Formulário de planificação</h1>
+
+<style>
+.ativ-switcher{
+  display:flex;gap:10px;margin-bottom:24px;
+  background:#f1f5f9;padding:6px;border-radius:999px;
+  width:fit-content;
+}
+.ativ-switcher a{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:7px 18px;border-radius:999px;
+  font-size:.84rem;font-weight:600;
+  color:#64748b;text-decoration:none;transition:all .18s;
+}
+.ativ-switcher a.active{background:#fff;color:#1e293b;box-shadow:0 1px 4px rgb(0 0 0/.1)}
+.ativ-switcher a.aberta.active{color:#065f46}
+.ativ-switcher a.fechada.active{color:#1e3a8a}
+</style>
+
+<div class="ativ-switcher"><a href="luz_aberta.html" class="aberta active">🔓 Atividade Aberta</a><a href="luz_fechada.html" class="fechada">🔒 Atividade Fechada</a></div>
+
+<div class="sec aberta"><h2>Atividade experimental ABERTA</h2>
+
+  <div class="bloco">
+    <h3>1. Conhecimento (o que quero ensinar/aprender)</h3>
+
+    <label>Questão geral orientadora (área de investigação):</label>
+    <textarea name="aberto_questao">Como diferentes materiais (transparentes, translúcidos, opacos) deixam passar a luz?</textarea>
+  </div>
+
+  <div class="bloco">
+    <h3>2. Problemas e variáveis pelos alunos</h3>
+
+    <label>Contexto / descrição da atividade:</label>
+    <textarea name="aberto_contexto">Alunos escolhem materiais (vidro, plástico translúcido, cartão, tecido) e formulam questões: “Qual deixa ver melhor?”, “Qual faz sombra mais escura?”</textarea>
+
+    <label>Variáveis possíveis (MUDAR / MEDIR / MANTER):</label>
+    <textarea name="aberto_variaveis">Exemplos:
+- MUDAR: tipo de material.
+- MEDIR/observar: quantidade de luz que passa, intensidade/escuro da sombra, se conseguimos ver através.
+- MANTER: mesma distância da fonte de luz, mesmo ecrã, mesma intensidade luminosa.</textarea>
+  </div>
+
+  <div class="bloco">
+    <h3>3. Equipamento e materiais</h3>
+
+    <label>Equipamento disponível:</label>
+    <textarea name="aberto_equipamento">Lâmpada, conjuntos de materiais (vidro, plástico translúcido, cartão, tecido, etc.), ecrã branco, figuras impressas para ver através, régua (eventual).</textarea>
+
+    <!-- Imagem / esquema da montagem colocada aqui, junto ao equipamento -->
+    <figure aria-labelledby="figtitle figdesc">
+      <svg viewBox="0 0 900 420" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="figtitle figdesc">
+        <title id="figtitle">Esquema claro da montagem para estudar passagem de luz</title>
+        <desc id="figdesc">Fonte de luz (lâmpada), suporte com material a testar, ecrã branco para registo; três colunas mostram comportamento para transparente, translúcido e opaco.</desc>
+
+        <!-- Fundo branco -->
+        <rect x="0" y="0" width="900" height="420" fill="#ffffff" />
+
+        <!-- Base / mesa -->
+        <rect x="40" y="340" width="820" height="12" fill="#e6e6e6" />
+        <text x="460" y="370" font-size="13" font-family="Arial" fill="#333" text-anchor="middle">Superfície / mesa</text>
+
+        <!-- Three panels: Transparent / Translucent / Opaque -->
+        <!-- Panel backgrounds -->
+        <rect x="60" y="30" width="250" height="280" fill="#fbfbfb" stroke="#eee" />
+        <rect x="325" y="30" width="250" height="280" fill="#fbfbfb" stroke="#eee" />
+        <rect x="590" y="30" width="250" height="280" fill="#fbfbfb" stroke="#eee" />
+
+        <!-- Panel titles -->
+        <text x="185" y="58" font-size="14" font-family="Arial" fill="#111" text-anchor="middle">Transparente (ex.: vidro)</text>
+        <text x="450" y="58" font-size="14" font-family="Arial" fill="#111" text-anchor="middle">Translúcido (ex.: plástico fosco)</text>
+        <text x="715" y="58" font-size="14" font-family="Arial" fill="#111" text-anchor="middle">Opaco (ex.: cartão)</text>
+
+        <!-- For each panel: lamp (left), material (centre), screen (right) -->
+        <!-- Panel 1: Transparent -->
+        <!-- Lamp -->
+        <g transform="translate(95,150)">
+          <ellipse cx="0" cy="0" rx="20" ry="26" fill="#fff7d9" stroke="#e6b800" stroke-width="2"/>
+          <rect x="-6" y="26" width="12" height="36" fill="#bdbdbd" />
+          <text x="0" y="-40" font-size="11" font-family="Arial" fill="#111" text-anchor="middle">Lâmpada</text>
+        </g>
+        <!-- Material (transparent) -->
+        <rect x="185" y="120" width="18" height="80" fill="#dff3ff" stroke="#9fd3ff" stroke-width="1.5" />
+        <text x="195" y="110" font-size="11" font-family="Arial" fill="#111" text-anchor="middle">Material</text>
+        <!-- Screen -->
+        <rect x="235" y="110" width="60" height="100" fill="#ffffff" stroke="#bbb" stroke-width="1.5" />
+        <text x="265" y="100" font-size="11" font-family="Arial" fill="#111" text-anchor="middle">Ecrã</text>
+        <!-- Rays: full intensity -->
+        <g stroke="#f39c12" stroke-width="3" stroke-linecap="round">
+          <line x1="115" y1="150" x2="185" y2="150" />
+          <line x1="115" y1="140" x2="185" y2="140" />
+          <line x1="115" y1="160" x2="185" y2="160" />
+          <line x1="203" y1="150" x2="235" y2="150" />
+          <line x1="203" y1="140" x2="235" y2="140" />
+          <line x1="203" y1="160" x2="235" y2="160" />
+        </g>
+        <!-- On-screen indicator (bright) -->
+        <rect x="240" y="120" width="50" height="80" fill="#fff7e6" opacity="0.9" />
+
+        <!-- Panel 2: Translúcido -->
+        <!-- Lamp -->
+        <g transform="translate(360,150)">
+          <ellipse cx="0" cy="0" rx="20" ry="26" fill="#fff7d9" stroke="#e6b800" stroke-width="2"/>
+          <rect x="-6" y="26" width="12" height="36" fill="#bdbdbd" />
+        </g>
+        <!-- Material (translúcido) -->
+        <rect x="450" y="120" width="18" height="80" fill="#f0f0f0" stroke="#cfcfcf" stroke-width="1.5" />
+        <text x="459" y="110" font-size="11" font-family="Arial" fill="#111" text-anchor="middle">Material</text>
+        <!-- Screen -->
+        <rect x="500" y="110" width="60" height="100" fill="#ffffff" stroke="#bbb" stroke-width="1.5" />
+        <text x="530" y="100" font-size="11" font-family="Arial" fill="#111" text-anchor="middle">Ecrã</text>
+        <!-- Rays: partially attenuated -->
+        <g stroke="#f39c12" stroke-width="3" stroke-linecap="round">
+          <line x1="380" y1="150" x2="450" y2="150" />
+          <line x1="380" y1="140" x2="450" y2="140" stroke-opacity="0.8" />
+          <line x1="380" y1="160" x2="450" y2="160" stroke-opacity="0.6" />
+          <line x1="468" y1="150" x2="500" y2="150" stroke-opacity="0.8" />
+          <line x1="468" y1="140" x2="500" y2="140" stroke-opacity="0.6" />
+          <line x1="468" y1="160" x2="500" y2="160" stroke-opacity="0.4" />
+        </g>
+        <!-- On-screen indicator (medium) -->
+        <rect x="505" y="120" width="50" height="80" fill="#fff3d9" opacity="0.7" />
+
+        <!-- Panel 3: Opaque -->
+        <!-- Lamp -->
+        <g transform="translate(625,150)">
+          <ellipse cx="0" cy="0" rx="20" ry="26" fill="#fff7d9" stroke="#e6b800" stroke-width="2"/>
+          <rect x="-6" y="26" width="12" height="36" fill="#bdbdbd" />
+        </g>
+        <!-- Material (opaque) -->
+        <rect x="710" y="120" width="18" height="80" fill="#d9c6a3" stroke="#bfa07a" stroke-width="1.5" />
+        <text x="719" y="110" font-size="11" font-family="Arial" fill="#111" text-anchor="middle">Material</text>
+        <!-- Screen -->
+        <rect x="760" y="110" width="60" height="100" fill="#ffffff" stroke="#bbb" stroke-width="1.5" />
+        <text x="790" y="100" font-size="11" font-family="Arial" fill="#111" text-anchor="middle">Ecrã</text>
+        <!-- Rays: blocked -->
+        <g stroke="#f39c12" stroke-width="3" stroke-linecap="round">
+          <line x1="655" y1="150" x2="710" y2="150" />
+          <line x1="655" y1="140" x2="710" y2="140" />
+          <line x1="655" y1="160" x2="710" y2="160" />
+          <!-- after material: no rays to screen -->
+        </g>
+        <!-- On-screen indicator (dark shadow) -->
+        <rect x="765" y="120" width="50" height="80" fill="#e6e6e6" opacity="0.95" />
+
+        <!-- Central explanatory arrows and labels -->
+        <g>
+          <line x1="300" y1="220" x2="360" y2="220" stroke="#444" stroke-width="1.2" marker-end="url(#arrow)" />
+          <text x="330" y="210" font-size="12" font-family="Arial" fill="#444" text-anchor="middle">Comparar intensidade no ecrã</text>
+        </g>
+
+        <!-- Marker arrow definition -->
+        <defs>
+          <marker id="arrow" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+            <polygon points="0 0, 6 3, 0 6" fill="#444" />
+          </marker>
+        </defs>
+
+        <!-- Bottom legend box -->
+        <rect x="60" y="320" width="780" height="80" fill="#fff" stroke="#e9e9e9" />
+        <text x="80" y="340" font-size="12" font-family="Arial" fill="#111">Legenda</text>
+        <text x="80" y="358" font-size="11" font-family="Arial" fill="#333">Lâmpada — fonte de luz; Material — peça a testar; Ecrã branco — registar intensidade e sombra.</text>
+        <text x="80" y="376" font-size="11" font-family="Arial" fill="#333">Raios — linhas laranja mostram a direcção da luz; opacidade das linhas indica atenuação.</text>
+
+      </svg>
+      <figcaption>Esquema claro e perceptível: três colunas mostram o comportamento da luz para materiais transparentes, translúcidos e opacos. Coloque a lâmpada, o material no suporte e o ecrã conforme indicado; mantenha a distância material→ecrã constante para comparar.</figcaption>
+    </figure>
+
+    <div class="legend">
+      <strong>Sugestões práticas:</strong>
+      <ul>
+        <li>Mantenha a lâmpada fixa e a mesma intensidade para todas as medições.</li>
+        <li>Marque a posição do suporte e do ecrã com fita para garantir repetibilidade.</li>
+        <li>Peça aos alunos que desenhem o padrão de luz no ecrã e atribuam uma escala 0–5 à intensidade observada.</li>
+      </ul>
+    </div>
+
+  </div>
+
+  <div class="bloco">
+    <h3>4. Registos de dados</h3>
+
+    <label>Formas de registo (tabelas, observações, desenhos):</label>
+    <textarea name="aberto_registos">Registos: tabelas com colunas “material”, “deixa passar luz (muito/pouco/nada)”, “sombra (clara/escura)”, “conseguimos ver através (sim/não)”.</textarea>
+
+    <table class="tabela-exemplo" aria-label="Exemplo de tabela de registo">
+      <thead>
+        <tr><th>Material</th><th>Deixa passar luz</th><th>Sombra</th><th>Conseguimos ver através</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Vidro</td><td>Muito</td><td>Clara</td><td>Sim</td></tr>
+        <tr><td>Plástico translúcido</td><td>Pouco</td><td>Intermédia</td><td>Parcial</td></tr>
+        <tr><td>Cartão</td><td>Nada</td><td>Escura</td><td>Não</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="bloco">
+    <h3>5. Etapas do trabalho prático</h3>
+
+    <label>ANTES da experimentação:</label>
+    <textarea name="aberto_antes">Explorar exemplos do quotidiano (vidraças, cortinas); alunos levantam questões.</textarea>
+
+    <label>DURANTE a experimentação:</label>
+    <textarea name="aberto_durante">Grupos experimentam diferentes materiais e registam. Manter a mesma distância material→ecrã e a mesma intensidade da lâmpada; trocar apenas o material.</textarea>
+
+    <label>DEPOIS da experimentação:</label>
+    <textarea name="aberto_depois">Classificar materiais em transparentes, translúcidos e opacos; discutir aplicações práticas e comparar com as previsões iniciais.</textarea>
+  </div>
+
+  <p class="nota"><strong>Nota pedagógica:</strong> peça aos alunos que desenhem o padrão de luz no ecrã para cada material e que quantifiquem, quando possível, a intensidade relativa (por exemplo, usando uma escala 0–5).</p>
+
+  <div class="quote">
+    "Como diferentes materiais (transparentes, translúcidos, opacos) deixam passar a luz?"  
+    "Lâmpada, conjuntos de materiais (vidro, plástico translúcido, cartão, tecido, etc.), ecrã branco, figuras impressas para ver através, régua (eventual)." 
+  </div>
+
+</div>
+</main>
+
+<style>
+.scroll-top{
+  position:fixed;bottom:24px;right:24px;
+  width:40px;height:40px;border-radius:50%;
+  background:var(--primary,#2563eb);color:#fff;
+  border:none;cursor:pointer;font-size:1.1rem;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 4px 12px rgb(0 0 0/.2);
+  opacity:0;transition:opacity .25s,transform .25s;
+  z-index:500;transform:translateY(8px);
+}
+.scroll-top.visible{opacity:1;transform:translateY(0)}
+.scroll-top:hover{background:#1d4ed8}
+</style>
+<button class="scroll-top" id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Voltar ao topo">↑</button>
+<script>
+(function(){
+  var btn=document.getElementById('scrollTop');
+  window.addEventListener('scroll',function(){
+    btn.classList.toggle('visible',window.scrollY>300);
+  });
+})();
+</script>
+
+</body>
+</html>

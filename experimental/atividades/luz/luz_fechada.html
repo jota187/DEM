@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Luz – Formulário (atividade FECHADA)</title>
+
+<link rel="stylesheet" href="../../../assets/css/shared.css">
+<style>
+/* Detect aberta/fechada for section coloring */
+.sec { --sec-type: fechada; }
+</style>
+</head>
+<body>
+<!--SITE_NAV_INJECTED--><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"><style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--primary:#2563eb;--primary-hover:#1d4ed8;--bg:#f8fafc;--card:#fff;--text:#1e293b;--muted:#64748b;--border:#e2e8f0;--hero:#0f172a;--accent:#10b981;--purple:#7c3aed;--radius:16px;--shadow:0 4px 6px -1px rgb(0 0 0 / .08),0 2px 4px -2px rgb(0 0 0 / .06);--shadow-hover:0 20px 25px -5px rgb(0 0 0 / .12),0 8px 10px -6px rgb(0 0 0 / .08);--t:all .25s cubic-bezier(.4,0,.2,1)}
+body{font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100vh;display:flex;flex-direction:column}
+a{color:var(--primary);text-decoration:none}
+a:hover{text-decoration:underline}
+.site-nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);padding:10px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;font-size:.92rem}
+.site-nav .crumbs{display:flex;align-items:center;gap:6px;flex-wrap:wrap;color:var(--muted)}
+.site-nav .crumbs a{color:var(--muted);font-weight:500}
+.site-nav .crumbs a:hover{color:var(--primary);text-decoration:none}
+.site-nav .crumbs .sep{opacity:.5}
+.site-nav .crumbs .current{color:var(--text);font-weight:600}
+.site-nav .actions{margin-left:auto;display:flex;gap:8px}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:999px;font-size:.85rem;font-weight:600;border:1px solid var(--border);background:#fff;color:var(--text);transition:var(--t)}
+.btn:hover{border-color:var(--primary);color:var(--primary);text-decoration:none;transform:translateY(-1px)}
+.btn.primary{background:var(--primary);color:#fff;border-color:var(--primary)}
+.btn.primary:hover{background:var(--primary-hover);color:#fff}
+.hero{position:relative;background:linear-gradient(135deg,var(--hero) 0%,#1e3a8a 100%);color:#fff;padding:54px 24px 60px;text-align:center;overflow:hidden}
+.hero::before,.hero::after{content:"";position:absolute;border-radius:50%;pointer-events:none}
+.hero::before{top:-50%;left:-10%;width:400px;height:400px;background:radial-gradient(circle,rgba(59,130,246,.3) 0%,transparent 70%)}
+.hero::after{bottom:-30%;right:-5%;width:300px;height:300px;background:radial-gradient(circle,rgba(16,185,129,.2) 0%,transparent 70%)}
+.hero-content{position:relative;z-index:1;max-width:900px;margin:0 auto;animation:fadeDown .6s ease-out}
+.badge{display:inline-block;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#bae6fd;padding:5px 14px;border-radius:999px;font-size:.78rem;font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:16px}
+.hero h1{font-size:clamp(2rem,4.5vw,3.4rem);font-weight:800;letter-spacing:-1px;line-height:1.15;margin-bottom:10px}
+.hero p.lead{color:#cbd5e1;font-size:1.05rem;max-width:640px;margin:0 auto}
+main{flex:1;max-width:1080px;margin:-32px auto 48px;padding:0 24px;width:100%;position:relative;z-index:2}
+.section-header{margin:8px 0 20px;padding-left:6px}
+.section-header h2{font-size:1.35rem;font-weight:700;color:var(--primary);display:flex;align-items:center;gap:10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:22px;animation:fadeUp .6s ease-out .15s both}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:26px 24px;box-shadow:var(--shadow);color:var(--text);text-decoration:none;display:flex;flex-direction:column;transition:var(--t);position:relative;overflow:hidden}
+.card::before{content:"";position:absolute;top:0;left:0;right:0;height:4px;background:var(--border);transition:var(--t)}
+.card:hover{transform:translateY(-5px);box-shadow:var(--shadow-hover);text-decoration:none;border-color:#cbd5e1}
+.card:hover::before{background:var(--primary)}
+.card.bayes:hover::before{background:var(--purple)}
+.card.medir:hover::before{background:#3b82f6}
+.card.experimental:hover::before{background:var(--accent)}
+.card-icon{width:52px;height:52px;border-radius:14px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;font-size:1.6rem;margin-bottom:16px;transition:var(--t)}
+.card.bayes .card-icon{background:#ede9fe;color:#7c3aed}
+.card.medir .card-icon{background:#dbeafe;color:#2563eb}
+.card.experimental .card-icon{background:#d1fae5;color:#059669}
+.card:hover .card-icon{transform:scale(1.1) rotate(-5deg)}
+.card h3{font-size:1.18rem;font-weight:700;margin-bottom:6px;letter-spacing:-.3px}
+.card p{color:var(--muted);font-size:.92rem;flex:1}
+.card-action{margin-top:18px;font-weight:600;font-size:.9rem;color:var(--primary);display:flex;align-items:center;gap:6px;transition:var(--t)}
+.card:hover .card-action{gap:10px}
+footer{margin-top:auto;padding:24px;text-align:center;color:var(--muted);font-size:.85rem;border-top:1px solid var(--border);background:#fff}
+@keyframes fadeDown{from{opacity:0;transform:translateY(-12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:600px){.hero{padding:40px 16px 50px}main{padding:0 16px}.site-nav{font-size:.82rem}}
+
+.site-nav{margin-bottom:16px}</style><nav class="site-nav" aria-label="Navegação"><div class="crumbs"><a href="../../../index.html">Início</a><span class="sep">›</span><a href="../../experimental_index.html">Atividades Experimentais</a><span class="sep">›</span><a href="../index.html">Atividades</a><span class="sep">›</span><a href="./index.html">Luz</a></div><div class="actions"><a class="btn" href="./index.html">↑ Índice da secção</a><a class="btn primary" href="../../../index.html">🏠 Início</a></div></nav>
+<main class="content-body">
+<h1>Luz – Formulário de planificação</h1>
+
+<style>
+.ativ-switcher{
+  display:flex;gap:10px;margin-bottom:24px;
+  background:#f1f5f9;padding:6px;border-radius:999px;
+  width:fit-content;
+}
+.ativ-switcher a{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:7px 18px;border-radius:999px;
+  font-size:.84rem;font-weight:600;
+  color:#64748b;text-decoration:none;transition:all .18s;
+}
+.ativ-switcher a.active{background:#fff;color:#1e293b;box-shadow:0 1px 4px rgb(0 0 0/.1)}
+.ativ-switcher a.aberta.active{color:#065f46}
+.ativ-switcher a.fechada.active{color:#1e3a8a}
+</style>
+
+<div class="ativ-switcher"><a href="luz_fechada.html" class="fechada active">🔒 Atividade Fechada</a><a href="luz_aberta.html" class="aberta">🔓 Atividade Aberta</a></div>
+
+<div class="sec fechada"><h2>Atividade experimental FECHADA</h2>
+
+  <div class="bloco">
+    <h3>1. Conhecimento (o que quero ensinar/aprender)</h3>
+
+    <label>Questão em estudo (problema):</label>
+    <textarea name="fechado_questao">Como varia o tamanho da sombra de um objeto quando aproximamos ou afastamos a fonte de luz?</textarea>
+  </div>
+
+  <div class="bloco">
+    <h3>2. Variáveis (o que vamos medir, mudar e manter)</h3>
+
+    <label>MUDAR – Variável independente:</label>
+    <input type="text" name="fechado_mudar" value="Distância entre a fonte de luz e o objeto.">
+
+    <label>MEDIR – Variável dependente:</label>
+    <input type="text" name="fechado_medir" value="Altura da sombra no ecrã.">
+
+    <label>MANTER – Variáveis controladas:</label>
+    <textarea name="fechado_manter">Tamanho do objeto, posição do objeto, tipo de lâmpada, distância do objeto ao ecrã.</textarea>
+  </div>
+
+  <div class="bloco">
+    <h3>3. Equipamento e materiais</h3>
+
+    <label>Equipamento:</label>
+    <textarea name="fechado_equipamento">Lâmpada de secretária, boneco ou objeto opaco, ecrã (cartolina branca), régua.</textarea>
+
+    <!-- ESQUEMA MELHORADO -->
+    <figure>
+      <svg viewBox="0 0 1100 520" xmlns="http://www.w3.org/2000/svg">
+
+        <!-- Fundo -->
+        <rect x="0" y="0" width="1100" height="520" fill="#ffffff"/>
+
+        <!-- Mesa -->
+        <rect x="50" y="470" width="1000" height="10" fill="#dcdcdc"/>
+
+        <!-- Ecrã -->
+        <g transform="translate(950,260)">
+          <rect x="-80" y="-150" width="160" height="300" fill="#ffffff" stroke="#999" stroke-width="3"/>
+          <text x="0" y="-165" font-size="16" text-anchor="middle">Ecrã (cartolina)</text>
+        </g>
+
+        <!-- Objecto -->
+        <g transform="translate(550,260)">
+          <rect x="-10" y="-120" width="20" height="240" fill="#444"/>
+          <rect x="-40" y="-120" width="80" height="80" fill="#222"/>
+          <text x="0" y="-140" font-size="16" text-anchor="middle">Objeto opaco</text>
+        </g>
+
+        <!-- Lâmpadas (vertical, sem sobreposição) -->
+        <g transform="translate(200,120)">
+          <circle cx="0" cy="0" r="22" fill="#fff4c2" stroke="#e6b800" stroke-width="3"/>
+          <text x="0" y="-35" font-size="14" text-anchor="middle">Lâmpada — 60 cm</text>
+        </g>
+
+        <g transform="translate(200,260)">
+          <circle cx="0" cy="0" r="26" fill="#fff4c2" stroke="#e6b800" stroke-width="3"/>
+          <text x="0" y="-40" font-size="14" text-anchor="middle">Lâmpada — 40 cm</text>
+        </g>
+
+        <g transform="translate(200,400)">
+          <circle cx="0" cy="0" r="30" fill="#fff4c2" stroke="#e6b800" stroke-width="3"/>
+          <text x="0" y="-45" font-size="14" text-anchor="middle">Lâmpada — 20 cm</text>
+        </g>
+
+        <!-- Raios separados por bandas -->
+        <!-- 60 cm -->
+        <g stroke="#f39c12" stroke-width="4">
+          <line x1="220" y1="120" x2="520" y2="120"/>
+          <line x1="220" y1="105" x2="520" y2="105"/>
+          <line x1="220" y1="135" x2="520" y2="135"/>
+        </g>
+
+        <!-- 40 cm -->
+        <g stroke="#f39c12" stroke-width="5">
+          <line x1="220" y1="260" x2="520" y2="260"/>
+          <line x1="220" y1="245" x2="520" y2="245"/>
+          <line x1="220" y1="275" x2="520" y2="275"/>
+        </g>
+
+        <!-- 20 cm -->
+        <g stroke="#f39c12" stroke-width="6">
+          <line x1="220" y1="400" x2="520" y2="400"/>
+          <line x1="220" y1="385" x2="520" y2="385"/>
+          <line x1="220" y1="415" x2="520" y2="415"/>
+        </g>
+
+        <!-- Sombras no ecrã (separadas verticalmente) -->
+        <g transform="translate(950,260)">
+          <!-- maior -->
+          <rect x="-30" y="-120" width="60" height="120" fill="#b3b3b3" stroke="#777" stroke-width="2"/>
+          <text x="0" y="-130" font-size="14" text-anchor="middle">Sombra — 20 cm (maior)</text>
+
+          <!-- média -->
+          <rect x="-20" y="-10" width="40" height="80" fill="#d0d0d0" stroke="#999" stroke-width="2"/>
+          <text x="0" y="-20" font-size="14" text-anchor="middle">Sombra — 40 cm</text>
+
+          <!-- menor -->
+          <rect x="-10" y="80" width="20" height="50" fill="#e6e6e6" stroke="#aaa" stroke-width="2"/>
+          <text x="0" y="70" font-size="14" text-anchor="middle">Sombra — 60 cm (menor)</text>
+        </g>
+
+        <!-- Setas de distância -->
+        <defs>
+          <marker id="arrow" markerWidth="10" markerHeight="10" refX="6" refY="5" orient="auto">
+            <polygon points="0 0, 10 5, 0 10" fill="#333"/>
+          </marker>
+        </defs>
+
+        <line x1="240" y1="450" x2="550" y2="450" stroke="#333" stroke-width="2" marker-end="url(#arrow)"/>
+        <text x="400" y="470" font-size="14" text-anchor="middle">Distância lâmpada → objeto (variar)</text>
+
+        <line x1="580" y1="450" x2="950" y2="450" stroke="#333" stroke-width="2" marker-end="url(#arrow)"/>
+        <text x="760" y="470" font-size="14" text-anchor="middle">Distância objeto → ecrã (manter constante)</text>
+
+      </svg>
+
+      <figcaption>Esquema claro e sem sobreposições: três posições da lâmpada, objeto fixo e sombras separadas no ecrã.</figcaption>
+    </figure>
+
+  </div>
+
+  <div class="bloco">
+    <h3>4. Registos de dados</h3>
+
+    <label>Descrição da tabela / registos previstos:</label>
+    <textarea name="fechado_registos">Registo: tabela “distância da lâmpada ao objeto vs altura da sombra (em cm)”.</textarea>
+  </div>
+
+  <div class="bloco">
+    <h3>5. Etapas do trabalho prático</h3>
+
+    <label>ANTES da experimentação:</label>
+    <textarea name="fechado_antes">Discutir sombras em casa/rua; definir variáveis; planear medidas.</textarea>
+
+    <label>DURANTE a experimentação:</label>
+    <textarea name="fechado_durante">Medir sombra para várias distâncias (por exemplo, 20, 40, 60 cm).</textarea>
+
+    <label>DEPOIS da experimentação:</label>
+    <textarea name="fechado_depois">Representar num gráfico; concluir que quanto mais perto a fonte de luz, maior a sombra.</textarea>
+  </div>
+
+</div>
+</main>
+
+<style>
+.scroll-top{
+  position:fixed;bottom:24px;right:24px;
+  width:40px;height:40px;border-radius:50%;
+  background:var(--primary,#2563eb);color:#fff;
+  border:none;cursor:pointer;font-size:1.1rem;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 4px 12px rgb(0 0 0/.2);
+  opacity:0;transition:opacity .25s,transform .25s;
+  z-index:500;transform:translateY(8px);
+}
+.scroll-top.visible{opacity:1;transform:translateY(0)}
+.scroll-top:hover{background:#1d4ed8}
+</style>
+<button class="scroll-top" id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Voltar ao topo">↑</button>
+<script>
+(function(){
+  var btn=document.getElementById('scrollTop');
+  window.addEventListener('scroll',function(){
+    btn.classList.toggle('visible',window.scrollY>300);
+  });
+})();
+</script>
+
+</body>
+</html>
